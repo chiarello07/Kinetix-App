@@ -19,8 +19,9 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 222.2 84% 4.9%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 326 100% 54%;
+    --primary-foreground: 0 0% 100%;
+    --primary-indigo: 275 100% 25%;
 
     --secondary: 210 40% 98%;
     --secondary-foreground: 222.2 84% 4.9%;
@@ -74,8 +75,9 @@
     --popover: 222.2 84% 4.9%;
     --popover-foreground: 210 40% 98%;
 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 84% 4.9%;
+    --primary: 326 100% 54%;
+    --primary-foreground: 0 0% 100%;
+    --primary-indigo: 275 100% 25%;
 
     --secondary: 222.2 84% 4.9%;
     --secondary-foreground: 210 40% 98%;
@@ -286,5 +288,16 @@
 
   .animate-spotlight {
     animation: spotlight 2s ease forwards;
+  }
+
+  .bg-primary-gradient {
+    background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-indigo)));
+  }
+
+  .text-primary-gradient {
+    background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-indigo)));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
 }
