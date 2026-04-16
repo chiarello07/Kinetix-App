@@ -1,5 +1,6 @@
 {
   "_versions": {
-    "stripe-webhook": 1
+    "stripe-webhook": 1,
+    "monthly-update": 1
   }
 }

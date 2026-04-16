@@ -17,6 +17,7 @@ import Nutrition from './pages/Nutrition'
 import CheckoutPage from './pages/Checkout'
 import AdminDashboard from './pages/admin/AdminDashboard'
 import ProgressPage from './pages/progress/ProgressPage'
+import MonthlyReportPage from './pages/monthly-report/MonthlyReportPage'
 import WorkoutExecutionPage from './pages/workout-execution/WorkoutExecutionPage'
 import Profile from './pages/Profile'
 
@@ -48,6 +49,7 @@ const App = () => (
             <Route path="/workouts" element={<Workouts />} />
             <Route path="/nutrition" element={<Nutrition />} />
             <Route path="/progress" element={<ProgressPage />} />
+            <Route path="/monthly-report/:reportId" element={<MonthlyReportPage />} />
             <Route path="/checkout" element={<CheckoutPage />} />
             <Route path="/admin" element={<AdminDashboard />} />
             <Route path="/profile" element={<Profile />} />

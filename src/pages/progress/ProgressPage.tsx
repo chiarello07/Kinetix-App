@@ -10,6 +10,7 @@ import { MetricsCardsWorkout, MetricsCardsNutrition } from './components/Metrics
 import { CalorieBalanceCard } from './components/CalorieBalanceCard'
 import { ProgressGraphs } from './components/ProgressGraphs'
 import { MonthlyReportSection } from './components/MonthlyReportSection'
+import { MonthlyUpdateSection } from './components/MonthlyUpdateSection'
 import { mockMetrics, mockReport, mockGraphs } from './data'
 
 export default function ProgressPage() {
@@ -29,6 +30,8 @@ export default function ProgressPage() {
 
   return (
     <div className="flex flex-col gap-2 p-6 pb-24 max-w-6xl mx-auto animate-fade-in-up">
+      <MonthlyUpdateSection />
+
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b pb-6">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Seu Progresso</h1>
