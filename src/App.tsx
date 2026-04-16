@@ -16,6 +16,7 @@ import NutritionPlanPage from './pages/nutrition-plan/NutritionPlanPage'
 import Nutrition from './pages/Nutrition'
 import CheckoutPage from './pages/Checkout'
 import AdminDashboard from './pages/admin/AdminDashboard'
+import ProgressPage from './pages/progress/ProgressPage'
 import WorkoutExecutionPage from './pages/workout-execution/WorkoutExecutionPage'
 
 // ONLY IMPORT AND RENDER WORKING PAGES, NEVER ADD PLACEHOLDER COMPONENTS OR PAGES IN THIS FILE
@@ -45,6 +46,7 @@ const App = () => (
             />
             <Route path="/workouts" element={<Workouts />} />
             <Route path="/nutrition" element={<Nutrition />} />
+            <Route path="/progress" element={<ProgressPage />} />
             <Route path="/checkout" element={<CheckoutPage />} />
             <Route path="/admin" element={<AdminDashboard />} />
           </Route>
