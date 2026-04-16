@@ -227,6 +227,13 @@ export async function logFood(request: LogFoodRequest): Promise<LogFoodResponse>
 
   if (updateError) throw new Error(`Erro ao atualizar resumo: ${updateError.message}`)
 
+  try {
+    const { processFoodLogGamification } = await import('@/services/gamification-engine')
+    await processFoodLogGamification(request.userId, foodLog.id)
+  } catch (e) {
+    console.error('Gamification error:', e)
+  }
+
   // 6. Check warnings
   const warnings: string[] = []
   if (calsPct > 100)
