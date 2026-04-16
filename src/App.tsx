@@ -16,6 +16,7 @@ import NutritionPlanPage from './pages/nutrition-plan/NutritionPlanPage'
 import Nutrition from './pages/Nutrition'
 import CheckoutPage from './pages/Checkout'
 import AdminDashboard from './pages/admin/AdminDashboard'
+import WorkoutExecutionPage from './pages/workout-execution/WorkoutExecutionPage'
 
 // ONLY IMPORT AND RENDER WORKING PAGES, NEVER ADD PLACEHOLDER COMPONENTS OR PAGES IN THIS FILE
 // AVOID REMOVING ANY CONTEXT PROVIDERS FROM THIS FILE (e.g. TooltipProvider, Toaster, Sonner)
@@ -47,6 +48,7 @@ const App = () => (
             <Route path="/checkout" element={<CheckoutPage />} />
             <Route path="/admin" element={<AdminDashboard />} />
           </Route>
+          <Route path="/workout/execute" element={<WorkoutExecutionPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </TooltipProvider>

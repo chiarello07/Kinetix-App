@@ -22,13 +22,21 @@ export default function Index() {
           </p>
         </div>
 
-        <div className="pt-8">
+        <div className="pt-8 flex flex-col gap-4">
           <Button
             asChild
             size="lg"
             className="w-full h-14 text-lg font-semibold bg-primary-gradient text-white rounded-xl shadow-lg hover:shadow-primary/25 transition-all hover:-translate-y-1"
           >
             <Link to="/onboarding">Começar Agora</Link>
+          </Button>
+          <Button
+            asChild
+            size="lg"
+            variant="outline"
+            className="w-full h-14 text-lg font-semibold rounded-xl shadow-lg transition-all hover:-translate-y-1"
+          >
+            <Link to="/workout/execute">Iniciar Treino (Prompt 11)</Link>
           </Button>
         </div>
       </div>
