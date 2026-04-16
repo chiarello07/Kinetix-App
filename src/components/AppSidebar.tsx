@@ -29,7 +29,10 @@ export function AppSidebar() {
         <div className="bg-primary text-primary-foreground p-1.5 rounded-lg">
           <Activity className="w-5 h-5" />
         </div>
-        <span className="font-bold text-lg tracking-tight text-foreground">FitLife Hub</span>
+        <span className="font-bold text-lg tracking-tight text-foreground">
+          Kinetix App
+          <br />
+        </span>
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>

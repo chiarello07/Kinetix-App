@@ -36,7 +36,10 @@ export default function Index() {
             variant="outline"
             className="w-full h-14 text-lg font-semibold rounded-xl shadow-lg transition-all hover:-translate-y-1"
           >
-            <Link to="/workout/execute">Iniciar Treino (Prompt 11)</Link>
+            <Link to="/workout/execute">
+              Iniciar Treino
+              <br />
+            </Link>
           </Button>
         </div>
       </div>
