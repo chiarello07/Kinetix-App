@@ -7,6 +7,7 @@ import Index from './pages/Index'
 import NotFound from './pages/NotFound'
 import Layout from './components/Layout'
 import OnboardingPage from './pages/onboarding/OnboardingPage'
+import NutritionOnboardingPage from './pages/nutrition-onboarding/NutritionOnboardingPage'
 import PosturalAnalysisPage from './pages/analysis/PosturalAnalysisPage'
 import Workouts from './pages/Workouts'
 
@@ -22,6 +23,7 @@ const App = () => (
         <Route element={<Layout />}>
           <Route path="/" element={<Index />} />
           <Route path="/onboarding" element={<OnboardingPage />} />
+          <Route path="/nutrition-onboarding" element={<NutritionOnboardingPage />} />
           <Route path="/analysis" element={<PosturalAnalysisPage />} />
           <Route
             path="/dashboard"
