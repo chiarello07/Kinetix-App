@@ -1,14 +1,53 @@
 // AVOID UPDATING THIS FILE DIRECTLY. It is automatically generated.
-export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[]
+export type Json =
+  | string
+  | number
+  | boolean
+  | null
+  | { [key: string]: Json | undefined }
+  | Json[]
 
 export type Database = {
   // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: '14.4'
+    PostgrestVersion: "14.4"
   }
   public: {
     Tables: {
+      admin_users: {
+        Row: {
+          created_at: string | null
+          email: string
+          id: string
+          last_login: string | null
+          name: string
+          password_hash: string
+          permissions: Json | null
+          role: string
+        }
+        Insert: {
+          created_at?: string | null
+          email: string
+          id?: string
+          last_login?: string | null
+          name: string
+          password_hash: string
+          permissions?: Json | null
+          role?: string
+        }
+        Update: {
+          created_at?: string | null
+          email?: string
+          id?: string
+          last_login?: string | null
+          name?: string
+          password_hash?: string
+          permissions?: Json | null
+          role?: string
+        }
+        Relationships: []
+      }
       ai_food_identifications: {
         Row: {
           created_at: string | null
@@ -45,13 +84,37 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: 'ai_food_identifications_food_log_id_fkey'
-            columns: ['food_log_id']
+            foreignKeyName: "ai_food_identifications_food_log_id_fkey"
+            columns: ["food_log_id"]
             isOneToOne: false
-            referencedRelation: 'food_logs'
-            referencedColumns: ['id']
+            referencedRelation: "food_logs"
+            referencedColumns: ["id"]
           },
         ]
+      }
+      app_settings: {
+        Row: {
+          description: string | null
+          id: string
+          setting_key: string
+          setting_value: Json
+          updated_at: string | null
+        }
+        Insert: {
+          description?: string | null
+          id?: string
+          setting_key: string
+          setting_value: Json
+          updated_at?: string | null
+        }
+        Update: {
+          description?: string | null
+          id?: string
+          setting_key?: string
+          setting_value?: Json
+          updated_at?: string | null
+        }
+        Relationships: []
       }
       assessment_responses: {
         Row: {
@@ -89,11 +152,61 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: 'assessment_responses_nutrition_assessment_id_fkey'
-            columns: ['nutrition_assessment_id']
+            foreignKeyName: "assessment_responses_nutrition_assessment_id_fkey"
+            columns: ["nutrition_assessment_id"]
             isOneToOne: false
-            referencedRelation: 'nutrition_assessments'
-            referencedColumns: ['id']
+            referencedRelation: "nutrition_assessments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      audit_log: {
+        Row: {
+          action: string
+          admin_email: string | null
+          admin_id: string | null
+          created_at: string | null
+          entity: string
+          entity_id: string | null
+          id: string
+          ip_address: string | null
+          new_value: Json | null
+          old_value: Json | null
+          user_agent: string | null
+        }
+        Insert: {
+          action: string
+          admin_email?: string | null
+          admin_id?: string | null
+          created_at?: string | null
+          entity: string
+          entity_id?: string | null
+          id?: string
+          ip_address?: string | null
+          new_value?: Json | null
+          old_value?: Json | null
+          user_agent?: string | null
+        }
+        Update: {
+          action?: string
+          admin_email?: string | null
+          admin_id?: string | null
+          created_at?: string | null
+          entity?: string
+          entity_id?: string | null
+          id?: string
+          ip_address?: string | null
+          new_value?: Json | null
+          old_value?: Json | null
+          user_agent?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "audit_log_admin_id_fkey"
+            columns: ["admin_id"]
+            isOneToOne: false
+            referencedRelation: "admin_users"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -184,13 +297,142 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: 'daily_summaries_nutrition_plan_id_fkey'
-            columns: ['nutrition_plan_id']
+            foreignKeyName: "daily_summaries_nutrition_plan_id_fkey"
+            columns: ["nutrition_plan_id"]
             isOneToOne: false
-            referencedRelation: 'nutrition_plans'
-            referencedColumns: ['id']
+            referencedRelation: "nutrition_plans"
+            referencedColumns: ["id"]
           },
         ]
+      }
+      decision_matrix: {
+        Row: {
+          deviation_id: string
+          exercise_id: string
+          priority: number | null
+        }
+        Insert: {
+          deviation_id: string
+          exercise_id: string
+          priority?: number | null
+        }
+        Update: {
+          deviation_id?: string
+          exercise_id?: string
+          priority?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "decision_matrix_deviation_id_fkey"
+            columns: ["deviation_id"]
+            isOneToOne: false
+            referencedRelation: "deviations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "decision_matrix_exercise_id_fkey"
+            columns: ["exercise_id"]
+            isOneToOne: false
+            referencedRelation: "exercises"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      deviations: {
+        Row: {
+          affected_muscles: string[] | null
+          created_at: string | null
+          description: string | null
+          id: string
+          name: string
+          region: string | null
+          scientific_reference: string | null
+          tight_muscles: string[] | null
+          type: string
+          updated_at: string | null
+          weak_muscles: string[] | null
+        }
+        Insert: {
+          affected_muscles?: string[] | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          name: string
+          region?: string | null
+          scientific_reference?: string | null
+          tight_muscles?: string[] | null
+          type: string
+          updated_at?: string | null
+          weak_muscles?: string[] | null
+        }
+        Update: {
+          affected_muscles?: string[] | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          name?: string
+          region?: string | null
+          scientific_reference?: string | null
+          tight_muscles?: string[] | null
+          type?: string
+          updated_at?: string | null
+          weak_muscles?: string[] | null
+        }
+        Relationships: []
+      }
+      exercises: {
+        Row: {
+          contraindicated_for: string[] | null
+          corrective_for: string[] | null
+          created_at: string | null
+          description: string | null
+          id: string
+          image_url: string | null
+          name: string
+          primary_muscles: string[]
+          progression_cues: string | null
+          safety_notes: string | null
+          scientific_reference: string | null
+          secondary_muscles: string[] | null
+          tier: string
+          updated_at: string | null
+          video_url: string | null
+        }
+        Insert: {
+          contraindicated_for?: string[] | null
+          corrective_for?: string[] | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          name: string
+          primary_muscles: string[]
+          progression_cues?: string | null
+          safety_notes?: string | null
+          scientific_reference?: string | null
+          secondary_muscles?: string[] | null
+          tier: string
+          updated_at?: string | null
+          video_url?: string | null
+        }
+        Update: {
+          contraindicated_for?: string[] | null
+          corrective_for?: string[] | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          name?: string
+          primary_muscles?: string[]
+          progression_cues?: string | null
+          safety_notes?: string | null
+          scientific_reference?: string | null
+          secondary_muscles?: string[] | null
+          tier?: string
+          updated_at?: string | null
+          video_url?: string | null
+        }
+        Relationships: []
       }
       food_database: {
         Row: {
@@ -324,11 +566,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: 'food_logs_nutrition_plan_id_fkey'
-            columns: ['nutrition_plan_id']
+            foreignKeyName: "food_logs_nutrition_plan_id_fkey"
+            columns: ["nutrition_plan_id"]
             isOneToOne: false
-            referencedRelation: 'nutrition_plans'
-            referencedColumns: ['id']
+            referencedRelation: "nutrition_plans"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -374,11 +616,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: 'food_substitutes_meal_food_id_fkey'
-            columns: ['meal_food_id']
+            foreignKeyName: "food_substitutes_meal_food_id_fkey"
+            columns: ["meal_food_id"]
             isOneToOne: false
-            referencedRelation: 'meal_foods'
-            referencedColumns: ['id']
+            referencedRelation: "meal_foods"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -487,18 +729,18 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: 'meal_foods_food_id_fkey'
-            columns: ['food_id']
+            foreignKeyName: "meal_foods_food_id_fkey"
+            columns: ["food_id"]
             isOneToOne: false
-            referencedRelation: 'foods'
-            referencedColumns: ['id']
+            referencedRelation: "foods"
+            referencedColumns: ["id"]
           },
           {
-            foreignKeyName: 'meal_foods_meal_plan_id_fkey'
-            columns: ['meal_plan_id']
+            foreignKeyName: "meal_foods_meal_plan_id_fkey"
+            columns: ["meal_plan_id"]
             isOneToOne: false
-            referencedRelation: 'meal_plans'
-            referencedColumns: ['id']
+            referencedRelation: "meal_plans"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -547,11 +789,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: 'meal_plans_nutrition_plan_id_fkey'
-            columns: ['nutrition_plan_id']
+            foreignKeyName: "meal_plans_nutrition_plan_id_fkey"
+            columns: ["nutrition_plan_id"]
             isOneToOne: false
-            referencedRelation: 'nutrition_plans'
-            referencedColumns: ['id']
+            referencedRelation: "nutrition_plans"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -609,11 +851,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: 'nutrition_assessments_nutrition_profile_id_fkey'
-            columns: ['nutrition_profile_id']
+            foreignKeyName: "nutrition_assessments_nutrition_profile_id_fkey"
+            columns: ["nutrition_profile_id"]
             isOneToOne: false
-            referencedRelation: 'nutrition_profiles'
-            referencedColumns: ['id']
+            referencedRelation: "nutrition_profiles"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -662,11 +904,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: 'nutrition_onboarding_steps_nutrition_profile_id_fkey'
-            columns: ['nutrition_profile_id']
+            foreignKeyName: "nutrition_onboarding_steps_nutrition_profile_id_fkey"
+            columns: ["nutrition_profile_id"]
             isOneToOne: false
-            referencedRelation: 'nutrition_profiles'
-            referencedColumns: ['id']
+            referencedRelation: "nutrition_profiles"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -754,11 +996,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: 'nutrition_plans_nutrition_profile_id_fkey'
-            columns: ['nutrition_profile_id']
+            foreignKeyName: "nutrition_plans_nutrition_profile_id_fkey"
+            columns: ["nutrition_profile_id"]
             isOneToOne: false
-            referencedRelation: 'nutrition_profiles'
-            referencedColumns: ['id']
+            referencedRelation: "nutrition_profiles"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -927,11 +1169,51 @@ export type Database = {
         }
         Relationships: []
       }
+      periodization: {
+        Row: {
+          cardio: string | null
+          created_at: string | null
+          expectations: string | null
+          id: string
+          name: string
+          objective: string
+          parameters: Json
+          phase: string | null
+          updated_at: string | null
+          weeks: number
+        }
+        Insert: {
+          cardio?: string | null
+          created_at?: string | null
+          expectations?: string | null
+          id?: string
+          name: string
+          objective: string
+          parameters: Json
+          phase?: string | null
+          updated_at?: string | null
+          weeks: number
+        }
+        Update: {
+          cardio?: string | null
+          created_at?: string | null
+          expectations?: string | null
+          id?: string
+          name?: string
+          objective?: string
+          parameters?: Json
+          phase?: string | null
+          updated_at?: string | null
+          weeks?: number
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string | null
           id: string
           is_premium: boolean | null
+          last_activity_at: string | null
           subscription_id: string | null
           trial_started_at: string | null
           updated_at: string | null
@@ -940,6 +1222,7 @@ export type Database = {
           created_at?: string | null
           id: string
           is_premium?: boolean | null
+          last_activity_at?: string | null
           subscription_id?: string | null
           trial_started_at?: string | null
           updated_at?: string | null
@@ -948,17 +1231,18 @@ export type Database = {
           created_at?: string | null
           id?: string
           is_premium?: boolean | null
+          last_activity_at?: string | null
           subscription_id?: string | null
           trial_started_at?: string | null
           updated_at?: string | null
         }
         Relationships: [
           {
-            foreignKeyName: 'profiles_subscription_id_fkey'
-            columns: ['subscription_id']
+            foreignKeyName: "profiles_subscription_id_fkey"
+            columns: ["subscription_id"]
             isOneToOne: false
-            referencedRelation: 'subscriptions'
-            referencedColumns: ['id']
+            referencedRelation: "subscriptions"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -1061,13 +1345,49 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: 'supplementation_plans_nutrition_plan_id_fkey'
-            columns: ['nutrition_plan_id']
+            foreignKeyName: "supplementation_plans_nutrition_plan_id_fkey"
+            columns: ["nutrition_plan_id"]
             isOneToOne: false
-            referencedRelation: 'nutrition_plans'
-            referencedColumns: ['id']
+            referencedRelation: "nutrition_plans"
+            referencedColumns: ["id"]
           },
         ]
+      }
+      user_activity_log: {
+        Row: {
+          action: string
+          created_at: string | null
+          details: Json | null
+          entity: string
+          entity_id: string | null
+          id: string
+          ip_address: string | null
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          action: string
+          created_at?: string | null
+          details?: Json | null
+          entity: string
+          entity_id?: string | null
+          id?: string
+          ip_address?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          action?: string
+          created_at?: string | null
+          details?: Json | null
+          entity?: string
+          entity_id?: string | null
+          id?: string
+          ip_address?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
       }
     }
     Views: {
@@ -1085,31 +1405,33 @@ export type Database = {
   }
 }
 
-type DatabaseWithoutInternals = Omit<Database, '__InternalSupabase'>
+type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">
 
-type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, 'public'>]
+type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">]
 
 export type Tables<
   DefaultSchemaTableNameOrOptions extends
-    | keyof (DefaultSchema['Tables'] & DefaultSchema['Views'])
+    | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
     | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
-    ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables'] &
-        DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Views'])
+    ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+        DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
     : never = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
-  ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables'] &
-      DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Views'])[TableName] extends {
+  ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+      DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
       Row: infer R
     }
     ? R
     : never
-  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema['Tables'] & DefaultSchema['Views'])
-    ? (DefaultSchema['Tables'] & DefaultSchema['Views'])[DefaultSchemaTableNameOrOptions] extends {
+  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])
+    ? (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
         Row: infer R
       }
       ? R
@@ -1118,23 +1440,23 @@ export type Tables<
 
 export type TablesInsert<
   DefaultSchemaTableNameOrOptions extends
-    | keyof DefaultSchema['Tables']
+    | keyof DefaultSchema["Tables"]
     | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
-    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables']
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
     : never = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
-  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables'][TableName] extends {
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
       Insert: infer I
     }
     ? I
     : never
-  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema['Tables']
-    ? DefaultSchema['Tables'][DefaultSchemaTableNameOrOptions] extends {
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
         Insert: infer I
       }
       ? I
@@ -1143,23 +1465,23 @@ export type TablesInsert<
 
 export type TablesUpdate<
   DefaultSchemaTableNameOrOptions extends
-    | keyof DefaultSchema['Tables']
+    | keyof DefaultSchema["Tables"]
     | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
-    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables']
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
     : never = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
-  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables'][TableName] extends {
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
       Update: infer U
     }
     ? U
     : never
-  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema['Tables']
-    ? DefaultSchema['Tables'][DefaultSchemaTableNameOrOptions] extends {
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
         Update: infer U
       }
       ? U
@@ -1168,36 +1490,36 @@ export type TablesUpdate<
 
 export type Enums<
   DefaultSchemaEnumNameOrOptions extends
-    | keyof DefaultSchema['Enums']
+    | keyof DefaultSchema["Enums"]
     | { schema: keyof DatabaseWithoutInternals },
   EnumName extends DefaultSchemaEnumNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
-    ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions['schema']]['Enums']
+    ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
     : never = never,
 > = DefaultSchemaEnumNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
-  ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions['schema']]['Enums'][EnumName]
-  : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema['Enums']
-    ? DefaultSchema['Enums'][DefaultSchemaEnumNameOrOptions]
+  ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
+  : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
+    ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
     : never
 
 export type CompositeTypes<
   PublicCompositeTypeNameOrOptions extends
-    | keyof DefaultSchema['CompositeTypes']
+    | keyof DefaultSchema["CompositeTypes"]
     | { schema: keyof DatabaseWithoutInternals },
   CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
-    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions['schema']]['CompositeTypes']
+    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
     : never = never,
 > = PublicCompositeTypeNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
-  ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions['schema']]['CompositeTypes'][CompositeTypeName]
-  : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema['CompositeTypes']
-    ? DefaultSchema['CompositeTypes'][PublicCompositeTypeNameOrOptions]
+  ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
+  : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
+    ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
     : never
 
 export const Constants = {
@@ -1205,6 +1527,7 @@ export const Constants = {
     Enums: {},
   },
 } as const
+
 
 // ====== DATABASE EXTENDED CONTEXT (auto-generated) ======
 // This section contains actual PostgreSQL column types, constraints, RLS policies,
@@ -1216,6 +1539,15 @@ export const Constants = {
 // --- COLUMN TYPES (actual PostgreSQL types) ---
 // Use this to know the real database type when writing migrations.
 // "string" in TypeScript types above may be uuid, text, varchar, timestamptz, etc.
+// Table: admin_users
+//   id: uuid (not null, default: gen_random_uuid())
+//   email: character varying (not null)
+//   name: character varying (not null)
+//   password_hash: character varying (not null)
+//   role: character varying (not null, default: 'moderator'::character varying)
+//   permissions: jsonb (nullable, default: '{}'::jsonb)
+//   created_at: timestamp without time zone (nullable, default: now())
+//   last_login: timestamp without time zone (nullable)
 // Table: ai_food_identifications
 //   id: uuid (not null, default: gen_random_uuid())
 //   food_log_id: uuid (not null)
@@ -1226,6 +1558,12 @@ export const Constants = {
 //   user_confirmed: boolean (nullable, default: false)
 //   user_corrections: jsonb (nullable)
 //   created_at: timestamp without time zone (nullable, default: now())
+// Table: app_settings
+//   id: uuid (not null, default: gen_random_uuid())
+//   setting_key: character varying (not null)
+//   setting_value: jsonb (not null)
+//   description: text (nullable)
+//   updated_at: timestamp without time zone (nullable, default: now())
 // Table: assessment_responses
 //   id: uuid (not null, default: gen_random_uuid())
 //   nutrition_assessment_id: uuid (not null)
@@ -1236,6 +1574,18 @@ export const Constants = {
 //   answer_value: text (nullable)
 //   answer_score: integer (nullable)
 //   created_at: timestamp with time zone (nullable, default: now())
+// Table: audit_log
+//   id: uuid (not null, default: gen_random_uuid())
+//   admin_id: uuid (nullable)
+//   admin_email: character varying (nullable)
+//   action: character varying (not null)
+//   entity: character varying (not null)
+//   entity_id: character varying (nullable)
+//   old_value: jsonb (nullable)
+//   new_value: jsonb (nullable)
+//   ip_address: character varying (nullable)
+//   user_agent: text (nullable)
+//   created_at: timestamp without time zone (nullable, default: now())
 // Table: daily_summaries
 //   id: uuid (not null, default: gen_random_uuid())
 //   nutrition_plan_id: uuid (not null)
@@ -1261,6 +1611,38 @@ export const Constants = {
 //   meal_logs: jsonb (nullable, default: '[]'::jsonb)
 //   completed: boolean (nullable, default: false)
 //   exceeded: boolean (nullable, default: false)
+//   created_at: timestamp without time zone (nullable, default: now())
+//   updated_at: timestamp without time zone (nullable, default: now())
+// Table: decision_matrix
+//   deviation_id: uuid (not null)
+//   exercise_id: uuid (not null)
+//   priority: integer (nullable, default: 1)
+// Table: deviations
+//   id: uuid (not null, default: gen_random_uuid())
+//   type: character varying (not null)
+//   name: character varying (not null)
+//   description: text (nullable)
+//   region: character varying (nullable)
+//   affected_muscles: _text (nullable)
+//   weak_muscles: _text (nullable)
+//   tight_muscles: _text (nullable)
+//   scientific_reference: text (nullable)
+//   created_at: timestamp without time zone (nullable, default: now())
+//   updated_at: timestamp without time zone (nullable, default: now())
+// Table: exercises
+//   id: uuid (not null, default: gen_random_uuid())
+//   name: character varying (not null)
+//   description: text (nullable)
+//   tier: character varying (not null)
+//   primary_muscles: _text (not null)
+//   secondary_muscles: _text (nullable)
+//   corrective_for: _uuid (nullable, default: '{}'::uuid[])
+//   contraindicated_for: _uuid (nullable, default: '{}'::uuid[])
+//   safety_notes: text (nullable)
+//   progression_cues: text (nullable)
+//   scientific_reference: text (nullable)
+//   video_url: character varying (nullable)
+//   image_url: character varying (nullable)
 //   created_at: timestamp without time zone (nullable, default: now())
 //   updated_at: timestamp without time zone (nullable, default: now())
 // Table: food_database
@@ -1467,6 +1849,17 @@ export const Constants = {
 //   status: character varying (not null, default: 'in_progress'::character varying)
 //   created_at: timestamp with time zone (nullable, default: now())
 //   updated_at: timestamp with time zone (nullable, default: now())
+// Table: periodization
+//   id: uuid (not null, default: gen_random_uuid())
+//   name: character varying (not null)
+//   weeks: integer (not null)
+//   objective: text (not null)
+//   parameters: jsonb (not null)
+//   cardio: text (nullable)
+//   expectations: text (nullable)
+//   phase: character varying (nullable)
+//   created_at: timestamp without time zone (nullable, default: now())
+//   updated_at: timestamp without time zone (nullable, default: now())
 // Table: profiles
 //   id: uuid (not null)
 //   is_premium: boolean (nullable, default: false)
@@ -1474,6 +1867,7 @@ export const Constants = {
 //   subscription_id: uuid (nullable)
 //   created_at: timestamp with time zone (nullable, default: now())
 //   updated_at: timestamp with time zone (nullable, default: now())
+//   last_activity_at: timestamp without time zone (nullable, default: now())
 // Table: subscriptions
 //   id: uuid (not null, default: gen_random_uuid())
 //   user_id: uuid (not null)
@@ -1503,19 +1897,48 @@ export const Constants = {
 //   recommended: boolean (nullable, default: true)
 //   optional: boolean (nullable, default: false)
 //   created_at: timestamp with time zone (nullable, default: now())
+// Table: user_activity_log
+//   id: uuid (not null, default: gen_random_uuid())
+//   user_id: uuid (nullable)
+//   action: character varying (not null)
+//   entity: character varying (not null)
+//   entity_id: character varying (nullable)
+//   details: jsonb (nullable)
+//   ip_address: character varying (nullable)
+//   user_agent: text (nullable)
+//   created_at: timestamp without time zone (nullable, default: now())
 
 // --- CONSTRAINTS ---
+// Table: admin_users
+//   UNIQUE admin_users_email_key: UNIQUE (email)
+//   PRIMARY KEY admin_users_pkey: PRIMARY KEY (id)
 // Table: ai_food_identifications
 //   FOREIGN KEY ai_food_identifications_food_log_id_fkey: FOREIGN KEY (food_log_id) REFERENCES food_logs(id) ON DELETE CASCADE
 //   PRIMARY KEY ai_food_identifications_pkey: PRIMARY KEY (id)
+// Table: app_settings
+//   PRIMARY KEY app_settings_pkey: PRIMARY KEY (id)
+//   UNIQUE app_settings_setting_key_key: UNIQUE (setting_key)
 // Table: assessment_responses
 //   FOREIGN KEY assessment_responses_nutrition_assessment_id_fkey: FOREIGN KEY (nutrition_assessment_id) REFERENCES nutrition_assessments(id) ON DELETE CASCADE
 //   PRIMARY KEY assessment_responses_pkey: PRIMARY KEY (id)
+// Table: audit_log
+//   FOREIGN KEY audit_log_admin_id_fkey: FOREIGN KEY (admin_id) REFERENCES admin_users(id) ON DELETE SET NULL
+//   PRIMARY KEY audit_log_pkey: PRIMARY KEY (id)
 // Table: daily_summaries
 //   FOREIGN KEY daily_summaries_nutrition_plan_id_fkey: FOREIGN KEY (nutrition_plan_id) REFERENCES nutrition_plans(id) ON DELETE CASCADE
 //   PRIMARY KEY daily_summaries_pkey: PRIMARY KEY (id)
 //   FOREIGN KEY daily_summaries_user_id_fkey: FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE
 //   UNIQUE daily_summaries_user_id_summary_date_key: UNIQUE (user_id, summary_date)
+// Table: decision_matrix
+//   FOREIGN KEY decision_matrix_deviation_id_fkey: FOREIGN KEY (deviation_id) REFERENCES deviations(id) ON DELETE CASCADE
+//   FOREIGN KEY decision_matrix_exercise_id_fkey: FOREIGN KEY (exercise_id) REFERENCES exercises(id) ON DELETE CASCADE
+//   PRIMARY KEY decision_matrix_pkey: PRIMARY KEY (deviation_id, exercise_id)
+// Table: deviations
+//   UNIQUE deviations_name_key: UNIQUE (name)
+//   PRIMARY KEY deviations_pkey: PRIMARY KEY (id)
+// Table: exercises
+//   UNIQUE exercises_name_key: UNIQUE (name)
+//   PRIMARY KEY exercises_pkey: PRIMARY KEY (id)
 // Table: food_database
 //   PRIMARY KEY food_database_pkey: PRIMARY KEY (id)
 //   UNIQUE food_database_usda_fdc_id_key: UNIQUE (usda_fdc_id)
@@ -1548,6 +1971,9 @@ export const Constants = {
 //   PRIMARY KEY nutrition_plans_pkey: PRIMARY KEY (id)
 // Table: nutrition_profiles
 //   PRIMARY KEY nutrition_profiles_pkey: PRIMARY KEY (id)
+// Table: periodization
+//   UNIQUE periodization_name_key: UNIQUE (name)
+//   PRIMARY KEY periodization_pkey: PRIMARY KEY (id)
 // Table: profiles
 //   FOREIGN KEY profiles_id_fkey: FOREIGN KEY (id) REFERENCES auth.users(id) ON DELETE CASCADE
 //   PRIMARY KEY profiles_pkey: PRIMARY KEY (id)
@@ -1560,21 +1986,54 @@ export const Constants = {
 // Table: supplementation_plans
 //   FOREIGN KEY supplementation_plans_nutrition_plan_id_fkey: FOREIGN KEY (nutrition_plan_id) REFERENCES nutrition_plans(id) ON DELETE CASCADE
 //   PRIMARY KEY supplementation_plans_pkey: PRIMARY KEY (id)
+// Table: user_activity_log
+//   PRIMARY KEY user_activity_log_pkey: PRIMARY KEY (id)
+//   FOREIGN KEY user_activity_log_user_id_fkey: FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE
 
 // --- ROW LEVEL SECURITY POLICIES ---
+// Table: admin_users
+//   Policy "auth_all_admin_users" (ALL, PERMISSIVE) roles={authenticated}
+//     USING: true
+//     WITH CHECK: true
 // Table: ai_food_identifications
 //   Policy "auth_all_ai_food_identifications" (ALL, PERMISSIVE) roles={authenticated}
 //     USING: (EXISTS ( SELECT 1    FROM food_logs fl   WHERE ((fl.id = ai_food_identifications.food_log_id) AND (fl.user_id = auth.uid()))))
 //     WITH CHECK: (EXISTS ( SELECT 1    FROM food_logs fl   WHERE ((fl.id = ai_food_identifications.food_log_id) AND (fl.user_id = auth.uid()))))
+// Table: app_settings
+//   Policy "auth_all_app_settings" (ALL, PERMISSIVE) roles={authenticated}
+//     USING: true
+//     WITH CHECK: true
+//   Policy "public_read_app_settings" (SELECT, PERMISSIVE) roles={public}
+//     USING: true
 // Table: assessment_responses
 //   Policy "Users can insert their own assessment_responses" (INSERT, PERMISSIVE) roles={public}
 //     WITH CHECK: true
 //   Policy "Users can view their own assessment_responses" (SELECT, PERMISSIVE) roles={public}
 //     USING: true
+// Table: audit_log
+//   Policy "auth_all_audit_log" (ALL, PERMISSIVE) roles={authenticated}
+//     USING: true
+//     WITH CHECK: true
 // Table: daily_summaries
 //   Policy "auth_all_daily_summaries" (ALL, PERMISSIVE) roles={authenticated}
 //     USING: (user_id = auth.uid())
 //     WITH CHECK: (user_id = auth.uid())
+// Table: decision_matrix
+//   Policy "auth_all_decision_matrix" (ALL, PERMISSIVE) roles={authenticated}
+//     USING: true
+//     WITH CHECK: true
+// Table: deviations
+//   Policy "auth_all_deviations" (ALL, PERMISSIVE) roles={authenticated}
+//     USING: true
+//     WITH CHECK: true
+//   Policy "public_read_deviations" (SELECT, PERMISSIVE) roles={public}
+//     USING: true
+// Table: exercises
+//   Policy "auth_all_exercises" (ALL, PERMISSIVE) roles={authenticated}
+//     USING: true
+//     WITH CHECK: true
+//   Policy "public_read_exercises" (SELECT, PERMISSIVE) roles={public}
+//     USING: true
 // Table: food_database
 //   Policy "public_read_food_db" (SELECT, PERMISSIVE) roles={public}
 //     USING: true
@@ -1619,6 +2078,12 @@ export const Constants = {
 //     USING: true
 //   Policy "Users can view their own nutrition_profiles" (SELECT, PERMISSIVE) roles={public}
 //     USING: true
+// Table: periodization
+//   Policy "auth_all_periodization" (ALL, PERMISSIVE) roles={authenticated}
+//     USING: true
+//     WITH CHECK: true
+//   Policy "public_read_periodization" (SELECT, PERMISSIVE) roles={public}
+//     USING: true
 // Table: profiles
 //   Policy "Users can update their own profiles" (UPDATE, PERMISSIVE) roles={authenticated}
 //     USING: (id = auth.uid())
@@ -1630,6 +2095,10 @@ export const Constants = {
 //     USING: (user_id = auth.uid())
 // Table: supplementation_plans
 //   Policy "authenticated_all" (ALL, PERMISSIVE) roles={authenticated}
+//     USING: true
+//     WITH CHECK: true
+// Table: user_activity_log
+//   Policy "auth_all_user_activity_log" (ALL, PERMISSIVE) roles={authenticated}
 //     USING: true
 //     WITH CHECK: true
 
@@ -1647,15 +2116,23 @@ export const Constants = {
 //     RETURN NEW;
 //   END;
 //   $function$
-//
+//   
 
 // --- INDEXES ---
+// Table: admin_users
+//   CREATE UNIQUE INDEX admin_users_email_key ON public.admin_users USING btree (email)
 // Table: ai_food_identifications
 //   CREATE INDEX idx_ai_food_identifications_food_log_id ON public.ai_food_identifications USING btree (food_log_id)
+// Table: app_settings
+//   CREATE UNIQUE INDEX app_settings_setting_key_key ON public.app_settings USING btree (setting_key)
 // Table: daily_summaries
 //   CREATE UNIQUE INDEX daily_summaries_user_id_summary_date_key ON public.daily_summaries USING btree (user_id, summary_date)
 //   CREATE INDEX idx_daily_summaries_summary_date ON public.daily_summaries USING btree (summary_date)
 //   CREATE INDEX idx_daily_summaries_user_id ON public.daily_summaries USING btree (user_id)
+// Table: deviations
+//   CREATE UNIQUE INDEX deviations_name_key ON public.deviations USING btree (name)
+// Table: exercises
+//   CREATE UNIQUE INDEX exercises_name_key ON public.exercises USING btree (name)
 // Table: food_database
 //   CREATE UNIQUE INDEX food_database_usda_fdc_id_key ON public.food_database USING btree (usda_fdc_id)
 //   CREATE INDEX idx_food_database_category ON public.food_database USING btree (food_category)
@@ -1666,6 +2143,8 @@ export const Constants = {
 //   CREATE INDEX idx_food_logs_user_id ON public.food_logs USING btree (user_id)
 // Table: foods
 //   CREATE UNIQUE INDEX foods_name_key ON public.foods USING btree (name)
+// Table: periodization
+//   CREATE UNIQUE INDEX periodization_name_key ON public.periodization USING btree (name)
 // Table: profiles
 //   CREATE INDEX idx_profiles_is_premium ON public.profiles USING btree (is_premium)
 //   CREATE INDEX idx_profiles_subscription_id ON public.profiles USING btree (subscription_id)
@@ -1677,3 +2156,4 @@ export const Constants = {
 //   CREATE INDEX idx_subscriptions_user_id ON public.subscriptions USING btree (user_id)
 //   CREATE UNIQUE INDEX subscriptions_stripe_customer_id_key ON public.subscriptions USING btree (stripe_customer_id)
 //   CREATE UNIQUE INDEX subscriptions_stripe_subscription_id_key ON public.subscriptions USING btree (stripe_subscription_id)
+
