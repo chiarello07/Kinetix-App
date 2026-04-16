@@ -1,11 +1,46 @@
 import { useState } from 'react'
-import { Play, Clock, Dumbbell, Calendar, ArrowLeft, Target, Activity } from 'lucide-react'
+import {
+  Play,
+  Clock,
+  Dumbbell,
+  Calendar,
+  ArrowLeft,
+  Target,
+  Activity,
+  AlertTriangle,
+  Plus,
+  Flame,
+  HeartPulse,
+} from 'lucide-react'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { useWorkoutStore } from '@/stores/use-workout-store'
-import type { WorkoutPlan } from '@/lib/types/workout'
+import type { WorkoutPlan, TrainingSession } from '@/lib/types/workout'
 import { ScrollArea } from '@/components/ui/scroll-area'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { Label } from '@/components/ui/label'
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@/components/ui/accordion'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 
 const defaultRoutines = [
   { id: 'def-1', name: 'Superior Força', time: '45 min', intensity: 'Alta', img: 'black&dpr=2' },
@@ -15,92 +50,196 @@ const defaultRoutines = [
 ]
 
 export default function Workouts() {
-  const { plans } = useWorkoutStore()
+  const { plans, generateWorkout, isGenerating } = useWorkoutStore()
   const [activePlan, setActivePlan] = useState<WorkoutPlan | null>(null)
   const [activeRoutine, setActiveRoutine] = useState<string | null>(null)
 
+  const [duration, setDuration] = useState('13')
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
+
+  const handleGenerate = async () => {
+    await generateWorkout({
+      durationWeeks: parseInt(duration) as 13 | 26 | 52,
+      trainingDays: ['Segunda', 'Quarta', 'Sexta'],
+      focusAreas: ['Braços', 'Peito'],
+      weightKg: 75,
+      posturalScore: 55, // Forcing < 60 to demonstrate medical warning feature
+      deviations: [
+        { id: 'DE001', name: 'Cabeça Anteriorizada' },
+        { id: 'DE004', name: 'Hiperlordose Lombar' },
+      ],
+    })
+    setIsDialogOpen(false)
+  }
+
+  const renderSession = (session: TrainingSession) => (
+    <Card key={session.id} className="mb-4 overflow-hidden border-l-4 border-l-primary shadow-sm">
+      <CardHeader className="bg-muted/20 py-3">
+        <div className="flex justify-between items-center">
+          <div>
+            <CardTitle className="text-base flex items-center gap-2">
+              <Calendar className="w-4 h-4 text-primary" /> {session.dayOfWeek}
+            </CardTitle>
+            <p className="text-xs text-muted-foreground mt-1">{session.name}</p>
+          </div>
+          <div className="flex gap-3 text-sm text-muted-foreground font-medium">
+            <span className="flex items-center gap-1">
+              <Clock className="w-4 h-4" /> {session.estimatedDurationMinutes}m
+            </span>
+            <span className="flex items-center gap-1">
+              <Flame className="w-4 h-4 text-orange-500" /> {session.estimatedCalories} kcal
+            </span>
+          </div>
+        </div>
+      </CardHeader>
+      <CardContent className="p-0">
+        <div className="divide-y">
+          {['Warm-up', 'Main', 'Accessory', 'Cool-down'].map((category) => {
+            const exList = session.exercises.filter((e) => e.category === category)
+            if (exList.length === 0) return null
+            return (
+              <div key={category} className="p-4">
+                <h4 className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-2">
+                  {category === 'Warm-up' ? (
+                    <HeartPulse className="w-3 h-3 text-red-500" />
+                  ) : category === 'Main' ? (
+                    <Target className="w-3 h-3 text-primary" />
+                  ) : category === 'Accessory' ? (
+                    <Dumbbell className="w-3 h-3 text-blue-500" />
+                  ) : (
+                    <Activity className="w-3 h-3 text-green-500" />
+                  )}
+                  {category}
+                </h4>
+                <div className="space-y-3">
+                  {exList.map((ex) => (
+                    <div
+                      key={ex.id}
+                      className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 bg-secondary/30 p-2 rounded-md"
+                    >
+                      <div>
+                        <p className="font-medium text-sm">{ex.exercise.name}</p>
+                        <p className="text-xs text-muted-foreground mt-0.5">{ex.notes}</p>
+                      </div>
+                      <div className="flex flex-wrap gap-2 sm:justify-end text-xs">
+                        <Badge variant="outline" className="bg-background">
+                          {ex.sets}x{ex.reps}
+                        </Badge>
+                        <Badge variant="outline" className="bg-background">
+                          RPE {ex.rpe}
+                        </Badge>
+                        <Badge variant="outline" className="bg-background">
+                          {ex.restTimeSeconds}s desc
+                        </Badge>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      </CardContent>
+    </Card>
+  )
+
   if (activePlan) {
     return (
-      <div className="flex flex-col h-full animate-fade-in pb-20 max-w-3xl mx-auto">
+      <div className="flex flex-col h-full animate-fade-in pb-20 max-w-4xl mx-auto">
         <div className="flex items-center gap-4 mb-6">
           <Button variant="ghost" size="icon" onClick={() => setActivePlan(null)}>
             <ArrowLeft className="w-5 h-5" />
           </Button>
           <div>
-            <h1 className="text-2xl font-bold tracking-tight">{activePlan.name}</h1>
-            <p className="text-sm text-muted-foreground flex items-center gap-2">
-              <Calendar className="w-4 h-4" />
-              Gerado em {new Date(activePlan.createdAt).toLocaleDateString()}
+            <h1 className="text-2xl font-bold tracking-tight bg-gradient-to-r from-fuchsia-600 to-indigo-600 bg-clip-text text-transparent">
+              {activePlan.name}
+            </h1>
+            <p className="text-sm text-muted-foreground flex items-center gap-2 mt-1">
+              <Activity className="w-4 h-4" />
+              {activePlan.periodizationType} Periodization • {activePlan.durationWeeks} Semanas
             </p>
           </div>
         </div>
 
-        <div className="bg-[#4B0082]/10 dark:bg-[#4B0082]/20 border border-[#4B0082]/20 rounded-xl p-4 mb-6">
-          <h3 className="font-semibold flex items-center gap-2 text-[#4B0082] dark:text-[#E6E6FA] mb-2">
-            <Target className="w-5 h-5" /> Foco Corretivo
+        {activePlan.medicalClearanceRequired && (
+          <Alert
+            variant="destructive"
+            className="mb-6 bg-red-50 dark:bg-red-950 border-red-200 dark:border-red-900"
+          >
+            <AlertTriangle className="h-4 w-4" />
+            <AlertTitle>Atenção Médica Necessária</AlertTitle>
+            <AlertDescription>
+              Seu score postural indica desvios significativos. É fortemente recomendado buscar
+              liberação médica antes de iniciar este plano avançado.
+            </AlertDescription>
+          </Alert>
+        )}
+
+        <div className="bg-gradient-to-br from-fuchsia-500/10 to-indigo-500/10 border border-indigo-200 dark:border-indigo-800 rounded-xl p-5 mb-8">
+          <h3 className="font-semibold flex items-center gap-2 text-indigo-900 dark:text-indigo-200 mb-3">
+            <Target className="w-5 h-5" /> Foco do Plano
           </h3>
           <div className="flex flex-wrap gap-2">
-            {activePlan.deviationsSnapshot.map((dev) => (
-              <Badge key={dev.id} variant="secondary" className="bg-background/50 border-none">
-                {dev.name}
+            {activePlan.deviationsSnapshot.map((dev: any) => (
+              <Badge key={dev.id} variant="secondary" className="bg-background/80">
+                Correção: {dev.name}
+              </Badge>
+            ))}
+            {activePlan.focusAreas.map((f) => (
+              <Badge key={f} variant="outline" className="border-indigo-300 dark:border-indigo-700">
+                Foco: {f}
               </Badge>
             ))}
           </div>
         </div>
 
         <ScrollArea className="flex-1 -mx-4 px-4">
-          <div className="space-y-4">
-            {activePlan.exercises.map((presc, idx) => (
-              <Card key={`${presc.exerciseId}-${idx}`} className="overflow-hidden shadow-sm">
-                <CardHeader className="py-4 bg-muted/30 border-b">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <div className="flex items-center gap-2 mb-1">
-                        <Badge variant="outline" className="text-xs font-mono">
-                          {presc.exerciseId}
-                        </Badge>
-                        <Badge className="bg-primary/10 text-primary hover:bg-primary/20 border-none">
-                          {presc.exercise.type}
-                        </Badge>
-                      </div>
-                      <CardTitle className="text-lg">{presc.exercise.name}</CardTitle>
-                    </div>
-                    <div className="text-right">
-                      <div className="font-bold text-xl">
-                        {presc.sets} x {presc.reps}
-                      </div>
-                      <div className="text-xs text-muted-foreground flex items-center justify-end gap-1 mt-1">
-                        <Clock className="w-3 h-3" /> {presc.restTimeSeconds}s desc.
-                      </div>
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent className="py-4 space-y-3">
-                  <p className="text-sm text-foreground/80">{presc.exercise.description}</p>
-
-                  <div>
-                    <span className="text-xs font-semibold uppercase text-muted-foreground">
-                      Músculos Alvo:
+          <Accordion type="single" collapsible className="w-full space-y-4">
+            {activePlan.mesocycles.map((meso) => (
+              <AccordionItem
+                key={meso.id}
+                value={meso.id}
+                className="border bg-card rounded-lg px-2 shadow-sm"
+              >
+                <AccordionTrigger className="hover:no-underline py-4 px-2">
+                  <div className="flex flex-col items-start text-left">
+                    <span className="text-sm text-muted-foreground font-medium mb-1">
+                      Semana {meso.startWeek} a {meso.endWeek}
                     </span>
-                    <div className="flex flex-wrap gap-1 mt-1">
-                      {presc.exercise.targetMuscles.map((m) => (
-                        <span key={m} className="text-xs bg-secondary px-2 py-0.5 rounded-full">
-                          {m}
-                        </span>
-                      ))}
-                    </div>
+                    <span className="text-lg font-bold">{meso.name}</span>
                   </div>
-
-                  <div className="bg-blue-50 dark:bg-blue-950/30 p-3 rounded-lg flex gap-3 items-start border border-blue-100 dark:border-blue-900">
-                    <Activity className="w-5 h-5 text-blue-500 shrink-0 mt-0.5" />
-                    <p className="text-sm text-blue-900 dark:text-blue-200">
-                      <strong>Execução:</strong> {presc.notes}
-                    </p>
-                  </div>
-                </CardContent>
-              </Card>
+                </AccordionTrigger>
+                <AccordionContent className="pt-2 pb-4 px-2">
+                  <Accordion type="single" collapsible className="w-full space-y-2">
+                    {meso.microcycles.map((micro) => (
+                      <AccordionItem
+                        key={micro.id}
+                        value={micro.id}
+                        className="border-none bg-muted/30 rounded-md"
+                      >
+                        <AccordionTrigger className="px-4 py-3 hover:no-underline">
+                          <div className="flex items-center gap-3">
+                            <span className="font-semibold">Semana {micro.weekNumber}</span>
+                            {micro.isDeload && (
+                              <Badge
+                                variant="secondary"
+                                className="bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200"
+                              >
+                                Deload
+                              </Badge>
+                            )}
+                          </div>
+                        </AccordionTrigger>
+                        <AccordionContent className="px-4 pb-4">
+                          <div className="mt-4">{micro.sessions.map(renderSession)}</div>
+                        </AccordionContent>
+                      </AccordionItem>
+                    ))}
+                  </Accordion>
+                </AccordionContent>
+              </AccordionItem>
             ))}
-          </div>
+          </Accordion>
         </ScrollArea>
       </div>
     )
@@ -124,24 +263,71 @@ export default function Workouts() {
 
   return (
     <div className="flex flex-col gap-8 pb-20 animate-fade-in max-w-5xl mx-auto">
-      <div className="flex flex-col">
-        <h1 className="text-3xl font-bold tracking-tight">Meus Treinos</h1>
-        <p className="text-base text-muted-foreground mt-1">
-          Sua central de exercícios e correções
-        </p>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-fuchsia-600 to-indigo-600 bg-clip-text text-transparent">
+            Meus Treinos
+          </h1>
+          <p className="text-base text-muted-foreground mt-1">
+            Planos periodizados e rotinas focadas
+          </p>
+        </div>
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+          <DialogTrigger asChild>
+            <Button className="bg-gradient-to-r from-fuchsia-600 to-indigo-600 hover:opacity-90 transition-opacity text-white shadow-md">
+              <Plus className="w-4 h-4 mr-2" /> Gerar Novo Plano
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle>Gerar Plano de Treino</DialogTitle>
+              <DialogDescription>
+                Selecione a duração para gerar um plano periodizado baseado na sua análise postural.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="grid gap-4 py-4">
+              <div className="grid gap-2">
+                <Label htmlFor="duration">Duração do Plano</Label>
+                <Select value={duration} onValueChange={setDuration}>
+                  <SelectTrigger id="duration">
+                    <SelectValue placeholder="Selecione a duração" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="13">
+                      13 Semanas (Trimestral) - Periodização Linear
+                    </SelectItem>
+                    <SelectItem value="26">
+                      26 Semanas (Semestral) - Periodização Ondulatória
+                    </SelectItem>
+                    <SelectItem value="52">52 Semanas (Anual) - Periodização em Blocos</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            <div className="flex justify-end mt-4">
+              <Button
+                onClick={handleGenerate}
+                disabled={isGenerating}
+                className="bg-gradient-to-r from-fuchsia-600 to-indigo-600 text-white"
+              >
+                {isGenerating ? 'Gerando...' : 'Gerar Plano'}
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
 
       {plans.length > 0 && (
         <div className="space-y-4">
-          <h2 className="text-xl font-bold flex items-center gap-2 border-b pb-2">
-            <Activity className="w-5 h-5 text-[#FF1493]" />
-            Treinos Corretivos Gerados
+          <h2 className="text-xl font-bold flex items-center gap-2 border-b pb-2 text-indigo-900 dark:text-indigo-200">
+            <Activity className="w-5 h-5 text-fuchsia-500" />
+            Planos Periodizados
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {plans.map((plan) => (
               <Card
                 key={plan.id}
-                className="cursor-pointer hover:shadow-md transition-all border-l-4 border-l-[#FF1493]"
+                className="cursor-pointer hover:shadow-md transition-all border-l-4 border-l-fuchsia-500 bg-gradient-to-br from-background to-muted/20"
                 onClick={() => setActivePlan(plan)}
               >
                 <CardHeader className="pb-2">
@@ -152,11 +338,19 @@ export default function Workouts() {
                     <Calendar className="w-4 h-4" />
                     {new Date(plan.createdAt).toLocaleDateString()}
                   </p>
-                  <div className="flex gap-2 text-xs font-medium text-foreground/70">
-                    <span>{plan.exercises.length} Exercícios</span>
-                    <span>•</span>
-                    <span>Foco em {plan.deviationsSnapshot.length} desvios</span>
+                  <div className="flex flex-col gap-1 text-xs font-medium text-foreground/70">
+                    <span className="flex items-center gap-1.5">
+                      <Target className="w-3 h-3" /> {plan.periodizationType}
+                    </span>
+                    <span className="flex items-center gap-1.5">
+                      <Clock className="w-3 h-3" /> {plan.durationWeeks} semanas
+                    </span>
                   </div>
+                  {plan.medicalClearanceRequired && (
+                    <Badge variant="destructive" className="mt-3 w-full justify-center">
+                      Alerta Médico
+                    </Badge>
+                  )}
                 </CardContent>
               </Card>
             ))}
@@ -165,8 +359,8 @@ export default function Workouts() {
       )}
 
       <div className="space-y-4">
-        <h2 className="text-xl font-bold flex items-center gap-2 border-b pb-2">
-          <Dumbbell className="w-5 h-5 text-[#4B0082]" />
+        <h2 className="text-xl font-bold flex items-center gap-2 border-b pb-2 text-indigo-900 dark:text-indigo-200">
+          <Dumbbell className="w-5 h-5 text-indigo-500" />
           Rotinas Padrão
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

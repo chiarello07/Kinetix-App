@@ -201,6 +201,22 @@ export const exercisesDB: Record<string, Exercise> = {
     executionNotes: 'Feche as pernas controlando o movimento de volta.',
     type: 'Isolation',
   },
+  EX026: {
+    id: 'EX026',
+    name: 'Esteira',
+    description: 'Cardio de baixa intensidade.',
+    targetMuscles: ['Cardio'],
+    executionNotes: 'Mantenha um ritmo constante que permita conversar.',
+    type: 'Cardio',
+  },
+  EX027: {
+    id: 'EX027',
+    name: 'Bicicleta Ergométrica',
+    description: 'Cardio sem impacto.',
+    targetMuscles: ['Cardio', 'Quadríceps'],
+    executionNotes: 'Ajuste o banco na altura do quadril.',
+    type: 'Cardio',
+  },
 }
 
 export const deviationMappings: Record<
@@ -235,4 +251,10 @@ export const deviationMappings: Record<
     { exerciseId: 'EX024', priority: 1, efficacy: 0.95 },
     { exerciseId: 'EX007', priority: 2, efficacy: 0.85 },
   ],
+}
+
+export const prohibitedMappings: Record<string, string[]> = {
+  DE001: ['EX005'],
+  DE004: ['EX004', 'EX003'],
+  DE006: ['EX001'],
 }

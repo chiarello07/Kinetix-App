@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
-import { api } from '@/lib/services/api'
 import type { WorkoutPlan } from '@/lib/types/workout'
-import type { PosturalDeviation } from '@/lib/types/analysis'
+import { generatePlan, type GeneratePlanParams } from '@/lib/services/workout-generator'
 import { toast } from 'sonner'
 
 type WorkoutState = {
@@ -30,19 +29,20 @@ export function useWorkoutStore() {
   }, [])
 
   const actions = {
-    generateWorkout: async (analysisId: string, deviations: PosturalDeviation[]) => {
+    generateWorkout: async (params: GeneratePlanParams) => {
       state.isGenerating = true
       notify()
 
       try {
-        const plan = await api.workout.generate(analysisId, deviations)
+        await new Promise((resolve) => setTimeout(resolve, 1500))
+        const plan = generatePlan(params)
         state.plans = [plan, ...state.plans]
-        toast.success('Plano de treino corretivo gerado!', {
-          description: 'Ele está disponível na aba de Treinos.',
+        toast.success('Plano periodizado gerado!', {
+          description: `Plano de ${plan.durationWeeks} semanas criado com sucesso.`,
         })
         return plan
       } catch (error) {
-        toast.error('Erro ao gerar treino', {
+        toast.error('Erro ao gerar plano', {
           description: error instanceof Error ? error.message : 'Tente novamente.',
         })
         throw error
