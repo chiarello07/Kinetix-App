@@ -13,6 +13,10 @@ import {
   HeartPulse,
 } from 'lucide-react'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
+import { checkAccessControl, AccessControlResponse, startTrial } from '@/services/access-control'
+import { PaywallModal } from '@/components/PaywallModal'
+import { TrialBanner } from '@/components/TrialBanner'
+import { useAuth } from '@/hooks/use-auth'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { useWorkoutStore } from '@/stores/use-workout-store'
@@ -56,6 +60,32 @@ export default function Workouts() {
 
   const [duration, setDuration] = useState('13')
   const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const [isPaywallOpen, setIsPaywallOpen] = useState(false)
+  const [access, setAccess] = useState<AccessControlResponse | null>(null)
+  const { user } = useAuth()
+
+  useEffect(() => {
+    if (user) {
+      checkAccessControl(user.id, 5).then(setAccess)
+    }
+  }, [user])
+
+  const handleGenerateClick = async () => {
+    if (!user) return
+    const res = await checkAccessControl(user.id, 10)
+    if (!res.allowed) {
+      if (res.action === 'show_paywall') {
+        setIsPaywallOpen(true)
+      } else if (res.action === 'show_trial_banner') {
+        await startTrial(user.id)
+        const newRes = await checkAccessControl(user.id, 10)
+        setAccess(newRes)
+        if (!newRes.allowed) setIsPaywallOpen(true)
+      }
+    } else {
+      setIsDialogOpen(true)
+    }
+  }
 
   const handleGenerate = async () => {
     await generateWorkout({
@@ -263,6 +293,22 @@ export default function Workouts() {
 
   return (
     <div className="flex flex-col gap-8 pb-20 animate-fade-in max-w-5xl mx-auto">
+      {access?.allowed &&
+        access.reason === 'trial_active' &&
+        access.daysRemaining !== undefined && (
+          <div className="mb-2">
+            <TrialBanner
+              daysRemaining={access.daysRemaining}
+              onUpgrade={() => setIsPaywallOpen(true)}
+            />
+          </div>
+        )}
+      <PaywallModal
+        isOpen={isPaywallOpen}
+        onClose={() => setIsPaywallOpen(false)}
+        feature="Geração de Novos Planos de Treino"
+        reason={access?.reason || 'trial_expired'}
+      />
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-fuchsia-600 to-indigo-600 bg-clip-text text-transparent">
@@ -272,12 +318,15 @@ export default function Workouts() {
             Planos periodizados e rotinas focadas
           </p>
         </div>
+        <div>
+          <Button
+            onClick={handleGenerateClick}
+            className="bg-gradient-to-r from-fuchsia-600 to-indigo-600 hover:opacity-90 transition-opacity text-white shadow-md"
+          >
+            <Plus className="w-4 h-4 mr-2" /> Gerar Novo Plano
+          </Button>
+        </div>
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogTrigger asChild>
-            <Button className="bg-gradient-to-r from-fuchsia-600 to-indigo-600 hover:opacity-90 transition-opacity text-white shadow-md">
-              <Plus className="w-4 h-4 mr-2" /> Gerar Novo Plano
-            </Button>
-          </DialogTrigger>
           <DialogContent className="sm:max-w-[425px]">
             <DialogHeader>
               <DialogTitle>Gerar Plano de Treino</DialogTitle>
