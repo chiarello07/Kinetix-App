@@ -48,8 +48,8 @@ export default function NutritionOnboardingPage() {
         <p className="text-muted-foreground text-center mb-8">
           Seu plano nutricional personalizado está sendo gerado.
         </p>
-        <Link to="/dashboard">
-          <Button className="h-12 px-8 text-lg font-bold">Ir para o Dashboard</Button>
+        <Link to="/nutrition-assessments">
+          <Button className="h-12 px-8 text-lg font-bold">Iniciar Avaliação Detalhada</Button>
         </Link>
       </div>
     )
