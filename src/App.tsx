@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { Toaster } from '@/components/ui/toaster'
 import { Toaster as Sonner } from '@/components/ui/sonner'
 import { TooltipProvider } from '@/components/ui/tooltip'
+import { AuthProvider } from '@/hooks/use-auth'
 import Index from './pages/Index'
 import NotFound from './pages/NotFound'
 import Layout from './components/Layout'
@@ -18,33 +19,35 @@ import Nutrition from './pages/Nutrition'
 // AVOID REMOVING ANY CONTEXT PROVIDERS FROM THIS FILE (e.g. TooltipProvider, Toaster, Sonner)
 
 const App = () => (
-  <BrowserRouter future={{ v7_startTransition: false, v7_relativeSplatPath: false }}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <Routes>
-        <Route element={<Layout />}>
-          <Route path="/" element={<Index />} />
-          <Route path="/onboarding" element={<OnboardingPage />} />
-          <Route path="/nutrition-onboarding" element={<NutritionOnboardingPage />} />
-          <Route path="/nutrition-assessments" element={<NutritionAssessmentsPage />} />
-          <Route path="/analysis" element={<PosturalAnalysisPage />} />
-          <Route path="/nutrition-plan" element={<NutritionPlanPage />} />
-          <Route
-            path="/dashboard"
-            element={
-              <div className="p-8 text-center text-muted-foreground animate-fade-in mt-20">
-                Dashboard em desenvolvimento...
-              </div>
-            }
-          />
-          <Route path="/workouts" element={<Workouts />} />
-          <Route path="/nutrition" element={<Nutrition />} />
-        </Route>
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    </TooltipProvider>
-  </BrowserRouter>
+  <AuthProvider>
+    <BrowserRouter future={{ v7_startTransition: false, v7_relativeSplatPath: false }}>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <Routes>
+          <Route element={<Layout />}>
+            <Route path="/" element={<Index />} />
+            <Route path="/onboarding" element={<OnboardingPage />} />
+            <Route path="/nutrition-onboarding" element={<NutritionOnboardingPage />} />
+            <Route path="/nutrition-assessments" element={<NutritionAssessmentsPage />} />
+            <Route path="/analysis" element={<PosturalAnalysisPage />} />
+            <Route path="/nutrition-plan" element={<NutritionPlanPage />} />
+            <Route
+              path="/dashboard"
+              element={
+                <div className="p-8 text-center text-muted-foreground animate-fade-in mt-20">
+                  Dashboard em desenvolvimento...
+                </div>
+              }
+            />
+            <Route path="/workouts" element={<Workouts />} />
+            <Route path="/nutrition" element={<Nutrition />} />
+          </Route>
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </TooltipProvider>
+    </BrowserRouter>
+  </AuthProvider>
 )
 
 export default App
