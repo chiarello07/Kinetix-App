@@ -12,6 +12,7 @@ import NutritionAssessmentsPage from './pages/nutrition-assessments/NutritionAss
 import PosturalAnalysisPage from './pages/analysis/PosturalAnalysisPage'
 import Workouts from './pages/Workouts'
 import NutritionPlanPage from './pages/nutrition-plan/NutritionPlanPage'
+import Nutrition from './pages/Nutrition'
 
 // ONLY IMPORT AND RENDER WORKING PAGES, NEVER ADD PLACEHOLDER COMPONENTS OR PAGES IN THIS FILE
 // AVOID REMOVING ANY CONTEXT PROVIDERS FROM THIS FILE (e.g. TooltipProvider, Toaster, Sonner)
@@ -38,6 +39,7 @@ const App = () => (
             }
           />
           <Route path="/workouts" element={<Workouts />} />
+          <Route path="/nutrition" element={<Nutrition />} />
         </Route>
         <Route path="*" element={<NotFound />} />
       </Routes>
