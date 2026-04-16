@@ -11,6 +11,7 @@ import NutritionOnboardingPage from './pages/nutrition-onboarding/NutritionOnboa
 import NutritionAssessmentsPage from './pages/nutrition-assessments/NutritionAssessmentsPage'
 import PosturalAnalysisPage from './pages/analysis/PosturalAnalysisPage'
 import Workouts from './pages/Workouts'
+import NutritionPlanPage from './pages/nutrition-plan/NutritionPlanPage'
 
 // ONLY IMPORT AND RENDER WORKING PAGES, NEVER ADD PLACEHOLDER COMPONENTS OR PAGES IN THIS FILE
 // AVOID REMOVING ANY CONTEXT PROVIDERS FROM THIS FILE (e.g. TooltipProvider, Toaster, Sonner)
@@ -27,6 +28,7 @@ const App = () => (
           <Route path="/nutrition-onboarding" element={<NutritionOnboardingPage />} />
           <Route path="/nutrition-assessments" element={<NutritionAssessmentsPage />} />
           <Route path="/analysis" element={<PosturalAnalysisPage />} />
+          <Route path="/nutrition-plan" element={<NutritionPlanPage />} />
           <Route
             path="/dashboard"
             element={
