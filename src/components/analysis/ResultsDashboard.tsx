@@ -10,6 +10,9 @@ import { Badge } from '@/components/ui/badge'
 import { AlertTriangle, BookOpen, CheckCircle, Activity } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
+import { useWorkoutStore } from '@/stores/use-workout-store'
+import { useNavigate } from 'react-router-dom'
+import { Loader2, Dumbbell } from 'lucide-react'
 
 interface ResultsDashboardProps {
   result: AnalysisResult
@@ -17,6 +20,18 @@ interface ResultsDashboardProps {
 }
 
 export function ResultsDashboard({ result, onReset }: ResultsDashboardProps) {
+  const { generateWorkout, isGenerating } = useWorkoutStore()
+  const navigate = useNavigate()
+
+  const handleGenerateWorkout = async () => {
+    try {
+      await generateWorkout(result.id, result.deviations)
+      navigate('/workouts')
+    } catch (e) {
+      // Error handled in store
+    }
+  }
+
   const getScoreColor = (score: number) => {
     if (score >= 90) return 'text-green-500'
     if (score >= 75) return 'text-blue-500'
@@ -165,9 +180,29 @@ export function ResultsDashboard({ result, onReset }: ResultsDashboardProps) {
         </Accordion>
       </div>
 
-      <div className="flex justify-center pt-8">
-        <Button variant="outline" size="lg" onClick={onReset} className="w-full md:w-auto px-8">
-          Nova Análise Postural
+      <div className="flex flex-col md:flex-row justify-center pt-8 gap-4">
+        <Button
+          size="lg"
+          onClick={handleGenerateWorkout}
+          disabled={isGenerating}
+          className="w-full md:w-auto px-8 bg-gradient-to-r from-[#FF1493] to-[#4B0082] hover:opacity-90 shadow-lg text-white font-bold"
+        >
+          {isGenerating ? (
+            <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+          ) : (
+            <Dumbbell className="w-5 h-5 mr-2" />
+          )}
+          {isGenerating ? 'Gerando Plano Científico...' : 'Gerar Treino Corretivo'}
+        </Button>
+
+        <Button
+          variant="outline"
+          size="lg"
+          onClick={onReset}
+          className="w-full md:w-auto px-8"
+          disabled={isGenerating}
+        >
+          Nova Análise
         </Button>
       </div>
     </div>

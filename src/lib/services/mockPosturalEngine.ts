@@ -14,6 +14,7 @@ export async function processPhotos(
   const mockScore = 68 // Moderate
 
   return {
+    id: `analysis-${Date.now()}`,
     score: mockScore,
     category: 'Moderate',
     riskLevel: 'Medium',
@@ -26,7 +27,7 @@ export async function processPhotos(
     },
     deviations: [
       {
-        id: 'dev-1',
+        id: 'DE001',
         name: 'Anteriorização da Cabeça',
         severity: 'Moderate',
         confidence: 0.92,
@@ -37,7 +38,7 @@ export async function processPhotos(
         ],
       },
       {
-        id: 'dev-2',
+        id: 'DE002',
         name: 'Cifose Torácica Aumentada',
         severity: 'Mild',
         confidence: 0.88,
@@ -48,7 +49,7 @@ export async function processPhotos(
         ],
       },
       {
-        id: 'dev-3',
+        id: 'DE003',
         name: 'Anteversão Pélvica',
         severity: 'Moderate',
         confidence: 0.95,

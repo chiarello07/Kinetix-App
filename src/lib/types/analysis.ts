@@ -14,6 +14,7 @@ export interface PosturalDeviation {
 }
 
 export interface AnalysisResult {
+  id: string
   score: number
   category: ScoreCategory
   riskLevel: RiskLevel
