@@ -35,7 +35,9 @@ export default function ProgressPage() {
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b pb-6">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Seu Progresso</h1>
-          <p className="text-muted-foreground mt-1">Treino + Nutrição Integrados</p>
+          <p className="text-muted-foreground mt-1">
+            <br />
+          </p>
         </div>
         <Select value={period} onValueChange={setPeriod}>
           <SelectTrigger className="w-[180px] shadow-sm">
