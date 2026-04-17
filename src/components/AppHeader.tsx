@@ -11,7 +11,7 @@ export function AppHeader() {
       </div>
       <div className="hidden md:block">
         <h2 className="text-sm font-medium text-muted-foreground">
-          Hoje é um ótimo dia para focar na saúde!
+          <br />
         </h2>
       </div>
 
