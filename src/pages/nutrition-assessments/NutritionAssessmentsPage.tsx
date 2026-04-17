@@ -256,23 +256,8 @@ export default function NutritionAssessmentsPage() {
                     <div className="flex flex-wrap gap-2">
                       {options.map((opt) => {
                         const isSelected = currentAnswers[q.id] === opt.value
-                        return (
-                          <button
-                            key={opt.value}
-                            onClick={() => handleAnswer(q.id, opt.value)}
-                            className={cn(
-                              'flex-1 min-w-[120px] text-sm font-medium py-3 px-4 rounded-xl border transition-all duration-200 active:scale-[0.98]',
-                              isSelected
-                                ? 'bg-primary text-primary-foreground border-primary shadow-md'
-                                : 'bg-card text-foreground border-border hover:border-primary/50 hover:bg-muted/50',
-                            )}
-                          >
-                            <span className="flex items-center justify-center gap-2">
-                              {isSelected && <CheckCircle2 className="w-4 h-4" />}
-                              {opt.label}
-                            </span>
-                          </button>
-                        )
+                        return
+                        null
                       })}
                     </div>
                   </CardContent>
