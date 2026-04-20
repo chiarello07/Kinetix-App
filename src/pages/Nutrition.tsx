@@ -1,62 +1,39 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { NutritionDaily } from '@/components/nutrition/NutritionDaily'
-import { NutritionChat } from '@/components/nutrition/NutritionChat'
-import { NutritionReports } from '@/components/nutrition/NutritionReports'
-import { NutritionGamification } from '@/components/nutrition/NutritionGamification'
-import { format } from 'date-fns'
-import { ptBR } from 'date-fns/locale'
+import { Button } from '@/components/ui/button'
+import { Link } from 'react-router-dom'
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
+import { Utensils, ClipboardList } from 'lucide-react'
 
 export default function Nutrition() {
   return (
-    <div className="flex flex-col gap-6 animate-fade-in-up pb-24 max-w-4xl mx-auto w-full">
-      <div>
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div>
-            <h1 className="text-3xl font-bold tracking-tight">Nutrição Inteligente</h1>
-            <p className="text-sm text-muted-foreground mt-1 capitalize font-medium">
-              {format(new Date(), "EEEE, d 'de' MMMM", { locale: ptBR })}
-            </p>
-          </div>
-          <a
-            href="/nutrition-assessments"
-            className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 shrink-0"
-          >
-            Anamnese Detalhada
-          </a>
+    <div className="p-6 max-w-4xl mx-auto space-y-6 animate-fade-in-up pb-24 md:pb-6">
+      <div className="flex items-center gap-3 mb-8">
+        <div className="p-3 bg-primary/10 rounded-xl text-primary shadow-sm">
+          <Utensils className="w-8 h-8" />
+        </div>
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">Nutrição</h1>
+          <p className="text-muted-foreground">Gerencie sua dieta e avaliações nutricionais.</p>
         </div>
       </div>
 
-      <Tabs defaultValue="daily" className="w-full">
-        <TabsList className="grid w-full grid-cols-4 mb-6 bg-muted/50 p-1 rounded-xl h-14">
-          <TabsTrigger value="daily" className="rounded-lg h-full font-semibold">
-            Diário
-          </TabsTrigger>
-          <TabsTrigger value="chat" className="rounded-lg h-full font-semibold md:flex hidden">
-            Assistente
-          </TabsTrigger>
-          <TabsTrigger value="chat" className="rounded-lg h-full font-semibold md:hidden">
-            IA
-          </TabsTrigger>
-          <TabsTrigger value="reports" className="rounded-lg h-full font-semibold">
-            Análises
-          </TabsTrigger>
-          <TabsTrigger value="gamification" className="rounded-lg h-full font-semibold">
-            Prêmios
-          </TabsTrigger>
-        </TabsList>
-        <TabsContent value="daily" className="mt-0">
-          <NutritionDaily />
-        </TabsContent>
-        <TabsContent value="chat" className="mt-0">
-          <NutritionChat />
-        </TabsContent>
-        <TabsContent value="reports" className="mt-0">
-          <NutritionReports />
-        </TabsContent>
-        <TabsContent value="gamification" className="mt-0">
-          <NutritionGamification />
-        </TabsContent>
-      </Tabs>
+      <div className="grid md:grid-cols-2 gap-6">
+        <Card className="hover:shadow-md transition-shadow border-primary/10 bg-card">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-xl">
+              <ClipboardList className="w-6 h-6 text-primary" /> Avaliação Nutricional
+            </CardTitle>
+            <CardDescription className="text-sm">
+              Responda à anamnese detalhada para realizar um rastreamento metabólico completo e
+              otimizar sua dieta.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Button asChild className="w-full h-12 font-bold shadow-sm">
+              <Link to="/nutrition-assessments">Iniciar Avaliação Detalhada</Link>
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   )
 }

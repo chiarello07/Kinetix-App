@@ -25,26 +25,15 @@ export default function Index() {
 
   const checkAnalysis = async () => {
     try {
-      // Check if there is any analysis completed for the user
       const { data } = await supabase
-        .from('nutrition_profiles')
-        .select(`
-          id,
-          nutrition_assessments!inner(id)
-        `)
+        .from('user_activity_log')
+        .select('id')
         .eq('user_id', user!.id)
+        .eq('action', 'postural_analysis_completed')
         .limit(1)
 
       if (data && data.length > 0) {
         setHasAnalysis(true)
-      } else {
-        // Fallback for demo: if user has a profile, assume analysis could be bypassed
-        const { data: profile } = await supabase
-          .from('nutrition_profiles')
-          .select('id')
-          .eq('user_id', user!.id)
-          .single()
-        if (profile) setHasAnalysis(true)
       }
     } catch (e) {
       console.error(e)

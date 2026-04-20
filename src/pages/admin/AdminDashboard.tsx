@@ -1,73 +1,109 @@
-import { useState } from 'react'
-import { LayoutDashboard, Users, Dumbbell, Settings, Apple, Activity } from 'lucide-react'
-import { cn } from '@/lib/utils'
 import { useAuth } from '@/hooks/use-auth'
-import { OverviewTab } from './tabs/OverviewTab'
-import { ExercisesTab } from './tabs/ExercisesTab'
-import { FoodsTab } from './tabs/FoodsTab'
-import { UsersTab } from './tabs/UsersTab'
-import { SettingsTab } from './tabs/SettingsTab'
-import { LogsTab } from './tabs/LogsTab'
+import { Navigate } from 'react-router-dom'
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
+import { Users, Activity, DollarSign, TrendingUp } from 'lucide-react'
 
 export default function AdminDashboard() {
   const { user } = useAuth()
-  const [activeTab, setActiveTab] = useState('overview')
 
+  // Restrição de acesso
   if (user?.email !== 'christianochiarello@gmail.com') {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-[calc(100vh-4rem)] text-center p-6 animate-fade-in">
-        <Activity className="w-20 h-20 text-destructive mb-6" />
-        <h1 className="text-4xl font-bold mb-3">Acesso Negado</h1>
-        <p className="text-lg text-muted-foreground">
-          Esta área é restrita para administradores do sistema.
-        </p>
-      </div>
-    )
+    return <Navigate to="/" replace />
   }
 
-  const menuItems = [
-    { id: 'overview', label: 'Overview', icon: LayoutDashboard },
-    { id: 'users', label: 'Usuários', icon: Users },
-    { id: 'exercises', label: 'Exercícios', icon: Dumbbell },
-    { id: 'foods', label: 'Alimentos', icon: Apple },
-    { id: 'logs', label: 'Audit & Logs', icon: Activity },
-    { id: 'settings', label: 'Configurações', icon: Settings },
-  ]
-
   return (
-    <div className="flex min-h-[calc(100vh-4rem)] w-full flex-col md:flex-row gap-4 p-4 md:p-8 animate-fade-in pt-24">
-      <aside className="w-full md:w-64 shrink-0">
-        <h1 className="text-2xl font-bold mb-6 px-4">Admin Panel</h1>
-        <nav className="flex md:flex-col gap-2 overflow-x-auto pb-2 md:pb-0">
-          {menuItems.map((item) => {
-            const Icon = item.icon
-            return (
-              <button
-                key={item.id}
-                onClick={() => setActiveTab(item.id)}
-                className={cn(
-                  'flex items-center gap-3 px-4 py-3 rounded-xl transition-colors whitespace-nowrap',
-                  activeTab === item.id
-                    ? 'bg-primary text-primary-foreground font-medium'
-                    : 'hover:bg-muted text-muted-foreground',
-                )}
-              >
-                <Icon className="w-5 h-5" />
-                {item.label}
-              </button>
-            )
-          })}
-        </nav>
-      </aside>
+    <div className="p-6 max-w-6xl mx-auto space-y-8 animate-fade-in-up pb-24 md:pb-6">
+      <div>
+        <h1 className="text-4xl font-extrabold tracking-tight">Painel Administrativo</h1>
+        <p className="text-muted-foreground text-lg mt-2">Visão geral do sistema KINETIX.</p>
+      </div>
 
-      <main className="flex-1 bg-card rounded-2xl p-4 md:p-6 border shadow-sm overflow-hidden flex flex-col h-[calc(100vh-8rem)]">
-        {activeTab === 'overview' && <OverviewTab />}
-        {activeTab === 'users' && <UsersTab />}
-        {activeTab === 'exercises' && <ExercisesTab />}
-        {activeTab === 'foods' && <FoodsTab />}
-        {activeTab === 'logs' && <LogsTab />}
-        {activeTab === 'settings' && <SettingsTab />}
-      </main>
+      <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <Card className="border-primary/10 shadow-sm bg-card hover:-translate-y-1 transition-transform">
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground">
+              Usuários Ativos
+            </CardTitle>
+            <Users className="w-4 h-4 text-primary" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-3xl font-bold">1,245</div>
+            <p className="text-xs text-green-500 flex items-center mt-1">
+              <TrendingUp className="w-3 h-3 mr-1" /> +12% em 30 dias
+            </p>
+          </CardContent>
+        </Card>
+        <Card className="border-primary/10 shadow-sm bg-card hover:-translate-y-1 transition-transform">
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground">
+              Treinos Realizados
+            </CardTitle>
+            <Activity className="w-4 h-4 text-primary" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-3xl font-bold">8,392</div>
+            <p className="text-xs text-green-500 flex items-center mt-1">
+              <TrendingUp className="w-3 h-3 mr-1" /> +24% em 30 dias
+            </p>
+          </CardContent>
+        </Card>
+        <Card className="border-primary/10 shadow-sm bg-card hover:-translate-y-1 transition-transform">
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground">
+              Avaliações Posturais
+            </CardTitle>
+            <Activity className="w-4 h-4 text-primary" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-3xl font-bold">3,102</div>
+            <p className="text-xs text-green-500 flex items-center mt-1">
+              <TrendingUp className="w-3 h-3 mr-1" /> +18% em 30 dias
+            </p>
+          </CardContent>
+        </Card>
+        <Card className="border-primary/10 shadow-sm bg-card hover:-translate-y-1 transition-transform">
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground">
+              Receita Mensal
+            </CardTitle>
+            <DollarSign className="w-4 h-4 text-primary" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-3xl font-bold">R$ 14.500</div>
+            <p className="text-xs text-green-500 flex items-center mt-1">
+              <TrendingUp className="w-3 h-3 mr-1" /> +8% em 30 dias
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+
+      <div className="grid lg:grid-cols-2 gap-6">
+        <Card className="border-primary/10 shadow-sm">
+          <CardHeader>
+            <CardTitle>Adesão Recente</CardTitle>
+            <CardDescription>Novos usuários registrados nos últimos 7 dias.</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {[1, 2, 3, 4, 5].map((i) => (
+              <div
+                key={i}
+                className="flex items-center justify-between py-2 border-b last:border-0"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-full bg-secondary text-primary flex items-center justify-center font-bold">
+                    {i}
+                  </div>
+                  <div>
+                    <p className="font-medium text-sm">usuario{i}@exemplo.com</p>
+                    <p className="text-xs text-muted-foreground">Há {i} horas</p>
+                  </div>
+                </div>
+                <div className="text-sm font-semibold text-primary">Plano Pro</div>
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+      </div>
     </div>
   )
 }

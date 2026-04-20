@@ -11,22 +11,68 @@ import { CalorieBalanceCard } from './components/CalorieBalanceCard'
 import { ProgressGraphs } from './components/ProgressGraphs'
 import { MonthlyReportSection } from './components/MonthlyReportSection'
 import { MonthlyUpdateSection } from './components/MonthlyUpdateSection'
-import { mockMetrics, mockReport, mockGraphs } from './data'
+import { supabase } from '@/lib/supabase/client'
+import { useAuth } from '@/hooks/use-auth'
 
 export default function ProgressPage() {
+  const { user } = useAuth()
   const [period, setPeriod] = useState('last30days')
   const [isLoading, setIsLoading] = useState(true)
   const [data, setData] = useState<any>(null)
 
   useEffect(() => {
+    if (!user) return
+    fetchMetrics()
+  }, [period, user])
+
+  const fetchMetrics = async () => {
     setIsLoading(true)
-    // Simulating API call latency
-    const timer = setTimeout(() => {
-      setData({ metrics: mockMetrics, report: mockReport, graphs: mockGraphs })
+    try {
+      const { data: metricsData } = await supabase
+        .from('progress_metrics')
+        .select('*')
+        .eq('user_id', user!.id)
+        .order('date', { ascending: false })
+        .limit(30)
+
+      const workoutMetrics = {
+        totalWorkouts:
+          metricsData?.reduce((acc, curr) => acc + (curr.workouts_completed || 0), 0) || 0,
+        totalReps: metricsData?.reduce((acc, curr) => acc + (curr.total_reps || 0), 0) || 0,
+        totalVolume: metricsData?.reduce((acc, curr) => acc + (curr.total_weight || 0), 0) || 0,
+        activeStreak: 0,
+        personalRecords: 0,
+      }
+
+      const nutritionMetrics = {
+        mealsLogged: metricsData?.reduce((acc, curr) => acc + (curr.meals_completed || 0), 0) || 0,
+        adherence: metricsData?.length
+          ? Math.round(
+              metricsData.reduce((acc, curr) => acc + (curr.nutrition_adherence_rate || 0), 0) /
+                metricsData.length,
+            )
+          : 0,
+        totalCalories:
+          metricsData?.reduce((acc, curr) => acc + (curr.total_calories_consumed || 0), 0) || 0,
+        proteinGoalHit: 0,
+        waterGoalHit: 0,
+      }
+
+      setData({
+        metrics: {
+          workout: workoutMetrics,
+          nutrition: nutritionMetrics,
+          calorieBalance: metricsData?.[0]?.calorie_balance || 0,
+        },
+        graphs: [],
+        report: null,
+      })
+    } catch (e) {
+      console.error(e)
+    } finally {
       setIsLoading(false)
-    }, 600)
-    return () => clearTimeout(timer)
-  }, [period])
+    }
+  }
 
   return (
     <div className="flex flex-col gap-2 p-6 pb-24 max-w-6xl mx-auto animate-fade-in-up">

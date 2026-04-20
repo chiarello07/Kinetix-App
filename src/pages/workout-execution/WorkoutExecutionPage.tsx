@@ -1,158 +1,99 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { Button } from '@/components/ui/button'
 import { useNavigate } from 'react-router-dom'
-import { useAuth } from '@/hooks/use-auth'
-import { supabase } from '@/lib/supabase/client'
-import { toast } from 'sonner'
-
-import { WarmupScreen } from './WarmupScreen'
-import { ExerciseScreen } from './ExerciseScreen'
-import { BorgScaleScreen } from './BorgScaleScreen'
-import { WorkoutSummaryScreen } from './WorkoutSummaryScreen'
-
-import {
-  calculateCaloriesBurned,
-  calculateCalorieBalance,
-  getBalanceStatus,
-  calculateMacroAdherence,
-  generateNutritionRecommendation,
-  getDailyNutritionSummary,
-} from '@/services/workout-execution'
-
-const mockExercises = [
-  {
-    exerciseId: 'ex-1',
-    exerciseName: 'Agachamento Livre',
-    imageUrl: 'https://img.usecurling.com/p/400/400?q=squat',
-    executionTips: [
-      'Mantenha o peito estufado e os joelhos alinhados com a ponta dos pés.',
-      'Desça até quebrar o paralelo.',
-    ],
-    plannedSets: 3,
-    plannedReps: 12,
-    plannedRest: 45,
-    plannedIntensity: '70% 1RM',
-    suggestedWeight: 60,
-  },
-  {
-    exerciseId: 'ex-2',
-    exerciseName: 'Supino Reto',
-    imageUrl: 'https://img.usecurling.com/p/400/400?q=bench%20press',
-    executionTips: ['Mantenha as escápulas retraídas e pés firmes no chão.'],
-    plannedSets: 3,
-    plannedReps: 10,
-    plannedRest: 45,
-    plannedIntensity: '75% 1RM',
-    suggestedWeight: 40,
-  },
-]
+import { Dumbbell, ArrowRight, Play, Pause } from 'lucide-react'
 
 export default function WorkoutExecutionPage() {
-  const { user } = useAuth()
+  const [timeElapsed, setTimeElapsed] = useState(0)
+  const [isPaused, setIsPaused] = useState(false)
+  const [currentSet, setCurrentSet] = useState(1)
   const navigate = useNavigate()
 
-  const [screen, setScreen] = useState<'exercise' | 'borg' | 'summary'>('exercise')
-  const [exercises] = useState(mockExercises)
-  const [currentIndex, setCurrentIndex] = useState(0)
-  const [completedExercises, setCompletedExercises] = useState<any[]>([])
-  const [startTime] = useState(Date.now())
-  const [summaryData, setSummaryData] = useState<any>(null)
+  useEffect(() => {
+    if (isPaused) return
+    const timer = setInterval(() => setTimeElapsed((t) => t + 1), 1000)
+    return () => clearInterval(timer)
+  }, [isPaused])
 
-  const handleExerciseComplete = (sets: any[]) => {
-    setCompletedExercises((prev) => [...prev, { ...exercises[currentIndex], sets }])
-    if (currentIndex < exercises.length - 1) {
-      setCurrentIndex((i) => i + 1)
-    } else {
-      setScreen('borg')
-    }
-  }
-
-  const handleFinish = async (rpe: number) => {
-    const totalTime = Math.max(Math.floor((Date.now() - startTime) / 1000), 2700) // Ensures at least realistic numbers for demo
-    let volume = 0
-    let weight = 0
-
-    completedExercises.forEach((ex) => {
-      ex.sets.forEach((s: any) => {
-        volume += s.repsCompleted
-        weight += s.repsCompleted * s.weightUsed
-      })
-    })
-
-    const userWeight = 75 // mocked or from profile
-    const burned = calculateCaloriesBurned(Math.ceil(totalTime / 60), userWeight, rpe)
-
-    const nutrition = await getDailyNutritionSummary(user?.id || '')
-    const calBalance = calculateCalorieBalance(burned, nutrition.caloriesConsumed)
-    const adherence = calculateMacroAdherence(nutrition.macrosIntake, nutrition.macrosTarget)
-
-    setSummaryData({
-      totalTime,
-      totalVolume: volume,
-      totalWeight: weight,
-      caloriesBurned: burned,
-      borgRPE: rpe,
-      message: 'Ótimo treino! Você completou 100% dos exercícios. Mantenha a consistência!',
-      nutritionSummary: {
-        caloriesConsumed: nutrition.caloriesConsumed,
-        caloriesBalance: calBalance,
-        balanceStatus: getBalanceStatus(calBalance),
-        macrosAdherence: adherence,
-        nutritionRecommendation: generateNutritionRecommendation(burned, adherence),
-      },
-      exercisesSummary: completedExercises.map((ex) => ({
-        name: ex.exerciseName,
-        sets: ex.sets.length,
-        reps: ex.sets[0]?.repsCompleted || 0,
-        weight: ex.sets[0]?.weightUsed || 0,
-      })),
-    })
-
-    setScreen('summary')
-  }
-
-  const handleSaveAndExit = async () => {
-    if (user && summaryData) {
-      const { error } = await supabase.from('workout_sessions').insert({
-        user_id: user.id,
-        training_plan_id: 'plan-123',
-        day_index: 1,
-        workout_date: new Date().toISOString().split('T')[0],
-        start_time: new Date(startTime).toISOString(),
-        end_time: new Date().toISOString(),
-        exercises_completed: completedExercises,
-        total_time: summaryData.totalTime,
-        total_rest_time: 0,
-        total_session_time: summaryData.totalTime,
-        total_volume: summaryData.totalVolume,
-        total_weight: summaryData.totalWeight,
-        calories_burned: summaryData.caloriesBurned,
-        borg_rpe: summaryData.borgRPE,
-        nutrition_integration: summaryData.nutritionSummary,
-      })
-
-      if (error) toast.error('Erro ao salvar', { description: error.message })
-      else toast.success('Treino salvo com sucesso!')
-    } else {
-      toast.success('Treino concluído! (Modo Visitante)')
-    }
-    navigate('/')
+  const formatTime = (seconds: number) => {
+    const h = Math.floor(seconds / 3600)
+    const m = Math.floor((seconds % 3600) / 60)
+    const s = seconds % 60
+    if (h > 0)
+      return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`
+    return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`
   }
 
   return (
-    <div className="min-h-[100dvh] bg-background">
-      {screen === 'exercise' && (
-        <ExerciseScreen
-          exercise={exercises[currentIndex]}
-          totalExercises={exercises.length}
-          currentIndex={currentIndex}
-          onComplete={handleExerciseComplete}
-          onCancel={() => navigate('/')}
-        />
-      )}
-      {screen === 'borg' && <BorgScaleScreen onComplete={handleFinish} />}
-      {screen === 'summary' && (
-        <WorkoutSummaryScreen summary={summaryData} onFinish={handleSaveAndExit} />
-      )}
+    <div className="min-h-screen flex flex-col p-6 items-center justify-center space-y-10 bg-background relative overflow-hidden">
+      <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-primary/5 via-background to-background"></div>
+
+      <div className="text-center space-y-4 w-full max-w-md animate-fade-in-down">
+        <h1 className="text-4xl font-extrabold tracking-tight">Treino em Andamento</h1>
+        <div className="bg-card border-2 border-primary/20 shadow-elevation rounded-3xl p-8 flex flex-col items-center justify-center relative">
+          <p className="text-sm font-semibold text-muted-foreground uppercase tracking-widest mb-2">
+            Tempo Total
+          </p>
+          <div className="text-7xl font-black font-mono tabular-nums text-primary tracking-tighter">
+            {formatTime(timeElapsed)}
+          </div>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="absolute top-4 right-4 rounded-full text-muted-foreground hover:text-primary"
+            onClick={() => setIsPaused(!isPaused)}
+          >
+            {isPaused ? <Play className="w-5 h-5" /> : <Pause className="w-5 h-5" />}
+          </Button>
+        </div>
+      </div>
+
+      <div className="w-full max-w-md p-6 bg-card border rounded-3xl shadow-subtle space-y-6 animate-fade-in-up">
+        <div>
+          <h2 className="text-sm font-bold text-primary mb-1 uppercase tracking-wider">
+            Exercício Atual
+          </h2>
+          <p className="text-3xl font-bold flex items-center gap-2">
+            Agachamento Livre <Dumbbell className="w-6 h-6 text-muted-foreground" />
+          </p>
+        </div>
+
+        <div className="flex flex-col gap-3">
+          {[1, 2, 3].map((set) => (
+            <div
+              key={set}
+              className={`flex justify-between items-center p-4 rounded-2xl transition-colors ${
+                set < currentSet
+                  ? 'bg-primary/10 text-primary opacity-50'
+                  : set === currentSet
+                    ? 'bg-primary text-primary-foreground shadow-md'
+                    : 'bg-secondary/40 text-muted-foreground'
+              }`}
+            >
+              <span className="font-semibold text-lg">Série {set}</span>
+              <div className="flex items-center gap-4">
+                <span className="font-bold text-xl">12 Reps</span>
+                <span className="font-medium opacity-80">60 kg</span>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <Button
+          className="w-full h-14 text-lg font-bold rounded-xl mt-4 flex items-center justify-center gap-2"
+          onClick={() => {
+            if (currentSet < 3) setCurrentSet((s) => s + 1)
+            else navigate('/')
+          }}
+        >
+          {currentSet < 3 ? 'Próxima Série' : 'Concluir Exercício'}{' '}
+          <ArrowRight className="w-5 h-5" />
+        </Button>
+      </div>
+
+      <Button variant="link" className="text-muted-foreground" onClick={() => navigate('/')}>
+        Finalizar Treino e Salvar
+      </Button>
     </div>
   )
 }

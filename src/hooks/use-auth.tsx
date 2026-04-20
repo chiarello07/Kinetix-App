@@ -5,7 +5,7 @@ import { supabase } from '@/lib/supabase/client'
 interface AuthContextType {
   user: User | null
   session: Session | null
-  signUp: (email: string, password: string) => Promise<{ error: any }>
+  signUp: (email: string, password: string, meta?: any) => Promise<{ error: any }>
   signIn: (email: string, password: string) => Promise<{ error: any }>
   signOut: () => Promise<{ error: any }>
   loading: boolean
@@ -40,12 +40,42 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return () => subscription.unsubscribe()
   }, [])
 
-  const signUp = async (email: string, password: string) => {
-    const { error } = await supabase.auth.signUp({
+  const signUp = async (email: string, password: string, meta?: any) => {
+    const { error, data } = await supabase.auth.signUp({
       email,
       password,
-      options: { emailRedirectTo: `${window.location.origin}/` },
+      options: {
+        emailRedirectTo: `${window.location.origin}/`,
+        data: meta,
+      },
     })
+
+    if (!error && data?.user) {
+      await supabase
+        .from('nutrition_profiles')
+        .insert({
+          user_id: data.user.id,
+          gender: 'outros',
+          date_of_birth: meta?.birth_date || '1990-01-01',
+          height_cm: 0,
+          current_weight_kg: 0,
+          target_weight_kg: 0,
+          primary_goal: 'saude',
+          fitness_level: 'sedentario',
+          exercise_types: [],
+          status: 'in_progress',
+        })
+        .select()
+        .single()
+
+      await supabase
+        .from('gamification_profiles')
+        .insert({
+          user_id: data.user.id,
+        })
+        .select()
+        .single()
+    }
     return { error }
   }
   const signIn = async (email: string, password: string) => {

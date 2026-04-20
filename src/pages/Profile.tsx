@@ -296,20 +296,35 @@ export default function Profile() {
             </div>
           </div>
         </CardContent>
-        <CardFooter className="flex flex-col sm:flex-row gap-3 border-t pt-6 bg-muted/20">
+        <CardFooter className="flex flex-col sm:flex-row gap-3 border-t pt-6 bg-muted/20 flex-wrap">
           <Button
             variant="outline"
-            className="w-full sm:w-auto"
+            className="flex-1"
             onClick={() => (window.location.href = '/onboarding')}
           >
             Refazer Anamnese Treino
           </Button>
           <Button
             variant="outline"
-            className="w-full sm:w-auto"
+            className="flex-1"
             onClick={() => (window.location.href = '/nutrition-onboarding')}
           >
             Refazer Anamnese Nutrição
+          </Button>
+          <Button
+            variant="outline"
+            className="flex-1 text-destructive hover:text-destructive hover:bg-destructive/10"
+            onClick={async () => {
+              if (user?.email) {
+                await supabase.auth.resetPasswordForEmail(user.email)
+                toast({
+                  title: 'Email enviado',
+                  description: 'Verifique sua caixa de entrada para redefinir a senha.',
+                })
+              }
+            }}
+          >
+            Alterar Senha
           </Button>
         </CardFooter>
         {isEditing && (

@@ -1,29 +1,81 @@
 import { useState } from 'react'
 import { useAuth } from '@/hooks/use-auth'
+import { useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Activity } from 'lucide-react'
+import { supabase } from '@/lib/supabase/client'
 
 export function LoginPage() {
   const { signIn, signUp } = useAuth()
+  const navigate = useNavigate()
   const [isLogin, setIsLogin] = useState(true)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [fullName, setFullName] = useState('')
+  const [phone, setPhone] = useState('')
+  const [birthDate, setBirthDate] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+
+  const validatePassword = (pwd: string) => {
+    if (pwd.length < 8) return 'A senha deve ter pelo menos 8 caracteres.'
+    if (!/[A-Z]/.test(pwd)) return 'A senha deve ter pelo menos 1 letra maiúscula.'
+    if (!/[a-z]/.test(pwd)) return 'A senha deve ter pelo menos 1 letra minúscula.'
+    if (!/[0-9]/.test(pwd)) return 'A senha deve ter pelo menos 1 número.'
+    if (!/[!@#$%^&*]/.test(pwd))
+      return 'A senha deve ter pelo menos 1 caractere especial (!@#$%^&*).'
+    return null
+  }
+
+  const getErrorMessage = (err: any) => {
+    const msg = err.message || ''
+    if (msg.includes('already registered')) return 'Este e-mail já está cadastrado.'
+    if (msg.includes('Invalid email')) return 'Formato de e-mail inválido.'
+    return 'Ocorreu um erro. Verifique seus dados e tente novamente.'
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
     setError('')
 
+    if (!isLogin) {
+      const pwdError = validatePassword(password)
+      if (pwdError) {
+        setError(pwdError)
+        setLoading(false)
+        return
+      }
+    }
+
     const { error: authError } = isLogin
       ? await signIn(email, password)
-      : await signUp(email, password)
+      : await signUp(email, password, { full_name: fullName, phone, birth_date: birthDate })
 
     if (authError) {
-      setError(authError.message)
+      setError(getErrorMessage(authError))
+    } else {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession()
+      if (session?.user) {
+        await supabase
+          .from('profiles')
+          .update({ last_activity_at: new Date().toISOString() })
+          .eq('id', session.user.id)
+        const { data: profile } = await supabase
+          .from('nutrition_profiles')
+          .select('onboarding_completed')
+          .eq('user_id', session.user.id)
+          .single()
+        if (profile && profile.onboarding_completed) {
+          navigate('/')
+        } else {
+          navigate('/nutrition-onboarding')
+        }
+      }
     }
     setLoading(false)
   }
@@ -43,6 +95,37 @@ export function LoginPage() {
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
+            {!isLogin && (
+              <>
+                <div className="space-y-2 animate-fade-in">
+                  <Input
+                    type="text"
+                    placeholder="Nome Completo"
+                    value={fullName}
+                    onChange={(e) => setFullName(e.target.value)}
+                    required
+                  />
+                </div>
+                <div className="space-y-2 animate-fade-in">
+                  <Input
+                    type="tel"
+                    placeholder="Telefone"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    required
+                  />
+                </div>
+                <div className="space-y-2 animate-fade-in">
+                  <Input
+                    type="date"
+                    placeholder="Data de Nascimento"
+                    value={birthDate}
+                    onChange={(e) => setBirthDate(e.target.value)}
+                    required
+                  />
+                </div>
+              </>
+            )}
             <div className="space-y-2">
               <Input
                 type="email"
