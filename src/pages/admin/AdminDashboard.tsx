@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { LayoutDashboard, Users, Dumbbell, Settings, Apple, Activity } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { useAuth } from '@/hooks/use-auth'
 import { OverviewTab } from './tabs/OverviewTab'
 import { ExercisesTab } from './tabs/ExercisesTab'
 import { FoodsTab } from './tabs/FoodsTab'
@@ -9,7 +10,20 @@ import { SettingsTab } from './tabs/SettingsTab'
 import { LogsTab } from './tabs/LogsTab'
 
 export default function AdminDashboard() {
+  const { user } = useAuth()
   const [activeTab, setActiveTab] = useState('overview')
+
+  if (user?.email !== 'christianochiarello@gmail.com') {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[calc(100vh-4rem)] text-center p-6 animate-fade-in">
+        <Activity className="w-20 h-20 text-destructive mb-6" />
+        <h1 className="text-4xl font-bold mb-3">Acesso Negado</h1>
+        <p className="text-lg text-muted-foreground">
+          Esta área é restrita para administradores do sistema.
+        </p>
+      </div>
+    )
+  }
 
   const menuItems = [
     { id: 'overview', label: 'Overview', icon: LayoutDashboard },

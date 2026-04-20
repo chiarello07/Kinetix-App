@@ -296,6 +296,22 @@ export default function Profile() {
             </div>
           </div>
         </CardContent>
+        <CardFooter className="flex flex-col sm:flex-row gap-3 border-t pt-6 bg-muted/20">
+          <Button
+            variant="outline"
+            className="w-full sm:w-auto"
+            onClick={() => (window.location.href = '/onboarding')}
+          >
+            Refazer Anamnese Treino
+          </Button>
+          <Button
+            variant="outline"
+            className="w-full sm:w-auto"
+            onClick={() => (window.location.href = '/nutrition-onboarding')}
+          >
+            Refazer Anamnese Nutrição
+          </Button>
+        </CardFooter>
         {isEditing && (
           <CardFooter className="flex justify-end gap-3 border-t pt-6">
             <Button

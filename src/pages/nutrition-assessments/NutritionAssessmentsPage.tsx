@@ -254,10 +254,24 @@ export default function NutritionAssessmentsPage() {
                   <CardContent className="p-5 flex flex-col gap-4">
                     <p className="font-semibold text-base leading-snug">{q.text}</p>
                     <div className="flex flex-wrap gap-2">
-                      {options.map((opt) => {
+                      {options.map((opt: any) => {
                         const isSelected = currentAnswers[q.id] === opt.value
-                        return
-                        null
+                        return (
+                          <Button
+                            key={opt.value}
+                            variant={isSelected ? 'default' : 'outline'}
+                            size="sm"
+                            onClick={() => handleAnswer(q.id, opt.value)}
+                            className={cn(
+                              'transition-all',
+                              isSelected
+                                ? 'shadow-md scale-105 bg-primary text-primary-foreground'
+                                : 'text-muted-foreground hover:bg-primary/5 hover:text-primary',
+                            )}
+                          >
+                            {opt.label || opt.value}
+                          </Button>
+                        )
                       })}
                     </div>
                   </CardContent>

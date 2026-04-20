@@ -10,10 +10,20 @@ export default function Nutrition() {
   return (
     <div className="flex flex-col gap-6 animate-fade-in-up pb-24 max-w-4xl mx-auto w-full">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">Nutrição Inteligente</h1>
-        <p className="text-sm text-muted-foreground mt-1 capitalize font-medium">
-          {format(new Date(), "EEEE, d 'de' MMMM", { locale: ptBR })}
-        </p>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight">Nutrição Inteligente</h1>
+            <p className="text-sm text-muted-foreground mt-1 capitalize font-medium">
+              {format(new Date(), "EEEE, d 'de' MMMM", { locale: ptBR })}
+            </p>
+          </div>
+          <a
+            href="/nutrition-assessments"
+            className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 shrink-0"
+          >
+            Anamnese Detalhada
+          </a>
+        </div>
       </div>
 
       <Tabs defaultValue="daily" className="w-full">

@@ -4,6 +4,7 @@ import { Toaster } from '@/components/ui/toaster'
 import { Toaster as Sonner } from '@/components/ui/sonner'
 import { TooltipProvider } from '@/components/ui/tooltip'
 import { AuthProvider } from '@/hooks/use-auth'
+import { ThemeProvider } from '@/components/theme-provider'
 import Index from './pages/Index'
 import NotFound from './pages/NotFound'
 import Layout from './components/Layout'
@@ -25,41 +26,43 @@ import Profile from './pages/Profile'
 // AVOID REMOVING ANY CONTEXT PROVIDERS FROM THIS FILE (e.g. TooltipProvider, Toaster, Sonner)
 
 const App = () => (
-  <AuthProvider>
-    <BrowserRouter future={{ v7_startTransition: false, v7_relativeSplatPath: false }}>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <Routes>
-          <Route element={<Layout />}>
-            <Route path="/" element={<Index />} />
-            <Route path="/onboarding" element={<OnboardingPage />} />
-            <Route path="/nutrition-onboarding" element={<NutritionOnboardingPage />} />
-            <Route path="/nutrition-assessments" element={<NutritionAssessmentsPage />} />
-            <Route path="/analysis" element={<PosturalAnalysisPage />} />
-            <Route path="/nutrition-plan" element={<NutritionPlanPage />} />
-            <Route
-              path="/dashboard"
-              element={
-                <div className="p-8 text-center text-muted-foreground animate-fade-in mt-20">
-                  Dashboard em desenvolvimento...
-                </div>
-              }
-            />
-            <Route path="/workouts" element={<Workouts />} />
-            <Route path="/nutrition" element={<Nutrition />} />
-            <Route path="/progress" element={<ProgressPage />} />
-            <Route path="/monthly-report/:reportId" element={<MonthlyReportPage />} />
-            <Route path="/checkout" element={<CheckoutPage />} />
-            <Route path="/admin" element={<AdminDashboard />} />
-            <Route path="/profile" element={<Profile />} />
-          </Route>
-          <Route path="/workout/execute" element={<WorkoutExecutionPage />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </TooltipProvider>
-    </BrowserRouter>
-  </AuthProvider>
+  <ThemeProvider defaultTheme="system" storageKey="kinetix-theme">
+    <AuthProvider>
+      <BrowserRouter future={{ v7_startTransition: false, v7_relativeSplatPath: false }}>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <Routes>
+            <Route element={<Layout />}>
+              <Route path="/" element={<Index />} />
+              <Route path="/onboarding" element={<OnboardingPage />} />
+              <Route path="/nutrition-onboarding" element={<NutritionOnboardingPage />} />
+              <Route path="/nutrition-assessments" element={<NutritionAssessmentsPage />} />
+              <Route path="/analysis" element={<PosturalAnalysisPage />} />
+              <Route path="/nutrition-plan" element={<NutritionPlanPage />} />
+              <Route
+                path="/dashboard"
+                element={
+                  <div className="p-8 text-center text-muted-foreground animate-fade-in mt-20">
+                    Dashboard em desenvolvimento...
+                  </div>
+                }
+              />
+              <Route path="/workouts" element={<Workouts />} />
+              <Route path="/nutrition" element={<Nutrition />} />
+              <Route path="/progress" element={<ProgressPage />} />
+              <Route path="/monthly-report/:reportId" element={<MonthlyReportPage />} />
+              <Route path="/checkout" element={<CheckoutPage />} />
+              <Route path="/admin" element={<AdminDashboard />} />
+              <Route path="/profile" element={<Profile />} />
+            </Route>
+            <Route path="/workout/execute" element={<WorkoutExecutionPage />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </TooltipProvider>
+      </BrowserRouter>
+    </AuthProvider>
+  </ThemeProvider>
 )
 
 export default App

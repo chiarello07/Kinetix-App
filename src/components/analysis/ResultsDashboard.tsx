@@ -192,7 +192,7 @@ export function ResultsDashboard({ result, onReset }: ResultsDashboardProps) {
           ) : (
             <Dumbbell className="w-5 h-5 mr-2" />
           )}
-          {isGenerating ? 'Gerando Plano Científico...' : 'Gerar Treino Corretivo'}
+          {isGenerating ? 'Gerando Plano...' : 'Gerar Treino'}
         </Button>
 
         <Button

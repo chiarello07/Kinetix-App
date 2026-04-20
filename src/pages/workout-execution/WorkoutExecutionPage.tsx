@@ -50,7 +50,7 @@ export default function WorkoutExecutionPage() {
   const { user } = useAuth()
   const navigate = useNavigate()
 
-  const [screen, setScreen] = useState<'warmup' | 'exercise' | 'borg' | 'summary'>('warmup')
+  const [screen, setScreen] = useState<'exercise' | 'borg' | 'summary'>('exercise')
   const [exercises] = useState(mockExercises)
   const [currentIndex, setCurrentIndex] = useState(0)
   const [completedExercises, setCompletedExercises] = useState<any[]>([])
@@ -140,7 +140,6 @@ export default function WorkoutExecutionPage() {
 
   return (
     <div className="min-h-[100dvh] bg-background">
-      {screen === 'warmup' && <WarmupScreen onComplete={() => setScreen('exercise')} />}
       {screen === 'exercise' && (
         <ExerciseScreen
           exercise={exercises[currentIndex]}

@@ -1,24 +1,34 @@
 import { Outlet } from 'react-router-dom'
-import { SidebarProvider } from '@/components/ui/sidebar'
 import { AppSidebar } from './AppSidebar'
 import { AppHeader } from './AppHeader'
-import { BottomNav } from './BottomNav'
+import { useAuth } from '@/hooks/use-auth'
+import { LoginPage } from '@/pages/auth/LoginPage'
+import { Activity } from 'lucide-react'
 
 export default function Layout() {
-  return (
-    <SidebarProvider>
-      <div className="flex min-h-screen w-full bg-background overflow-hidden">
-        <AppSidebar />
-        <div className="flex flex-col flex-1 w-full relative h-screen">
-          <AppHeader />
-          <main className="flex-1 overflow-y-auto p-4 md:p-8 pb-24 md:pb-8">
-            <div className="max-w-5xl mx-auto w-full h-full animate-fade-in-up">
-              <Outlet />
-            </div>
-          </main>
-          <BottomNav className="md:hidden" />
-        </div>
+  const { user, loading } = useAuth()
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-background">
+        <Activity className="w-12 h-12 text-primary animate-pulse" />
       </div>
-    </SidebarProvider>
+    )
+  }
+
+  if (!user) {
+    return <LoginPage />
+  }
+
+  return (
+    <div className="flex h-screen overflow-hidden bg-background">
+      <AppSidebar />
+      <div className="flex-1 flex flex-col h-full overflow-hidden">
+        <AppHeader />
+        <main className="flex-1 overflow-y-auto relative">
+          <Outlet />
+        </main>
+      </div>
+    </div>
   )
 }

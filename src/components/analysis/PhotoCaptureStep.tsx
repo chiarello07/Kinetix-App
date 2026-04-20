@@ -136,7 +136,7 @@ export function PhotoCaptureStep({
         disabled={!allCaptured}
         onClick={onComplete}
       >
-        {allCaptured ? 'Analisar Postura (AI)' : 'Conclua todas as fotos'}
+        {allCaptured ? 'Realizar Análise' : 'Conclua todas as fotos'}
       </Button>
     </div>
   )

@@ -318,7 +318,14 @@ export default function Workouts() {
             Planos periodizados e rotinas focadas
           </p>
         </div>
-        <div>
+        <div className="flex flex-col sm:flex-row gap-2">
+          <Button
+            variant="outline"
+            onClick={() => (window.location.href = '/analysis')}
+            className="border-indigo-200 text-indigo-700 hover:bg-indigo-50 dark:border-indigo-800 dark:text-indigo-300 dark:hover:bg-indigo-950"
+          >
+            <Activity className="w-4 h-4 mr-2" /> Realizar Análise
+          </Button>
           <Button
             onClick={handleGenerateClick}
             className="bg-gradient-to-r from-fuchsia-600 to-indigo-600 hover:opacity-90 transition-opacity text-white shadow-md"
