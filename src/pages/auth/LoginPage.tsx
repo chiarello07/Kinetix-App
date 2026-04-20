@@ -30,10 +30,13 @@ export function LoginPage() {
   }
 
   const getErrorMessage = (err: any) => {
-    const msg = err.message || ''
-    if (msg.includes('already registered')) return 'Este e-mail já está cadastrado.'
-    if (msg.includes('Invalid email')) return 'Formato de e-mail inválido.'
-    return 'Ocorreu um erro. Verifique seus dados e tente novamente.'
+    const msg = err?.message || err || ''
+    if (msg.includes('already registered') || msg.includes('já está cadastrado'))
+      return 'Este e-mail já está cadastrado.'
+    if (msg.includes('Invalid email') || msg.includes('inválido'))
+      return 'Formato de e-mail inválido ou credenciais incorretas.'
+    if (msg.includes('Invalid login credentials')) return 'Email ou senha inválidos.'
+    return msg || 'Ocorreu um erro. Verifique seus dados e tente novamente.'
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -42,41 +45,51 @@ export function LoginPage() {
     setError('')
 
     if (!isLogin) {
+      if (!email || !password || !fullName) {
+        setError('Todos os campos são obrigatórios')
+        setLoading(false)
+        return
+      }
+
       const pwdError = validatePassword(password)
       if (pwdError) {
         setError(pwdError)
         setLoading(false)
         return
       }
-    }
-
-    const { error: authError } = isLogin
-      ? await signIn(email, password)
-      : await signUp(email, password, { full_name: fullName, phone, birth_date: birthDate })
-
-    if (authError) {
-      setError(getErrorMessage(authError))
     } else {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession()
-      if (session?.user) {
-        await supabase
-          .from('profiles')
-          .update({ last_activity_at: new Date().toISOString() })
-          .eq('id', session.user.id)
-        const { data: profile } = await supabase
-          .from('nutrition_profiles')
-          .select('onboarding_completed')
-          .eq('user_id', session.user.id)
-          .single()
-        if (profile && profile.onboarding_completed) {
-          navigate('/')
-        } else {
-          navigate('/nutrition-onboarding')
-        }
+      if (!email || !password) {
+        setError('Email e senha são obrigatórios')
+        setLoading(false)
+        return
       }
     }
+
+    if (isLogin) {
+      const result = await signIn(email, password)
+      if (result.success) {
+        navigate(result.redirect || '/')
+      } else {
+        setError(getErrorMessage({ message: result.error }))
+      }
+    } else {
+      const result = await signUp(email, password, {
+        full_name: fullName,
+        phone,
+        birth_date: birthDate,
+      })
+      if (result.success) {
+        const loginResult = await signIn(email, password)
+        if (loginResult.success) {
+          navigate(loginResult.redirect || '/onboarding')
+        } else {
+          navigate('/')
+        }
+      } else {
+        setError(getErrorMessage({ message: result.error }))
+      }
+    }
+
     setLoading(false)
   }
 
