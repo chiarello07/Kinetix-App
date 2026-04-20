@@ -1,11 +1,17 @@
 // AVOID UPDATING THIS FILE DIRECTLY. It is automatically generated.
-export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[]
+export type Json =
+  | string
+  | number
+  | boolean
+  | null
+  | { [key: string]: Json | undefined }
+  | Json[]
 
 export type Database = {
   // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: '14.4'
+    PostgrestVersion: "14.4"
   }
   public: {
     Tables: {
@@ -78,11 +84,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: 'ai_food_identifications_food_log_id_fkey'
-            columns: ['food_log_id']
+            foreignKeyName: "ai_food_identifications_food_log_id_fkey"
+            columns: ["food_log_id"]
             isOneToOne: false
-            referencedRelation: 'food_logs'
-            referencedColumns: ['id']
+            referencedRelation: "food_logs"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -146,11 +152,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: 'assessment_responses_nutrition_assessment_id_fkey'
-            columns: ['nutrition_assessment_id']
+            foreignKeyName: "assessment_responses_nutrition_assessment_id_fkey"
+            columns: ["nutrition_assessment_id"]
             isOneToOne: false
-            referencedRelation: 'nutrition_assessments'
-            referencedColumns: ['id']
+            referencedRelation: "nutrition_assessments"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -196,13 +202,102 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: 'audit_log_admin_id_fkey'
-            columns: ['admin_id']
+            foreignKeyName: "audit_log_admin_id_fkey"
+            columns: ["admin_id"]
             isOneToOne: false
-            referencedRelation: 'admin_users'
-            referencedColumns: ['id']
+            referencedRelation: "admin_users"
+            referencedColumns: ["id"]
           },
         ]
+      }
+      challenge_participations: {
+        Row: {
+          challenge_id: string
+          completed_at: string | null
+          created_at: string | null
+          id: string
+          progress: number
+          progress_details: Json | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          challenge_id: string
+          completed_at?: string | null
+          created_at?: string | null
+          id?: string
+          progress?: number
+          progress_details?: Json | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          challenge_id?: string
+          completed_at?: string | null
+          created_at?: string | null
+          id?: string
+          progress?: number
+          progress_details?: Json | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "challenge_participations_challenge_id_fkey"
+            columns: ["challenge_id"]
+            isOneToOne: false
+            referencedRelation: "challenges"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      challenges: {
+        Row: {
+          category: string
+          created_at: string | null
+          description: string | null
+          difficulty: string
+          end_date: string
+          id: string
+          is_active: boolean | null
+          name: string
+          reward_badge: string | null
+          reward_points: number
+          rules: string | null
+          start_date: string
+          updated_at: string | null
+        }
+        Insert: {
+          category: string
+          created_at?: string | null
+          description?: string | null
+          difficulty: string
+          end_date: string
+          id?: string
+          is_active?: boolean | null
+          name: string
+          reward_badge?: string | null
+          reward_points?: number
+          rules?: string | null
+          start_date: string
+          updated_at?: string | null
+        }
+        Update: {
+          category?: string
+          created_at?: string | null
+          description?: string | null
+          difficulty?: string
+          end_date?: string
+          id?: string
+          is_active?: boolean | null
+          name?: string
+          reward_badge?: string | null
+          reward_points?: number
+          rules?: string | null
+          start_date?: string
+          updated_at?: string | null
+        }
+        Relationships: []
       }
       daily_summaries: {
         Row: {
@@ -291,11 +386,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: 'daily_summaries_nutrition_plan_id_fkey'
-            columns: ['nutrition_plan_id']
+            foreignKeyName: "daily_summaries_nutrition_plan_id_fkey"
+            columns: ["nutrition_plan_id"]
             isOneToOne: false
-            referencedRelation: 'nutrition_plans'
-            referencedColumns: ['id']
+            referencedRelation: "nutrition_plans"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -317,18 +412,18 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: 'decision_matrix_deviation_id_fkey'
-            columns: ['deviation_id']
+            foreignKeyName: "decision_matrix_deviation_id_fkey"
+            columns: ["deviation_id"]
             isOneToOne: false
-            referencedRelation: 'deviations'
-            referencedColumns: ['id']
+            referencedRelation: "deviations"
+            referencedColumns: ["id"]
           },
           {
-            foreignKeyName: 'decision_matrix_exercise_id_fkey'
-            columns: ['exercise_id']
+            foreignKeyName: "decision_matrix_exercise_id_fkey"
+            columns: ["exercise_id"]
             isOneToOne: false
-            referencedRelation: 'exercises'
-            referencedColumns: ['id']
+            referencedRelation: "exercises"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -560,11 +655,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: 'food_logs_nutrition_plan_id_fkey'
-            columns: ['nutrition_plan_id']
+            foreignKeyName: "food_logs_nutrition_plan_id_fkey"
+            columns: ["nutrition_plan_id"]
             isOneToOne: false
-            referencedRelation: 'nutrition_plans'
-            referencedColumns: ['id']
+            referencedRelation: "nutrition_plans"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -610,11 +705,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: 'food_substitutes_meal_food_id_fkey'
-            columns: ['meal_food_id']
+            foreignKeyName: "food_substitutes_meal_food_id_fkey"
+            columns: ["meal_food_id"]
             isOneToOne: false
-            referencedRelation: 'meal_foods'
-            referencedColumns: ['id']
+            referencedRelation: "meal_foods"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -720,6 +815,54 @@ export type Database = {
         }
         Relationships: []
       }
+      leaderboards: {
+        Row: {
+          created_at: string | null
+          id: string
+          meals_logged: number | null
+          nutrition_adherence: number | null
+          period: string
+          rank: number
+          streak_days: number | null
+          total_points: number
+          updated_at: string | null
+          user_avatar: string | null
+          user_id: string
+          user_name: string | null
+          workouts_completed: number | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          meals_logged?: number | null
+          nutrition_adherence?: number | null
+          period: string
+          rank: number
+          streak_days?: number | null
+          total_points?: number
+          updated_at?: string | null
+          user_avatar?: string | null
+          user_id: string
+          user_name?: string | null
+          workouts_completed?: number | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          meals_logged?: number | null
+          nutrition_adherence?: number | null
+          period?: string
+          rank?: number
+          streak_days?: number | null
+          total_points?: number
+          updated_at?: string | null
+          user_avatar?: string | null
+          user_id?: string
+          user_name?: string | null
+          workouts_completed?: number | null
+        }
+        Relationships: []
+      }
       meal_foods: {
         Row: {
           calories: number | null
@@ -768,18 +911,18 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: 'meal_foods_food_id_fkey'
-            columns: ['food_id']
+            foreignKeyName: "meal_foods_food_id_fkey"
+            columns: ["food_id"]
             isOneToOne: false
-            referencedRelation: 'foods'
-            referencedColumns: ['id']
+            referencedRelation: "foods"
+            referencedColumns: ["id"]
           },
           {
-            foreignKeyName: 'meal_foods_meal_plan_id_fkey'
-            columns: ['meal_plan_id']
+            foreignKeyName: "meal_foods_meal_plan_id_fkey"
+            columns: ["meal_plan_id"]
             isOneToOne: false
-            referencedRelation: 'meal_plans'
-            referencedColumns: ['id']
+            referencedRelation: "meal_plans"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -828,11 +971,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: 'meal_plans_nutrition_plan_id_fkey'
-            columns: ['nutrition_plan_id']
+            foreignKeyName: "meal_plans_nutrition_plan_id_fkey"
+            columns: ["nutrition_plan_id"]
             isOneToOne: false
-            referencedRelation: 'nutrition_plans'
-            referencedColumns: ['id']
+            referencedRelation: "nutrition_plans"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -974,11 +1117,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: 'nutrition_assessments_nutrition_profile_id_fkey'
-            columns: ['nutrition_profile_id']
+            foreignKeyName: "nutrition_assessments_nutrition_profile_id_fkey"
+            columns: ["nutrition_profile_id"]
             isOneToOne: false
-            referencedRelation: 'nutrition_profiles'
-            referencedColumns: ['id']
+            referencedRelation: "nutrition_profiles"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -1051,11 +1194,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: 'nutrition_onboarding_steps_nutrition_profile_id_fkey'
-            columns: ['nutrition_profile_id']
+            foreignKeyName: "nutrition_onboarding_steps_nutrition_profile_id_fkey"
+            columns: ["nutrition_profile_id"]
             isOneToOne: false
-            referencedRelation: 'nutrition_profiles'
-            referencedColumns: ['id']
+            referencedRelation: "nutrition_profiles"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -1143,11 +1286,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: 'nutrition_plans_nutrition_profile_id_fkey'
-            columns: ['nutrition_profile_id']
+            foreignKeyName: "nutrition_plans_nutrition_profile_id_fkey"
+            columns: ["nutrition_profile_id"]
             isOneToOne: false
-            referencedRelation: 'nutrition_profiles'
-            referencedColumns: ['id']
+            referencedRelation: "nutrition_profiles"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -1385,11 +1528,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: 'profiles_subscription_id_fkey'
-            columns: ['subscription_id']
+            foreignKeyName: "profiles_subscription_id_fkey"
+            columns: ["subscription_id"]
             isOneToOne: false
-            referencedRelation: 'subscriptions'
-            referencedColumns: ['id']
+            referencedRelation: "subscriptions"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -1465,6 +1608,33 @@ export type Database = {
           week_of_year?: number | null
           workouts_completed?: number | null
           year?: number | null
+        }
+        Relationships: []
+      }
+      social_connections: {
+        Row: {
+          accepted_at: string | null
+          created_at: string | null
+          friend_id: string
+          id: string
+          status: string
+          user_id: string
+        }
+        Insert: {
+          accepted_at?: string | null
+          created_at?: string | null
+          friend_id: string
+          id?: string
+          status: string
+          user_id: string
+        }
+        Update: {
+          accepted_at?: string | null
+          created_at?: string | null
+          friend_id?: string
+          id?: string
+          status?: string
+          user_id?: string
         }
         Relationships: []
       }
@@ -1567,11 +1737,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: 'supplementation_plans_nutrition_plan_id_fkey'
-            columns: ['nutrition_plan_id']
+            foreignKeyName: "supplementation_plans_nutrition_plan_id_fkey"
+            columns: ["nutrition_plan_id"]
             isOneToOne: false
-            referencedRelation: 'nutrition_plans'
-            referencedColumns: ['id']
+            referencedRelation: "nutrition_plans"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -1608,6 +1778,63 @@ export type Database = {
           ip_address?: string | null
           user_agent?: string | null
           user_id?: string | null
+        }
+        Relationships: []
+      }
+      user_badges: {
+        Row: {
+          badge_type: string
+          created_at: string | null
+          earned_at: string
+          id: string
+          metadata: Json | null
+          user_id: string
+        }
+        Insert: {
+          badge_type: string
+          created_at?: string | null
+          earned_at?: string
+          id?: string
+          metadata?: Json | null
+          user_id: string
+        }
+        Update: {
+          badge_type?: string
+          created_at?: string | null
+          earned_at?: string
+          id?: string
+          metadata?: Json | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_points: {
+        Row: {
+          amount: number
+          created_at: string | null
+          earned_at: string
+          id: string
+          point_type: string
+          reason: string | null
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string | null
+          earned_at?: string
+          id?: string
+          point_type: string
+          reason?: string | null
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string | null
+          earned_at?: string
+          id?: string
+          point_type?: string
+          reason?: string | null
+          user_id?: string
         }
         Relationships: []
       }
@@ -1679,7 +1906,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      update_all_leaderboards: { Args: never; Returns: undefined }
     }
     Enums: {
       [_ in never]: never
@@ -1690,31 +1917,33 @@ export type Database = {
   }
 }
 
-type DatabaseWithoutInternals = Omit<Database, '__InternalSupabase'>
+type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">
 
-type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, 'public'>]
+type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">]
 
 export type Tables<
   DefaultSchemaTableNameOrOptions extends
-    | keyof (DefaultSchema['Tables'] & DefaultSchema['Views'])
+    | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
     | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
-    ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables'] &
-        DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Views'])
+    ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+        DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
     : never = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
-  ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables'] &
-      DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Views'])[TableName] extends {
+  ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+      DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
       Row: infer R
     }
     ? R
     : never
-  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema['Tables'] & DefaultSchema['Views'])
-    ? (DefaultSchema['Tables'] & DefaultSchema['Views'])[DefaultSchemaTableNameOrOptions] extends {
+  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])
+    ? (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
         Row: infer R
       }
       ? R
@@ -1723,23 +1952,23 @@ export type Tables<
 
 export type TablesInsert<
   DefaultSchemaTableNameOrOptions extends
-    | keyof DefaultSchema['Tables']
+    | keyof DefaultSchema["Tables"]
     | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
-    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables']
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
     : never = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
-  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables'][TableName] extends {
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
       Insert: infer I
     }
     ? I
     : never
-  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema['Tables']
-    ? DefaultSchema['Tables'][DefaultSchemaTableNameOrOptions] extends {
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
         Insert: infer I
       }
       ? I
@@ -1748,23 +1977,23 @@ export type TablesInsert<
 
 export type TablesUpdate<
   DefaultSchemaTableNameOrOptions extends
-    | keyof DefaultSchema['Tables']
+    | keyof DefaultSchema["Tables"]
     | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
-    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables']
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
     : never = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
-  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables'][TableName] extends {
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
       Update: infer U
     }
     ? U
     : never
-  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema['Tables']
-    ? DefaultSchema['Tables'][DefaultSchemaTableNameOrOptions] extends {
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
         Update: infer U
       }
       ? U
@@ -1773,36 +2002,36 @@ export type TablesUpdate<
 
 export type Enums<
   DefaultSchemaEnumNameOrOptions extends
-    | keyof DefaultSchema['Enums']
+    | keyof DefaultSchema["Enums"]
     | { schema: keyof DatabaseWithoutInternals },
   EnumName extends DefaultSchemaEnumNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
-    ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions['schema']]['Enums']
+    ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
     : never = never,
 > = DefaultSchemaEnumNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
-  ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions['schema']]['Enums'][EnumName]
-  : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema['Enums']
-    ? DefaultSchema['Enums'][DefaultSchemaEnumNameOrOptions]
+  ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
+  : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
+    ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
     : never
 
 export type CompositeTypes<
   PublicCompositeTypeNameOrOptions extends
-    | keyof DefaultSchema['CompositeTypes']
+    | keyof DefaultSchema["CompositeTypes"]
     | { schema: keyof DatabaseWithoutInternals },
   CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
-    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions['schema']]['CompositeTypes']
+    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
     : never = never,
 > = PublicCompositeTypeNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
-  ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions['schema']]['CompositeTypes'][CompositeTypeName]
-  : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema['CompositeTypes']
-    ? DefaultSchema['CompositeTypes'][PublicCompositeTypeNameOrOptions]
+  ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
+  : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
+    ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
     : never
 
 export const Constants = {
@@ -1810,6 +2039,7 @@ export const Constants = {
     Enums: {},
   },
 } as const
+
 
 // ====== DATABASE EXTENDED CONTEXT (auto-generated) ======
 // This section contains actual PostgreSQL column types, constraints, RLS policies,
@@ -1868,6 +2098,29 @@ export const Constants = {
 //   ip_address: character varying (nullable)
 //   user_agent: text (nullable)
 //   created_at: timestamp without time zone (nullable, default: now())
+// Table: challenge_participations
+//   id: uuid (not null, default: gen_random_uuid())
+//   user_id: uuid (not null)
+//   challenge_id: uuid (not null)
+//   progress: integer (not null, default: 0)
+//   progress_details: jsonb (nullable)
+//   completed_at: timestamp with time zone (nullable)
+//   created_at: timestamp with time zone (nullable, default: now())
+//   updated_at: timestamp with time zone (nullable, default: now())
+// Table: challenges
+//   id: uuid (not null, default: gen_random_uuid())
+//   name: character varying (not null)
+//   description: text (nullable)
+//   rules: text (nullable)
+//   reward_points: integer (not null, default: 100)
+//   reward_badge: character varying (nullable)
+//   start_date: timestamp with time zone (not null)
+//   end_date: timestamp with time zone (not null)
+//   difficulty: character varying (not null)
+//   category: character varying (not null)
+//   is_active: boolean (nullable, default: true)
+//   created_at: timestamp with time zone (nullable, default: now())
+//   updated_at: timestamp with time zone (nullable, default: now())
 // Table: daily_summaries
 //   id: uuid (not null, default: gen_random_uuid())
 //   nutrition_plan_id: uuid (not null)
@@ -2009,6 +2262,20 @@ export const Constants = {
 //   badges: jsonb (nullable, default: '[]'::jsonb)
 //   created_at: timestamp with time zone (nullable, default: now())
 //   updated_at: timestamp with time zone (nullable, default: now())
+// Table: leaderboards
+//   id: uuid (not null, default: gen_random_uuid())
+//   user_id: uuid (not null)
+//   user_name: character varying (nullable)
+//   user_avatar: text (nullable)
+//   rank: integer (not null)
+//   total_points: integer (not null, default: 0)
+//   period: character varying (not null)
+//   workouts_completed: integer (nullable, default: 0)
+//   meals_logged: integer (nullable, default: 0)
+//   streak_days: integer (nullable, default: 0)
+//   nutrition_adherence: numeric (nullable, default: 0)
+//   updated_at: timestamp with time zone (nullable, default: now())
+//   created_at: timestamp with time zone (nullable, default: now())
 // Table: meal_foods
 //   id: uuid (not null, default: gen_random_uuid())
 //   meal_plan_id: uuid (not null)
@@ -2216,6 +2483,13 @@ export const Constants = {
 //   balance_status: character varying (nullable)
 //   created_at: timestamp with time zone (nullable, default: now())
 //   updated_at: timestamp with time zone (nullable, default: now())
+// Table: social_connections
+//   id: uuid (not null, default: gen_random_uuid())
+//   user_id: uuid (not null)
+//   friend_id: uuid (not null)
+//   status: character varying (not null)
+//   created_at: timestamp with time zone (nullable, default: now())
+//   accepted_at: timestamp with time zone (nullable)
 // Table: subscriptions
 //   id: uuid (not null, default: gen_random_uuid())
 //   user_id: uuid (not null)
@@ -2255,6 +2529,21 @@ export const Constants = {
 //   ip_address: character varying (nullable)
 //   user_agent: text (nullable)
 //   created_at: timestamp without time zone (nullable, default: now())
+// Table: user_badges
+//   id: uuid (not null, default: gen_random_uuid())
+//   user_id: uuid (not null)
+//   badge_type: character varying (not null)
+//   earned_at: timestamp with time zone (not null, default: now())
+//   metadata: jsonb (nullable)
+//   created_at: timestamp with time zone (nullable, default: now())
+// Table: user_points
+//   id: uuid (not null, default: gen_random_uuid())
+//   user_id: uuid (not null)
+//   point_type: character varying (not null)
+//   amount: integer (not null)
+//   reason: text (nullable)
+//   earned_at: timestamp with time zone (not null, default: now())
+//   created_at: timestamp with time zone (nullable, default: now())
 // Table: workout_sessions
 //   id: uuid (not null, default: gen_random_uuid())
 //   user_id: uuid (not null)
@@ -2291,6 +2580,17 @@ export const Constants = {
 // Table: audit_log
 //   FOREIGN KEY audit_log_admin_id_fkey: FOREIGN KEY (admin_id) REFERENCES admin_users(id) ON DELETE SET NULL
 //   PRIMARY KEY audit_log_pkey: PRIMARY KEY (id)
+// Table: challenge_participations
+//   FOREIGN KEY challenge_participations_challenge_id_fkey: FOREIGN KEY (challenge_id) REFERENCES challenges(id) ON DELETE CASCADE
+//   PRIMARY KEY challenge_participations_pkey: PRIMARY KEY (id)
+//   CHECK challenge_participations_progress_check: CHECK (((progress >= 0) AND (progress <= 100)))
+//   UNIQUE challenge_participations_user_id_challenge_id_key: UNIQUE (user_id, challenge_id)
+//   FOREIGN KEY challenge_participations_user_id_fkey: FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE
+// Table: challenges
+//   CHECK challenges_category_check: CHECK (((category)::text = ANY ((ARRAY['consistency'::character varying, 'strength'::character varying, 'endurance'::character varying, 'posture'::character varying, 'nutrition'::character varying, 'balanced'::character varying])::text[])))
+//   CHECK challenges_check: CHECK ((end_date > start_date))
+//   CHECK challenges_difficulty_check: CHECK (((difficulty)::text = ANY ((ARRAY['easy'::character varying, 'medium'::character varying, 'hard'::character varying])::text[])))
+//   PRIMARY KEY challenges_pkey: PRIMARY KEY (id)
 // Table: daily_summaries
 //   FOREIGN KEY daily_summaries_nutrition_plan_id_fkey: FOREIGN KEY (nutrition_plan_id) REFERENCES nutrition_plans(id) ON DELETE CASCADE
 //   PRIMARY KEY daily_summaries_pkey: PRIMARY KEY (id)
@@ -2323,6 +2623,11 @@ export const Constants = {
 //   PRIMARY KEY gamification_profiles_pkey: PRIMARY KEY (id)
 //   FOREIGN KEY gamification_profiles_user_id_fkey: FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE
 //   UNIQUE gamification_profiles_user_id_key: UNIQUE (user_id)
+// Table: leaderboards
+//   CHECK leaderboards_period_check: CHECK (((period)::text = ANY ((ARRAY['weekly'::character varying, 'monthly'::character varying, 'all_time'::character varying])::text[])))
+//   PRIMARY KEY leaderboards_pkey: PRIMARY KEY (id)
+//   FOREIGN KEY leaderboards_user_id_fkey: FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE
+//   UNIQUE leaderboards_user_id_period_key: UNIQUE (user_id, period)
 // Table: meal_foods
 //   FOREIGN KEY meal_foods_food_id_fkey: FOREIGN KEY (food_id) REFERENCES foods(id)
 //   FOREIGN KEY meal_foods_meal_plan_id_fkey: FOREIGN KEY (meal_plan_id) REFERENCES meal_plans(id) ON DELETE CASCADE
@@ -2362,6 +2667,12 @@ export const Constants = {
 //   PRIMARY KEY progress_metrics_pkey: PRIMARY KEY (id)
 //   UNIQUE progress_metrics_user_id_date_key: UNIQUE (user_id, date)
 //   FOREIGN KEY progress_metrics_user_id_fkey: FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE
+// Table: social_connections
+//   CHECK social_connections_check: CHECK ((user_id <> friend_id))
+//   FOREIGN KEY social_connections_friend_id_fkey: FOREIGN KEY (friend_id) REFERENCES auth.users(id) ON DELETE CASCADE
+//   PRIMARY KEY social_connections_pkey: PRIMARY KEY (id)
+//   CHECK social_connections_status_check: CHECK (((status)::text = ANY ((ARRAY['pending'::character varying, 'accepted'::character varying, 'blocked'::character varying])::text[])))
+//   FOREIGN KEY social_connections_user_id_fkey: FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE
 // Table: subscriptions
 //   PRIMARY KEY subscriptions_pkey: PRIMARY KEY (id)
 //   UNIQUE subscriptions_stripe_customer_id_key: UNIQUE (stripe_customer_id)
@@ -2373,6 +2684,14 @@ export const Constants = {
 // Table: user_activity_log
 //   PRIMARY KEY user_activity_log_pkey: PRIMARY KEY (id)
 //   FOREIGN KEY user_activity_log_user_id_fkey: FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE
+// Table: user_badges
+//   PRIMARY KEY user_badges_pkey: PRIMARY KEY (id)
+//   UNIQUE user_badges_user_id_badge_type_key: UNIQUE (user_id, badge_type)
+//   FOREIGN KEY user_badges_user_id_fkey: FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE
+// Table: user_points
+//   CHECK user_points_amount_check: CHECK ((amount > 0))
+//   PRIMARY KEY user_points_pkey: PRIMARY KEY (id)
+//   FOREIGN KEY user_points_user_id_fkey: FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE
 // Table: workout_sessions
 //   CHECK workout_sessions_borg_rpe_check: CHECK (((borg_rpe >= 0) AND (borg_rpe <= 10)))
 //   PRIMARY KEY workout_sessions_pkey: PRIMARY KEY (id)
@@ -2402,6 +2721,13 @@ export const Constants = {
 //   Policy "auth_all_audit_log" (ALL, PERMISSIVE) roles={authenticated}
 //     USING: true
 //     WITH CHECK: true
+// Table: challenge_participations
+//   Policy "auth_all_challenge_participations" (ALL, PERMISSIVE) roles={authenticated}
+//     USING: (user_id = auth.uid())
+//     WITH CHECK: (user_id = auth.uid())
+// Table: challenges
+//   Policy "auth_select_challenges" (SELECT, PERMISSIVE) roles={authenticated}
+//     USING: true
 // Table: daily_summaries
 //   Policy "auth_all_daily_summaries" (ALL, PERMISSIVE) roles={authenticated}
 //     USING: (user_id = auth.uid())
@@ -2438,6 +2764,12 @@ export const Constants = {
 //     USING: true
 // Table: gamification_profiles
 //   Policy "auth_all_gamification_profiles" (ALL, PERMISSIVE) roles={authenticated}
+//     USING: (user_id = auth.uid())
+//     WITH CHECK: (user_id = auth.uid())
+// Table: leaderboards
+//   Policy "auth_all_leaderboards" (SELECT, PERMISSIVE) roles={authenticated}
+//     USING: true
+//   Policy "auth_manage_leaderboards" (ALL, PERMISSIVE) roles={authenticated}
 //     USING: (user_id = auth.uid())
 //     WITH CHECK: (user_id = auth.uid())
 // Table: meal_foods
@@ -2500,6 +2832,10 @@ export const Constants = {
 //     WITH CHECK: (user_id = auth.uid())
 //   Policy "Users can view their own progress metrics" (SELECT, PERMISSIVE) roles={authenticated}
 //     USING: (user_id = auth.uid())
+// Table: social_connections
+//   Policy "auth_all_social_connections" (ALL, PERMISSIVE) roles={authenticated}
+//     USING: ((user_id = auth.uid()) OR (friend_id = auth.uid()))
+//     WITH CHECK: ((user_id = auth.uid()) OR (friend_id = auth.uid()))
 // Table: subscriptions
 //   Policy "Users can view their own subscriptions" (SELECT, PERMISSIVE) roles={authenticated}
 //     USING: (user_id = auth.uid())
@@ -2511,6 +2847,14 @@ export const Constants = {
 //   Policy "auth_all_user_activity_log" (ALL, PERMISSIVE) roles={authenticated}
 //     USING: true
 //     WITH CHECK: true
+// Table: user_badges
+//   Policy "auth_all_user_badges" (ALL, PERMISSIVE) roles={authenticated}
+//     USING: (user_id = auth.uid())
+//     WITH CHECK: (user_id = auth.uid())
+// Table: user_points
+//   Policy "auth_all_user_points" (ALL, PERMISSIVE) roles={authenticated}
+//     USING: (user_id = auth.uid())
+//     WITH CHECK: (user_id = auth.uid())
 // Table: workout_sessions
 //   Policy "Users can manage their own workout sessions" (ALL, PERMISSIVE) roles={authenticated}
 //     USING: (user_id = auth.uid())
@@ -2530,7 +2874,45 @@ export const Constants = {
 //     RETURN NEW;
 //   END;
 //   $function$
-//
+//   
+// FUNCTION update_all_leaderboards()
+//   CREATE OR REPLACE FUNCTION public.update_all_leaderboards()
+//    RETURNS void
+//    LANGUAGE plpgsql
+//    SECURITY DEFINER
+//   AS $function$
+//     DECLARE
+//       p_period VARCHAR;
+//       v_start_date TIMESTAMPTZ;
+//     BEGIN
+//       FOREACH p_period IN ARRAY ARRAY['weekly', 'monthly', 'all_time']
+//       LOOP
+//         IF p_period = 'weekly' THEN
+//           v_start_date := NOW() - INTERVAL '7 days';
+//         ELSIF p_period = 'monthly' THEN
+//           v_start_date := NOW() - INTERVAL '1 month';
+//         ELSE
+//           v_start_date := '2020-01-01'::TIMESTAMPTZ;
+//         END IF;
+//   
+//         INSERT INTO public.leaderboards (user_id, rank, total_points, period, updated_at)
+//         SELECT 
+//           up.user_id,
+//           ROW_NUMBER() OVER(ORDER BY SUM(up.amount) DESC) as rank,
+//           SUM(up.amount) as total_points,
+//           p_period,
+//           NOW()
+//         FROM public.user_points up
+//         WHERE up.earned_at >= v_start_date
+//         GROUP BY up.user_id
+//         ON CONFLICT (user_id, period) DO UPDATE 
+//         SET rank = EXCLUDED.rank, 
+//             total_points = EXCLUDED.total_points, 
+//             updated_at = EXCLUDED.updated_at;
+//       END LOOP;
+//     END;
+//     $function$
+//   
 // FUNCTION update_progress_metrics_integrated()
 //   CREATE OR REPLACE FUNCTION public.update_progress_metrics_integrated()
 //    RETURNS trigger
@@ -2551,7 +2933,7 @@ export const Constants = {
 //     ELSE
 //       RETURN NEW;
 //     END IF;
-//
+//   
 //     INSERT INTO public.progress_metrics (
 //       user_id, date, week_of_year, month_of_year, year
 //     )
@@ -2562,11 +2944,11 @@ export const Constants = {
 //       EXTRACT(YEAR FROM target_date)
 //     )
 //     ON CONFLICT (user_id, date) DO UPDATE SET updated_at = NOW();
-//
+//   
 //     RETURN NEW;
 //   END;
 //   $function$
-//
+//   
 
 // --- TRIGGERS ---
 // Table: food_logs
@@ -2581,6 +2963,16 @@ export const Constants = {
 //   CREATE INDEX idx_ai_food_identifications_food_log_id ON public.ai_food_identifications USING btree (food_log_id)
 // Table: app_settings
 //   CREATE UNIQUE INDEX app_settings_setting_key_key ON public.app_settings USING btree (setting_key)
+// Table: challenge_participations
+//   CREATE UNIQUE INDEX challenge_participations_user_id_challenge_id_key ON public.challenge_participations USING btree (user_id, challenge_id)
+//   CREATE INDEX idx_challenge_participations_challenge_id ON public.challenge_participations USING btree (challenge_id)
+//   CREATE INDEX idx_challenge_participations_completed_at ON public.challenge_participations USING btree (completed_at)
+//   CREATE INDEX idx_challenge_participations_user_id ON public.challenge_participations USING btree (user_id)
+// Table: challenges
+//   CREATE INDEX idx_challenges_category ON public.challenges USING btree (category)
+//   CREATE INDEX idx_challenges_end_date ON public.challenges USING btree (end_date)
+//   CREATE INDEX idx_challenges_is_active ON public.challenges USING btree (is_active)
+//   CREATE INDEX idx_challenges_start_date ON public.challenges USING btree (start_date)
 // Table: daily_summaries
 //   CREATE UNIQUE INDEX daily_summaries_user_id_summary_date_key ON public.daily_summaries USING btree (user_id, summary_date)
 //   CREATE INDEX idx_daily_summaries_summary_date ON public.daily_summaries USING btree (summary_date)
@@ -2601,6 +2993,12 @@ export const Constants = {
 //   CREATE UNIQUE INDEX foods_name_key ON public.foods USING btree (name)
 // Table: gamification_profiles
 //   CREATE UNIQUE INDEX gamification_profiles_user_id_key ON public.gamification_profiles USING btree (user_id)
+// Table: leaderboards
+//   CREATE INDEX idx_leaderboards_period ON public.leaderboards USING btree (period)
+//   CREATE INDEX idx_leaderboards_rank ON public.leaderboards USING btree (rank)
+//   CREATE INDEX idx_leaderboards_total_points ON public.leaderboards USING btree (total_points DESC)
+//   CREATE INDEX idx_leaderboards_user_id ON public.leaderboards USING btree (user_id)
+//   CREATE UNIQUE INDEX leaderboards_user_id_period_key ON public.leaderboards USING btree (user_id, period)
 // Table: monthly_metrics
 //   CREATE INDEX idx_monthly_metrics_user_cycle ON public.monthly_metrics USING btree (user_id, cycle_number)
 // Table: monthly_reports
@@ -2616,6 +3014,10 @@ export const Constants = {
 //   CREATE INDEX idx_progress_metrics_date ON public.progress_metrics USING btree (date DESC)
 //   CREATE INDEX idx_progress_metrics_user_id ON public.progress_metrics USING btree (user_id)
 //   CREATE UNIQUE INDEX progress_metrics_user_id_date_key ON public.progress_metrics USING btree (user_id, date)
+// Table: social_connections
+//   CREATE INDEX idx_social_connections_friend_id ON public.social_connections USING btree (friend_id)
+//   CREATE INDEX idx_social_connections_status ON public.social_connections USING btree (status)
+//   CREATE INDEX idx_social_connections_user_id ON public.social_connections USING btree (user_id)
 // Table: subscriptions
 //   CREATE INDEX idx_subscriptions_expires_at ON public.subscriptions USING btree (expires_at)
 //   CREATE INDEX idx_subscriptions_plan_id ON public.subscriptions USING btree (plan_id)
@@ -2623,6 +3025,16 @@ export const Constants = {
 //   CREATE INDEX idx_subscriptions_user_id ON public.subscriptions USING btree (user_id)
 //   CREATE UNIQUE INDEX subscriptions_stripe_customer_id_key ON public.subscriptions USING btree (stripe_customer_id)
 //   CREATE UNIQUE INDEX subscriptions_stripe_subscription_id_key ON public.subscriptions USING btree (stripe_subscription_id)
+// Table: user_badges
+//   CREATE INDEX idx_user_badges_badge_type ON public.user_badges USING btree (badge_type)
+//   CREATE INDEX idx_user_badges_earned_at ON public.user_badges USING btree (earned_at DESC)
+//   CREATE INDEX idx_user_badges_user_id ON public.user_badges USING btree (user_id)
+//   CREATE UNIQUE INDEX user_badges_user_id_badge_type_key ON public.user_badges USING btree (user_id, badge_type)
+// Table: user_points
+//   CREATE INDEX idx_user_points_earned_at ON public.user_points USING btree (earned_at DESC)
+//   CREATE INDEX idx_user_points_point_type ON public.user_points USING btree (point_type)
+//   CREATE INDEX idx_user_points_user_id ON public.user_points USING btree (user_id)
 // Table: workout_sessions
 //   CREATE INDEX idx_workout_sessions_user_id ON public.workout_sessions USING btree (user_id)
 //   CREATE INDEX idx_workout_sessions_workout_date ON public.workout_sessions USING btree (workout_date DESC)
+
