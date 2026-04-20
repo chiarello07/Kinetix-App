@@ -30,7 +30,7 @@ export function AppSidebar() {
           <Activity className="w-5 h-5" />
         </div>
         <span className="font-bold text-lg tracking-tight text-foreground">
-          Kinetix App
+          Kinetix
           <br />
         </span>
       </SidebarHeader>
