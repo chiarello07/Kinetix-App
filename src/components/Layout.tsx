@@ -77,6 +77,8 @@ export default function Layout() {
               <UserIcon className="mr-3 h-4 w-4" /> Perfil
             </Button>
           </Link>
+          <div>Análises</div>
+          <div>Início</div>
         </nav>
       </aside>
 
