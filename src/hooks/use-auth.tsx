@@ -57,7 +57,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const signUp = async (email: string, password: string, meta?: any) => {
     try {
-      console.log('1. Tentando criar usuário no Auth com email:', email)
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email,
         password,
@@ -76,69 +75,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         return { success: false, error: 'Usuário não foi criado no Auth' }
       }
 
-      const userId = authData.user.id
-      console.log('3. ID do usuário:', userId)
-
-      // Atualizar profile (geralmente criado por trigger)
-      const { error: profileError } = await supabase
-        .from('profiles')
-        .update({ is_premium: false })
-        .eq('id', userId)
-
-      if (profileError) console.error('Erro ao atualizar profile:', profileError)
-
-      // Criar registro em nutrition_profiles
-      const { data: nutritionData, error: nutritionError } = await supabase
-        .from('nutrition_profiles')
-        .insert({
-          user_id: userId,
-          gender: 'outros',
-          date_of_birth: meta?.birth_date || '1990-01-01',
-          height_cm: 0,
-          current_weight_kg: 0,
-          target_weight_kg: 0,
-          primary_goal: 'saude',
-          fitness_level: 'sedentario',
-          exercise_types: [],
-          status: 'in_progress',
-          onboarding_completed: false,
-        })
-        .select()
-        .single()
-
-      if (nutritionError) console.error('Erro ao criar nutrition_profile:', nutritionError)
-
-      const nutritionProfileId = nutritionData?.id
-
-      // Criar registro em gamification_profiles
-      const { error: gamificationError } = await supabase.from('gamification_profiles').insert({
-        user_id: userId,
-        total_points: 0,
-        level: 1,
-        badges: [],
-      })
-
-      if (gamificationError) console.error('Erro ao criar gamification_profile:', gamificationError)
-
-      // Criar primeiro passo do onboarding
-      if (nutritionProfileId) {
-        const { error: stepError } = await supabase.from('nutrition_onboarding_steps').insert({
-          nutrition_profile_id: nutritionProfileId,
-          step_number: 1,
-          step_name: 'Dados Pessoais',
-          completed: false,
-          skipped: false,
-          data: null,
-          is_valid: false,
-        })
-
-        if (stepError) console.error('Erro ao criar onboarding step:', stepError)
-      }
+      // The database trigger 'handle_new_user' takes care of creating:
+      // - profiles
+      // - nutrition_profiles
+      // - nutrition_onboarding_steps
+      // - gamification_profiles
 
       return {
         success: true,
         user: authData.user,
-        message: 'Conta criada com sucesso! Por favor, verifique seu email.',
+        message: 'Conta criada com sucesso!',
       }
     } catch (error: any) {
       console.error('Erro no signup:', error)
