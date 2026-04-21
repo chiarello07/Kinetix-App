@@ -17,13 +17,14 @@ export function BottomNav({ className }: { className?: string }) {
   return (
     <nav
       className={cn(
-        'fixed bottom-0 left-0 right-0 bg-background border-t border-border/50 pb-safe pt-2 px-4 z-50 shadow-[0_-4px_20px_rgba(0,0,0,0.05)]',
+        'fixed bottom-0 left-0 right-0 bg-background border-t border-border/50 pb-safe pt-2 px-1 z-50 shadow-[0_-4px_20px_rgba(0,0,0,0.05)] md:hidden',
         className,
       )}
     >
-      <ul className="flex items-center justify-between pb-2">
+      <ul className="flex items-center justify-around pb-2">
         {items.map((item) => {
-          const isActive = location.pathname === item.url
+          const isActive =
+            location.pathname === item.url || (item.url === '/index' && location.pathname === '/')
           return (
             <li key={item.title} className="flex-1">
               <Link
@@ -39,9 +40,16 @@ export function BottomNav({ className }: { className?: string }) {
                     isActive && 'bg-primary/10',
                   )}
                 >
-                  <item.icon className={cn('w-5 h-5', isActive && 'fill-primary/20')} />
+                  <item.icon className={cn('w-[22px] h-[22px]', isActive && 'fill-primary/20')} />
                 </div>
-                <span className="text-[9px] font-medium">{item.title}</span>
+                <span
+                  className={cn(
+                    'text-[9px] sm:text-[10px] tracking-tight',
+                    isActive ? 'font-bold' : 'font-medium',
+                  )}
+                >
+                  {item.title}
+                </span>
               </Link>
             </li>
           )
