@@ -31,7 +31,7 @@ export default function Workouts() {
           </CardHeader>
           <CardContent>
             <Button asChild className="w-full h-12 font-bold shadow-sm">
-              <Link to="/analysis">Fazer (ou refazer) Análise</Link>
+              <Link to="/analysis">Fazer Análise</Link>
             </Button>
           </CardContent>
         </Card>
