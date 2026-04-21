@@ -1,6 +1,6 @@
 -- 1. Auto-confirm existing users to unblock them
 UPDATE auth.users
-SET email_confirmed_at = NOW(), confirmed_at = NOW()
+SET email_confirmed_at = NOW()
 WHERE email_confirmed_at IS NULL;
 
 -- 2. Create auto-confirm trigger function
@@ -8,7 +8,6 @@ CREATE OR REPLACE FUNCTION public.auto_confirm_email()
 RETURNS trigger AS $function$
 BEGIN
   NEW.email_confirmed_at = NOW();
-  NEW.confirmed_at = NOW();
   RETURN NEW;
 END;
 $function$ LANGUAGE plpgsql SECURITY DEFINER;
