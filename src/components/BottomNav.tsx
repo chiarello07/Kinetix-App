@@ -4,9 +4,9 @@ import { cn } from '@/lib/utils'
 
 const items = [
   { title: 'Início', url: '/index', icon: Home },
-  { title: 'Análises', url: '/assessments', icon: ClipboardList },
-  { title: 'Treinos', url: '/workouts', icon: Dumbbell },
   { title: 'Nutrição', url: '/nutrition', icon: Utensils },
+  { title: 'Treinos', url: '/workouts', icon: Dumbbell },
+  { title: 'Análises', url: '/assessments', icon: ClipboardList },
   { title: 'Progresso', url: '/progress', icon: TrendingUp },
   { title: 'Perfil', url: '/profile', icon: User },
 ]
