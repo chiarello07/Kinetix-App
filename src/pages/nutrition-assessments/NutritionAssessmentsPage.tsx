@@ -147,10 +147,21 @@ export default function NutritionAssessmentsPage() {
             completed_at: new Date().toISOString(),
           })
         }
+
+        // Auto-generate nutrition plan
+        await supabase.from('nutrition_plans').insert({
+          nutrition_profile_id: profileId,
+          plan_name: 'Plano Inteligente Kinetix',
+          primary_goal: 'Equilíbrio e Saúde',
+          start_date: new Date().toISOString().split('T')[0],
+          end_date: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+          target_calories: 2200,
+          status: 'active',
+        })
       }
 
       setIsCompleted(true)
-      toast.success('Avaliação concluída com sucesso!')
+      toast.success('Avaliação concluída com sucesso! Plano gerado automaticamente.')
     } catch (error) {
       toast.error('Erro ao salvar avaliação. Tentando concluir localmente...')
       setIsCompleted(true)
@@ -169,8 +180,8 @@ export default function NutritionAssessmentsPage() {
         <p className="text-muted-foreground text-center mb-8 text-lg max-w-md">
           Seu perfil nutricional e metabólico foi mapeado detalhadamente.
         </p>
-        <Button className="h-14 px-10 text-lg font-bold" onClick={() => navigate('/dashboard')}>
-          Ir para o Dashboard
+        <Button className="h-14 px-10 text-lg font-bold" onClick={() => navigate('/nutrition')}>
+          Ir para Nutrição
         </Button>
       </div>
     )

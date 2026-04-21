@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom'
-import { Home, Utensils, Dumbbell, TrendingUp, User, Activity } from 'lucide-react'
+import { Home, Utensils, Dumbbell, TrendingUp, User, Activity, ClipboardList } from 'lucide-react'
 import {
   Sidebar,
   SidebarContent,
@@ -13,9 +13,10 @@ import {
 } from '@/components/ui/sidebar'
 
 const items = [
-  { title: 'Painel', url: '/', icon: Home },
-  { title: 'Nutrição', url: '/nutrition', icon: Utensils },
+  { title: 'Início', url: '/index', icon: Home },
+  { title: 'Análises', url: '/assessments', icon: ClipboardList },
   { title: 'Treinos', url: '/workouts', icon: Dumbbell },
+  { title: 'Nutrição', url: '/nutrition', icon: Utensils },
   { title: 'Progresso', url: '/progress', icon: TrendingUp },
   { title: 'Perfil', url: '/profile', icon: User },
 ]

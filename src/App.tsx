@@ -17,6 +17,7 @@ import Workouts from './pages/Workouts'
 import NutritionPlanPage from './pages/nutrition-plan/NutritionPlanPage'
 import Nutrition from './pages/Nutrition'
 import CheckoutPage from './pages/Checkout'
+import AssessmentsPage from './pages/assessments/AssessmentsPage'
 import AdminDashboard from './pages/admin/AdminDashboard'
 import ProgressPage from './pages/progress/ProgressPage'
 import MonthlyReportPage from './pages/monthly-report/MonthlyReportPage'
@@ -44,8 +45,9 @@ const App = () => (
           <Sonner />
           <Routes>
             <Route element={<Layout />}>
-              <Route path="/" element={<Navigate to="/nutrition" replace />} />
+              <Route path="/" element={<Navigate to="/index" replace />} />
               <Route path="/index" element={<Index />} />
+              <Route path="/assessments" element={<AssessmentsPage />} />
               <Route path="/onboarding" element={<OnboardingPage />} />
               <Route path="/nutrition-onboarding" element={<NutritionOnboardingPage />} />
               <Route path="/nutrition-assessments" element={<NutritionAssessmentsPage />} />

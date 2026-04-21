@@ -1,127 +1,79 @@
 import { Button } from '@/components/ui/button'
 import { Link } from 'react-router-dom'
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog'
-import { Activity, Dumbbell, Utensils, AlertCircle } from 'lucide-react'
+import { Activity, Dumbbell, Utensils, LineChart, ClipboardList } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase/client'
 import { useAuth } from '@/hooks/use-auth'
-import { Alert, AlertDescription } from '@/components/ui/alert'
 
 export default function Index() {
   const { user } = useAuth()
-  const [hasAnalysis, setHasAnalysis] = useState(false)
+  const [hasData, setHasData] = useState(false)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     if (user) {
-      checkAnalysis()
+      checkData()
     }
   }, [user])
 
-  const checkAnalysis = async () => {
+  const checkData = async () => {
     try {
-      const { data } = await supabase
-        .from('user_activity_log')
-        .select('id')
+      const { count } = await supabase
+        .from('progress_metrics')
+        .select('*', { count: 'exact', head: true })
         .eq('user_id', user!.id)
-        .eq('action', 'postural_analysis_completed')
-        .limit(1)
 
-      if (data && data.length > 0) {
-        setHasAnalysis(true)
+      if (count && count > 0) {
+        setHasData(true)
       }
     } catch (e) {
       console.error(e)
+    } finally {
+      setLoading(false)
     }
   }
 
+  const firstName =
+    user?.user_metadata?.full_name?.split(' ')[0] || user?.email?.split('@')[0] || 'Atleta'
+
   return (
-    <div className="min-h-[85vh] flex flex-col items-center justify-center p-6 bg-background relative overflow-hidden">
-      <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/10 via-background to-background"></div>
+    <div className="flex flex-col items-center justify-center min-h-[85vh] text-center p-6 animate-fade-in-up bg-background relative overflow-hidden">
+      <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/5 via-background to-background"></div>
 
-      <div className="max-w-md w-full text-center space-y-8 animate-fade-in-up">
-        <div className="w-24 h-24 mx-auto bg-primary/20 rounded-3xl rotate-12 flex items-center justify-center shadow-xl mb-12">
-          <Activity className="w-12 h-12 text-primary -rotate-12 opacity-90 shadow-inner" />
-        </div>
+      <div className="w-24 h-24 bg-primary/10 rounded-full flex items-center justify-center mb-6 text-primary shadow-sm ring-1 ring-primary/20">
+        <Activity className="w-12 h-12" />
+      </div>
 
-        <div className="space-y-6">
-          <h1 className="text-5xl font-extrabold tracking-tight leading-tight">
-            KINETIX <br />
-            <span className="text-primary">Health</span>
-          </h1>
-          <p className="text-lg text-muted-foreground">
-            Sua plataforma integrada de saúde, nutrição e performance.
-          </p>
-        </div>
+      <h2 className="text-3xl md:text-4xl font-bold mb-4 tracking-tight">
+        Olá, <span className="text-primary">{firstName}</span>!
+      </h2>
 
-        <div className="pt-8 flex flex-col gap-4">
-          <Dialog>
-            <DialogTrigger asChild>
-              <Button
-                size="lg"
-                className="w-full h-14 text-lg font-semibold bg-primary text-primary-foreground rounded-xl shadow-lg hover:-translate-y-1 transition-all"
-              >
-                Começar Agora
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-md">
-              <DialogHeader>
-                <DialogTitle className="text-center text-xl mb-2">
-                  O que você deseja configurar primeiro?
-                </DialogTitle>
-              </DialogHeader>
-              <div className="grid gap-4 py-4">
-                <Button
-                  asChild
-                  variant="outline"
-                  className="h-16 flex justify-start px-6 gap-4 text-lg"
-                >
-                  <Link to="/onboarding">
-                    <Dumbbell className="w-6 h-6 text-primary" />
-                    Responder Anamnese Treino
-                  </Link>
-                </Button>
-                <Button
-                  asChild
-                  variant="outline"
-                  className="h-16 flex justify-start px-6 gap-4 text-lg"
-                >
-                  <Link to="/nutrition-onboarding">
-                    <Utensils className="w-6 h-6 text-primary" />
-                    Responder Anamnese Dieta
-                  </Link>
-                </Button>
-              </div>
-            </DialogContent>
-          </Dialog>
+      <p className="text-muted-foreground max-w-md mb-10 text-lg">
+        {hasData
+          ? 'Bem-vindo de volta! Acesse suas análises, veja seus planos e registre seu progresso hoje.'
+          : 'Seu progresso começa aqui! Acesse a aba de Análises para que a IA gere seus planos inteligentes.'}
+      </p>
 
-          <div className="space-y-2">
-            <Button
-              asChild
-              size="lg"
-              variant="outline"
-              disabled={!hasAnalysis}
-              className={`w-full h-14 text-lg font-semibold rounded-xl shadow-lg transition-all ${
-                !hasAnalysis ? 'opacity-50 pointer-events-none' : 'hover:-translate-y-1'
-              }`}
-            >
-              <Link to={hasAnalysis ? '/workout/execute' : '#'}>Iniciar Treino</Link>
-            </Button>
-            {!hasAnalysis && (
-              <Alert variant="default" className="bg-muted/50 border-none mt-2">
-                <AlertCircle className="h-4 w-4 text-muted-foreground" />
-                <AlertDescription className="text-xs text-muted-foreground">
-                  Faça a Análise Postural primeiro para liberar seus treinos.
-                </AlertDescription>
-              </Alert>
-            )}
-          </div>
-        </div>
+      <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto max-w-md">
+        <Button
+          asChild
+          size="lg"
+          className="h-14 px-8 font-bold text-lg w-full sm:w-auto shadow-lg hover:-translate-y-1 transition-transform"
+        >
+          <Link to="/assessments">
+            <ClipboardList className="w-5 h-5 mr-2" /> Minhas Análises
+          </Link>
+        </Button>
+        <Button
+          asChild
+          variant="outline"
+          size="lg"
+          className="h-14 px-8 font-bold text-lg w-full sm:w-auto bg-background hover:-translate-y-1 transition-transform"
+        >
+          <Link to="/progress">
+            <LineChart className="w-5 h-5 mr-2" /> Ver Progresso
+          </Link>
+        </Button>
       </div>
     </div>
   )

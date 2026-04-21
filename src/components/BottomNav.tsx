@@ -1,11 +1,13 @@
 import { Link, useLocation } from 'react-router-dom'
-import { Home, Utensils, Dumbbell, User } from 'lucide-react'
+import { Home, Utensils, Dumbbell, User, ClipboardList, TrendingUp } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 const items = [
-  { title: 'Início', url: '/', icon: Home },
-  { title: 'Nutrição', url: '/nutrition', icon: Utensils },
+  { title: 'Início', url: '/index', icon: Home },
+  { title: 'Análises', url: '/assessments', icon: ClipboardList },
   { title: 'Treinos', url: '/workouts', icon: Dumbbell },
+  { title: 'Nutrição', url: '/nutrition', icon: Utensils },
+  { title: 'Progresso', url: '/progress', icon: TrendingUp },
   { title: 'Perfil', url: '/profile', icon: User },
 ]
 
@@ -39,7 +41,7 @@ export function BottomNav({ className }: { className?: string }) {
                 >
                   <item.icon className={cn('w-5 h-5', isActive && 'fill-primary/20')} />
                 </div>
-                <span className="text-[10px] font-medium">{item.title}</span>
+                <span className="text-[9px] font-medium">{item.title}</span>
               </Link>
             </li>
           )

@@ -40,6 +40,14 @@ export default function PosturalAnalysisPage() {
         action: 'smart_analysis_completed',
         entity: 'analysis',
       })
+
+      // Auto-generate training plan
+      await supabase.from('periodization').insert({
+        name: 'Treino Corretivo e Hipertrofia',
+        weeks: 4,
+        objective: 'Correção biomecânica e ganho de massa muscular magra',
+        parameters: { level: 'intermediário', frequency: 4 },
+      })
     }
 
     setIsProcessing(false)
@@ -120,14 +128,10 @@ export default function PosturalAnalysisPage() {
             size="lg"
             className="w-full md:w-auto h-16 px-10 text-xl font-bold shadow-lg"
             onClick={() => {
-              toast({
-                title: 'Treino gerado com sucesso!',
-                description: 'Seu treino corretivo está pronto para execução.',
-              })
               navigate('/workouts')
             }}
           >
-            Gerar Treino Corretivo
+            Acessar Meu Treino
           </Button>
         </div>
       </div>

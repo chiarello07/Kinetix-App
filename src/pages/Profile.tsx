@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react'
-import { Save, Edit2, AlertCircle, RefreshCw, User as UserIcon } from 'lucide-react'
+import { useState, useEffect, useRef } from 'react'
+import { Save, Edit2, AlertCircle, RefreshCw, User as UserIcon, Camera } from 'lucide-react'
 import {
   Card,
   CardContent,
@@ -37,11 +37,14 @@ import { Badge } from '@/components/ui/badge'
 export default function Profile() {
   const { user } = useAuth()
   const { toast } = useToast()
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   const [isEditing, setIsEditing] = useState(false)
   const [profile, setProfile] = useState<any>(null)
   const [formData, setFormData] = useState<any>(null)
   const [isSaving, setIsSaving] = useState(false)
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null)
+  const [fullName, setFullName] = useState('')
 
   const [criticalChanges, setCriticalChanges] = useState<CriticalChange[]>([])
   const [showModal, setShowModal] = useState(false)
@@ -49,12 +52,16 @@ export default function Profile() {
 
   useEffect(() => {
     if (user) {
+      setFullName(user.user_metadata?.full_name || '')
+      setAvatarUrl(
+        user.user_metadata?.avatar_url || `https://img.usecurling.com/ppl/large?seed=${user.id}`,
+      )
       fetchProfile()
     }
   }, [user])
 
   const fetchProfile = async () => {
-    const { data, error } = await supabase
+    const { data } = await supabase
       .from('nutrition_profiles')
       .select('*')
       .eq('user_id', user!.id)
@@ -66,7 +73,25 @@ export default function Profile() {
     }
   }
 
+  const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      const file = e.target.files[0]
+      const url = URL.createObjectURL(file)
+      setAvatarUrl(url)
+      await supabase.auth.updateUser({
+        data: { avatar_url: url },
+      })
+      toast({ title: 'Foto atualizada', description: 'Sua foto de perfil foi atualizada.' })
+    }
+  }
+
   const handleSave = async () => {
+    if (fullName !== user?.user_metadata?.full_name) {
+      await supabase.auth.updateUser({
+        data: { full_name: fullName },
+      })
+    }
+
     const changes = detectCriticalChanges(profile, formData)
 
     if (changes.some((c) => c.severity === 'critical')) {
@@ -136,7 +161,7 @@ export default function Profile() {
     )
 
   return (
-    <div className="flex flex-col gap-6 max-w-4xl mx-auto w-full animate-fade-in-up pb-20">
+    <div className="flex flex-col gap-6 max-w-4xl mx-auto w-full animate-fade-in-up pb-24 md:pb-6 p-6">
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold tracking-tight">Meu Perfil</h1>
         {!isEditing && (
@@ -147,15 +172,39 @@ export default function Profile() {
       </div>
 
       <Card className="border-none shadow-subtle bg-primary/5">
-        <CardContent className="p-6 flex items-center gap-6">
-          <Avatar className="w-20 h-20 border-2 border-background shadow-sm">
-            <AvatarImage src={`https://img.usecurling.com/ppl/large?seed=${user?.id}`} />
-            <AvatarFallback>
-              <UserIcon className="w-8 h-8 text-muted-foreground" />
-            </AvatarFallback>
-          </Avatar>
-          <div>
-            <h2 className="text-2xl font-bold">{user?.email?.split('@')[0] || 'Usuário'}</h2>
+        <CardContent className="p-6 flex flex-col md:flex-row items-center md:items-start gap-6">
+          <div
+            className="relative group cursor-pointer"
+            onClick={() => fileInputRef.current?.click()}
+          >
+            <Avatar className="w-24 h-24 border-4 border-background shadow-sm transition-transform group-hover:scale-105">
+              <AvatarImage src={avatarUrl || undefined} />
+              <AvatarFallback>
+                <UserIcon className="w-10 h-10 text-muted-foreground" />
+              </AvatarFallback>
+            </Avatar>
+            <div className="absolute inset-0 bg-black/40 rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white">
+              <Camera className="w-6 h-6" />
+            </div>
+            <input
+              type="file"
+              className="hidden"
+              ref={fileInputRef}
+              accept="image/*"
+              onChange={handleAvatarChange}
+            />
+          </div>
+          <div className="flex-1 text-center md:text-left space-y-2 mt-4 md:mt-2">
+            {isEditing ? (
+              <Input
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
+                placeholder="Seu Nome Completo"
+                className="text-xl font-bold bg-background max-w-xs mx-auto md:mx-0"
+              />
+            ) : (
+              <h2 className="text-2xl font-bold">{fullName || 'Atleta Kinetix'}</h2>
+            )}
             <p className="text-muted-foreground">{user?.email}</p>
           </div>
         </CardContent>
@@ -163,8 +212,10 @@ export default function Profile() {
 
       <Card className="border-none shadow-elevation">
         <CardHeader>
-          <CardTitle>Informações do Plano</CardTitle>
-          <CardDescription>Seus dados biométricos, de treino e nutrição.</CardDescription>
+          <CardTitle>Informações Essenciais</CardTitle>
+          <CardDescription>
+            Seus dados biométricos principais que guiam nossos planos.
+          </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="grid sm:grid-cols-2 gap-4">
@@ -296,24 +347,10 @@ export default function Profile() {
             </div>
           </div>
         </CardContent>
-        <CardFooter className="flex flex-col sm:flex-row gap-3 border-t pt-6 bg-muted/20 flex-wrap">
+        <CardFooter className="flex flex-col sm:flex-row gap-3 border-t pt-6 bg-muted/20">
           <Button
             variant="outline"
-            className="flex-1"
-            onClick={() => (window.location.href = '/onboarding')}
-          >
-            Refazer Anamnese Treino
-          </Button>
-          <Button
-            variant="outline"
-            className="flex-1"
-            onClick={() => (window.location.href = '/nutrition-onboarding')}
-          >
-            Refazer Anamnese Nutrição
-          </Button>
-          <Button
-            variant="outline"
-            className="flex-1 text-destructive hover:text-destructive hover:bg-destructive/10"
+            className="w-full text-destructive hover:text-destructive hover:bg-destructive/10"
             onClick={async () => {
               if (user?.email) {
                 await supabase.auth.resetPasswordForEmail(user.email)
@@ -328,12 +365,13 @@ export default function Profile() {
           </Button>
         </CardFooter>
         {isEditing && (
-          <CardFooter className="flex justify-end gap-3 border-t pt-6">
+          <CardFooter className="flex justify-end gap-3 border-t pt-6 bg-background">
             <Button
               variant="outline"
               onClick={() => {
                 setIsEditing(false)
                 setFormData(profile)
+                setFullName(user?.user_metadata?.full_name || '')
               }}
             >
               Cancelar
