@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button'
 import { Link } from 'react-router-dom'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
-import { Dumbbell, Camera } from 'lucide-react'
+import { Dumbbell, BrainCircuit } from 'lucide-react'
 
 export default function Workouts() {
   return (
@@ -13,7 +13,7 @@ export default function Workouts() {
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Treinos</h1>
           <p className="text-muted-foreground">
-            Gerencie seus planos de treino e análises posturais.
+            Gerencie seus planos de treino e análises biomecânicas.
           </p>
         </div>
       </div>
@@ -22,16 +22,16 @@ export default function Workouts() {
         <Card className="hover:shadow-md transition-shadow border-primary/10 bg-card">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-xl">
-              <Camera className="w-6 h-6 text-primary" /> Análise Postural
+              <BrainCircuit className="w-6 h-6 text-primary" /> Análise Inteligente
             </CardTitle>
             <CardDescription className="text-sm">
-              Faça a captura de ângulos biométricos para a IA gerar um treino corretivo e
+              Faça a captura ou upload das suas fotos para a IA gerar um treino corretivo e
               hipertrófico personalizado.
             </CardDescription>
           </CardHeader>
           <CardContent>
             <Button asChild className="w-full h-12 font-bold shadow-sm">
-              <Link to="/analysis">Realizar Análise</Link>
+              <Link to="/analysis">Fazer (ou refazer) Análise</Link>
             </Button>
           </CardContent>
         </Card>

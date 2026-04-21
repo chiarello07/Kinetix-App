@@ -45,14 +45,6 @@ export default function Layout() {
           <span className="font-bold text-lg tracking-tight">KINETIX</span>
         </div>
         <nav className="flex-1 overflow-y-auto py-4 px-3 space-y-1">
-          <Link to="/">
-            <Button
-              variant={location.pathname === '/' ? 'secondary' : 'ghost'}
-              className="w-full justify-start font-medium"
-            >
-              <LayoutDashboard className="mr-3 h-4 w-4" /> Painel
-            </Button>
-          </Link>
           <Link to="/nutrition">
             <Button
               variant={location.pathname.startsWith('/nutrition') ? 'secondary' : 'ghost'}
@@ -162,13 +154,6 @@ export default function Layout() {
 
         {/* Mobile Navigation Bar */}
         <nav className="md:hidden h-16 border-t bg-card flex items-center justify-around px-2 sticky bottom-0 z-20">
-          <Link
-            to="/"
-            className={`p-2 rounded-xl flex flex-col items-center ${location.pathname === '/' ? 'text-primary' : 'text-muted-foreground'}`}
-          >
-            <LayoutDashboard className="h-5 w-5" />
-            <span className="text-[10px] mt-1 font-medium">Painel</span>
-          </Link>
           <Link
             to="/nutrition"
             className={`p-2 rounded-xl flex flex-col items-center ${location.pathname.startsWith('/nutrition') ? 'text-primary' : 'text-muted-foreground'}`}

@@ -1,6 +1,6 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { Button } from '@/components/ui/button'
-import { Camera, CheckCircle2, RefreshCw } from 'lucide-react'
+import { Camera, CheckCircle2, RefreshCw, Upload, BrainCircuit } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { supabase } from '@/lib/supabase/client'
 import { useAuth } from '@/hooks/use-auth'
@@ -11,12 +11,21 @@ export default function PosturalAnalysisPage() {
   const navigate = useNavigate()
   const [step, setStep] = useState(0) // 0: front, 1: left, 2: right, 3: back, 4: processing, 5: results
   const [isProcessing, setIsProcessing] = useState(false)
+  const [photos, setPhotos] = useState<string[]>([])
+
+  const fileInputRef = useRef<HTMLInputElement>(null)
+  const cameraInputRef = useRef<HTMLInputElement>(null)
 
   const views = ['Frontal', 'Lateral Esquerda', 'Lateral Direita', 'Posterior']
 
-  const handleCapture = () => {
-    if (step < 3) setStep((s) => s + 1)
-    else setStep(4)
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      const url = URL.createObjectURL(e.target.files[0])
+      setPhotos((prev) => [...prev, url])
+
+      if (step < 3) setStep((s) => s + 1)
+      else setStep(4)
+    }
   }
 
   const processAnalysis = async () => {
@@ -28,7 +37,7 @@ export default function PosturalAnalysisPage() {
     if (user) {
       await supabase.from('user_activity_log').insert({
         user_id: user.id,
-        action: 'postural_analysis_completed',
+        action: 'smart_analysis_completed',
         entity: 'analysis',
       })
     }
@@ -40,11 +49,11 @@ export default function PosturalAnalysisPage() {
   if (step === 4) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[80vh] gap-6 animate-fade-in px-4 text-center">
-        <div className="w-20 h-20 border-4 border-primary border-t-transparent rounded-full animate-spin shadow-sm" />
+        <BrainCircuit className="w-20 h-20 text-primary animate-pulse shadow-sm" />
         <h2 className="text-3xl font-bold tracking-tight">Processando Imagens...</h2>
         <p className="text-muted-foreground max-w-md">
           Nossa IA está analisando seus ângulos biomecânicos e identificando possíveis desvios
-          posturais.
+          posturais para otimizar seu treino.
         </p>
         <Button
           onClick={processAnalysis}
@@ -52,7 +61,7 @@ export default function PosturalAnalysisPage() {
           size="lg"
           className="mt-4 h-14 px-8 font-bold"
         >
-          Realizar Análise
+          Visualizar Resultados
         </Button>
       </div>
     )
@@ -65,9 +74,9 @@ export default function PosturalAnalysisPage() {
           <div className="w-20 h-20 bg-green-500/10 text-green-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-sm border border-green-500/20">
             <CheckCircle2 className="w-10 h-10" />
           </div>
-          <h2 className="text-3xl font-bold tracking-tight">Análise Concluída</h2>
+          <h2 className="text-3xl font-bold tracking-tight">Análise Inteligente Concluída</h2>
           <p className="text-muted-foreground">
-            Confira os resultados da sua avaliação postural inteligente.
+            Confira os resultados da sua avaliação postural e biomecânica.
           </p>
         </div>
 
@@ -87,7 +96,7 @@ export default function PosturalAnalysisPage() {
 
           <div className="p-6 border rounded-2xl bg-card shadow-subtle">
             <h3 className="font-semibold text-lg mb-4 flex items-center gap-2">
-              <Camera className="w-5 h-5 text-primary" /> Desvios Detectados
+              <BrainCircuit className="w-5 h-5 text-primary" /> Desvios Detectados
             </h3>
             <ul className="space-y-3">
               <li className="flex gap-3 text-sm text-foreground p-2 rounded-lg bg-secondary/30">
@@ -118,7 +127,7 @@ export default function PosturalAnalysisPage() {
               navigate('/workouts')
             }}
           >
-            Gerar Treino
+            Gerar Treino Corretivo
           </Button>
         </div>
       </div>
@@ -128,29 +137,68 @@ export default function PosturalAnalysisPage() {
   return (
     <div className="max-w-md mx-auto p-6 flex flex-col items-center min-h-[80vh] justify-center gap-8 animate-fade-in pb-24">
       <div className="text-center space-y-2">
-        <h2 className="text-3xl font-bold tracking-tight">Posição {views[step]}</h2>
+        <h2 className="text-3xl font-bold tracking-tight">Análise Inteligente</h2>
         <p className="text-muted-foreground">
-          Posicione-se em frente à câmera e capture a foto para a análise biomecânica.
+          Posição {step + 1} de 4:{' '}
+          <span className="font-semibold text-foreground">{views[step]}</span>
         </p>
       </div>
 
-      <div className="w-full aspect-[3/4] bg-secondary/40 rounded-3xl flex items-center justify-center border-2 border-dashed border-primary/40 relative overflow-hidden shadow-inner">
-        <Camera className="w-16 h-16 text-primary/40" />
-        <div className="absolute inset-0 bg-gradient-to-t from-background/50 to-transparent" />
+      <div className="w-full aspect-[3/4] bg-secondary/40 rounded-3xl flex flex-col items-center justify-center border-2 border-dashed border-primary/40 relative overflow-hidden shadow-inner">
+        {photos[step] ? (
+          <img
+            src={photos[step]}
+            alt={`Captura ${views[step]}`}
+            className="w-full h-full object-cover"
+          />
+        ) : (
+          <>
+            <Camera className="w-16 h-16 text-primary/40 mb-4" />
+            <p className="text-sm text-muted-foreground px-8 text-center">
+              Posicione a câmera na altura do umbigo e capture a foto de corpo inteiro.
+            </p>
+          </>
+        )}
       </div>
 
+      <input
+        type="file"
+        accept="image/*"
+        className="hidden"
+        ref={fileInputRef}
+        onChange={handleFileChange}
+      />
+      <input
+        type="file"
+        accept="image/*"
+        capture="environment"
+        className="hidden"
+        ref={cameraInputRef}
+        onChange={handleFileChange}
+      />
+
       <div className="flex gap-4 w-full mt-4">
-        {step > 0 && (
+        {step > 0 && !photos[step] && (
           <Button
             variant="outline"
             className="flex-1 h-14 font-semibold"
             onClick={() => setStep((s) => s - 1)}
           >
-            <RefreshCw className="w-4 h-4 mr-2" /> Recapturar
+            <RefreshCw className="w-4 h-4 mr-2" /> Voltar
           </Button>
         )}
-        <Button className="flex-[2] h-14 font-bold text-lg shadow-md" onClick={handleCapture}>
-          {step === 3 ? 'Finalizar Captura' : 'Capturar Foto'}
+        <Button
+          variant="secondary"
+          className="flex-1 h-14 font-semibold"
+          onClick={() => fileInputRef.current?.click()}
+        >
+          <Upload className="w-4 h-4 mr-2" /> Upload
+        </Button>
+        <Button
+          className="flex-[2] h-14 font-bold shadow-md"
+          onClick={() => cameraInputRef.current?.click()}
+        >
+          <Camera className="w-4 h-4 mr-2" /> {step === 3 ? 'Finalizar' : 'Capturar Foto'}
         </Button>
       </div>
     </div>

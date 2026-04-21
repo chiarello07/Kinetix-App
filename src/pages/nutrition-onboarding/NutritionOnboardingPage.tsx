@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button'
 import { supabase } from '@/lib/supabase/client'
 import { useAuth } from '@/hooks/use-auth'
 import { saveNutritionProfileStep } from '@/lib/utils/supabase-helpers'
+import { useEffect } from 'react'
 
 export default function NutritionOnboardingPage() {
   const [step, setStep] = useState(1)
@@ -19,6 +20,10 @@ export default function NutritionOnboardingPage() {
     setData((d) => ({ ...d, ...updates }))
 
   const { user } = useAuth()
+
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [step])
 
   const mapStepToProfileData = (stepNum: number, currentData: any) => {
     switch (stepNum) {
@@ -149,8 +154,8 @@ export default function NutritionOnboardingPage() {
         <p className="text-muted-foreground text-center mb-8">
           Seu plano nutricional personalizado está sendo gerado.
         </p>
-        <Link to="/nutrition-assessments">
-          <Button className="h-12 px-8 text-lg font-bold">Iniciar Avaliação Detalhada</Button>
+        <Link to="/nutrition">
+          <Button className="h-12 px-8 text-lg font-bold">Ir para Nutrição</Button>
         </Link>
       </div>
     )

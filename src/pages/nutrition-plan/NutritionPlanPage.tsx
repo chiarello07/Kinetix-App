@@ -166,7 +166,7 @@ export default function NutritionPlanPage() {
         <Button
           variant="ghost"
           size="icon"
-          onClick={() => navigate('/dashboard')}
+          onClick={() => navigate('/nutrition')}
           className="h-9 w-9"
         >
           <ChevronLeft className="h-5 w-5" />

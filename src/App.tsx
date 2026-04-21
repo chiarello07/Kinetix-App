@@ -1,5 +1,6 @@
 /* Main App Component - Handles routing (using react-router-dom), query client and other providers - use this file to add all routes */
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, useLocation, Navigate } from 'react-router-dom'
+import { useEffect } from 'react'
 import { Toaster } from '@/components/ui/toaster'
 import { Toaster as Sonner } from '@/components/ui/sonner'
 import { TooltipProvider } from '@/components/ui/tooltip'
@@ -25,16 +26,26 @@ import Profile from './pages/Profile'
 // ONLY IMPORT AND RENDER WORKING PAGES, NEVER ADD PLACEHOLDER COMPONENTS OR PAGES IN THIS FILE
 // AVOID REMOVING ANY CONTEXT PROVIDERS FROM THIS FILE (e.g. TooltipProvider, Toaster, Sonner)
 
+function ScrollToTop() {
+  const { pathname } = useLocation()
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [pathname])
+  return null
+}
+
 const App = () => (
   <ThemeProvider defaultTheme="system" storageKey="kinetix-theme">
     <AuthProvider>
       <BrowserRouter future={{ v7_startTransition: false, v7_relativeSplatPath: false }}>
+        <ScrollToTop />
         <TooltipProvider>
           <Toaster />
           <Sonner />
           <Routes>
             <Route element={<Layout />}>
-              <Route path="/" element={<Index />} />
+              <Route path="/" element={<Navigate to="/nutrition" replace />} />
+              <Route path="/index" element={<Index />} />
               <Route path="/onboarding" element={<OnboardingPage />} />
               <Route path="/nutrition-onboarding" element={<NutritionOnboardingPage />} />
               <Route path="/nutrition-assessments" element={<NutritionAssessmentsPage />} />

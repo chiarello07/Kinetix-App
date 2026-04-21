@@ -13,6 +13,9 @@ import { MonthlyReportSection } from './components/MonthlyReportSection'
 import { MonthlyUpdateSection } from './components/MonthlyUpdateSection'
 import { supabase } from '@/lib/supabase/client'
 import { useAuth } from '@/hooks/use-auth'
+import { Link } from 'react-router-dom'
+import { Button } from '@/components/ui/button'
+import { LineChart, Dumbbell, Utensils } from 'lucide-react'
 
 export default function ProgressPage() {
   const { user } = useAuth()
@@ -72,6 +75,40 @@ export default function ProgressPage() {
     } finally {
       setIsLoading(false)
     }
+  }
+
+  const hasData =
+    data &&
+    (data.metrics.workout.totalWorkouts > 0 ||
+      data.metrics.nutrition.mealsLogged > 0 ||
+      data.metrics.workout.totalVolume > 0 ||
+      data.metrics.nutrition.totalCalories > 0)
+
+  if (!isLoading && !hasData) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[70vh] text-center p-6 animate-fade-in-up">
+        <div className="w-24 h-24 bg-primary/10 rounded-full flex items-center justify-center mb-6 text-primary shadow-sm">
+          <LineChart className="w-12 h-12" />
+        </div>
+        <h2 className="text-3xl font-bold mb-3 tracking-tight">Seu progresso começa aqui!</h2>
+        <p className="text-muted-foreground max-w-md mb-10 text-lg">
+          Registre seus treinos e refeições para que a IA gere análises e gráficos inteligentes da
+          sua evolução.
+        </p>
+        <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+          <Button asChild size="lg" className="h-14 px-8 font-bold text-lg">
+            <Link to="/workouts">
+              <Dumbbell className="w-5 h-5 mr-2" /> Iniciar Treino
+            </Link>
+          </Button>
+          <Button asChild variant="outline" size="lg" className="h-14 px-8 font-bold text-lg">
+            <Link to="/nutrition">
+              <Utensils className="w-5 h-5 mr-2" /> Registrar Refeição
+            </Link>
+          </Button>
+        </div>
+      </div>
+    )
   }
 
   return (
