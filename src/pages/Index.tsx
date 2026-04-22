@@ -10,7 +10,11 @@ export default function Index() {
       </div>
 
       <h1 className="text-5xl md:text-6xl font-black tracking-tighter mb-6 bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/70">
-        KINETIX <span className="text-[#FF1493]">Health</span>
+        KINETIX{' '}
+        <span className="text-[#FF1493]">
+          App
+          <br />
+        </span>
       </h1>
 
       <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-12 leading-relaxed">
