@@ -170,7 +170,7 @@ export function PaywallModal({
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-2 gap-x-4 text-sm text-gray-300">
             <div className="flex items-center gap-2">
               <span className="text-green-400 shrink-0">✓</span>
-              <span>Análise postural ilimitada com IA</span>
+              <span>Análise corporal inteligente</span>
             </div>
             <div className="flex items-center gap-2">
               <span className="text-green-400 shrink-0">✓</span>
@@ -182,11 +182,11 @@ export function PaywallModal({
             </div>
             <div className="flex items-center gap-2">
               <span className="text-green-400 shrink-0">✓</span>
-              <span>Relatórios detalhados + trimestrais</span>
+              <span>Relatórios detalhado</span>
             </div>
             <div className="flex items-center gap-2">
               <span className="text-green-400 shrink-0">✓</span>
-              <span>Suporte prioritário por email</span>
+              <span>Suporte prioritário por e-mail</span>
             </div>
             <div className="flex items-center gap-2">
               <span className="text-green-400 shrink-0">✓</span>
@@ -196,9 +196,7 @@ export function PaywallModal({
         </div>
 
         <div className="text-center mt-6">
-          <p className="text-xs text-gray-400 mb-3">
-            Pagamento seguro via Stripe • Cancele quando quiser
-          </p>
+          <p className="text-xs text-gray-400 mb-3">Pagamento seguro via Mercado Pago</p>
           <button
             onClick={onClose}
             className="text-gray-400 hover:text-white transition-colors text-sm font-medium underline-offset-4 hover:underline"
