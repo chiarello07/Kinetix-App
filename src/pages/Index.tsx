@@ -1,44 +1,42 @@
 import { Button } from '@/components/ui/button'
 import { Link } from 'react-router-dom'
-import { Activity } from 'lucide-react'
+import { ArrowRight, Play } from 'lucide-react'
 
 export default function Index() {
   return (
-    <div className="flex flex-col items-center justify-center min-h-[85vh] text-center p-6 animate-fade-in bg-background">
-      <div className="w-[96px] h-[96px] bg-[#fdf2f8] dark:bg-[#ec4899]/10 rounded-3xl flex items-center justify-center mb-10 transform rotate-6 shadow-sm">
-        <div className="transform -rotate-6">
-          <Activity className="w-12 h-12 text-[#ec4899] stroke-[2.5]" />
-        </div>
+    <div className="flex flex-col items-center justify-center min-h-[80vh] text-center px-4 animate-fade-in-up">
+      <div className="w-24 h-24 bg-gradient-to-br from-[#FF1493] to-[#4B0082] rounded-3xl flex items-center justify-center shadow-xl shadow-primary/20 mb-8 transform -rotate-6">
+        <span className="text-4xl font-black text-white rotate-6">K</span>
       </div>
 
-      <div className="flex flex-col items-center mb-6">
-        <h1 className="text-[3.25rem] font-black tracking-tighter text-slate-900 dark:text-white leading-[1.1] uppercase">
-          KINETIX
-        </h1>
-        <h1 className="text-[3.25rem] font-black tracking-tighter text-[#ec4899] leading-[1.1]">
-          <div>
-            <br />
-          </div>
-        </h1>
-      </div>
+      <h1 className="text-5xl md:text-6xl font-black tracking-tighter mb-6 bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/70">
+        KINETIX <span className="text-[#FF1493]">Health</span>
+      </h1>
 
-      <p className="text-slate-500 dark:text-slate-400 text-center max-w-[280px] mb-12 text-[1.05rem] leading-relaxed">
-        Sua plataforma integrada de saúde, nutrição e performance.
+      <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-12 leading-relaxed">
+        Sua plataforma integrada de saúde, treinos personalizados e análise postural com
+        Inteligência Artificial.
       </p>
 
-      <div className="flex flex-col gap-4 w-full max-w-[320px]">
+      <div className="flex flex-col sm:flex-row gap-4 w-full max-w-md mx-auto">
         <Button
           asChild
-          className="w-full h-14 text-[1.1rem] font-semibold bg-[#ec4899] hover:bg-[#db2777] text-white rounded-[1rem] shadow-sm transition-transform hover:-translate-y-0.5 border-none"
+          size="lg"
+          className="w-full text-lg h-14 bg-foreground text-background hover:bg-foreground/90 font-bold shadow-lg"
         >
-          <Link to="/assessments">Começar Agora</Link>
+          <Link to="/analysis">
+            Começar Agora <ArrowRight className="w-5 h-5 ml-2" />
+          </Link>
         </Button>
         <Button
           asChild
+          size="lg"
           variant="outline"
-          className="w-full h-14 text-[1.1rem] font-semibold bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-500 dark:text-slate-400 border border-slate-100 dark:border-slate-800 shadow-[0_2px_15px_rgba(0,0,0,0.04)] rounded-[1rem] transition-transform hover:-translate-y-0.5"
+          className="w-full text-lg h-14 font-bold border-2 border-[#FF1493]/20 hover:border-[#FF1493]/50 hover:bg-[#FF1493]/5 text-foreground"
         >
-          <Link to="/workouts">Iniciar Treino</Link>
+          <Link to="/workouts">
+            <Play className="w-5 h-5 mr-2 text-[#FF1493]" /> Iniciar Treino
+          </Link>
         </Button>
       </div>
     </div>

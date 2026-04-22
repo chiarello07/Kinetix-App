@@ -1,5 +1,14 @@
 import { useState, useEffect, useRef } from 'react'
-import { Save, Edit2, AlertCircle, RefreshCw, User as UserIcon, Camera } from 'lucide-react'
+import {
+  Save,
+  Edit2,
+  AlertCircle,
+  RefreshCw,
+  User as UserIcon,
+  Camera,
+  Crown,
+  CreditCard,
+} from 'lucide-react'
 import {
   Card,
   CardContent,
@@ -33,6 +42,8 @@ import {
 import { detectCriticalChanges, CriticalChange } from '@/lib/utils/profile-utils'
 import { regeneratePlans } from '@/services/regeneration'
 import { Badge } from '@/components/ui/badge'
+import { PaywallModal } from '@/components/PaywallModal'
+import { cn } from '@/lib/utils'
 
 export default function Profile() {
   const { user } = useAuth()
@@ -49,6 +60,9 @@ export default function Profile() {
   const [criticalChanges, setCriticalChanges] = useState<CriticalChange[]>([])
   const [showModal, setShowModal] = useState(false)
   const [isGenerating, setIsGenerating] = useState(false)
+
+  const [subscription, setSubscription] = useState<any>(null)
+  const [showPaywall, setShowPaywall] = useState(false)
 
   useEffect(() => {
     if (user) {
@@ -70,6 +84,23 @@ export default function Profile() {
     if (data) {
       setProfile(data)
       setFormData(data)
+    }
+
+    const { data: profileData } = await supabase
+      .from('profiles')
+      .select('is_premium, subscription_id')
+      .eq('id', user!.id)
+      .single()
+
+    if (profileData?.subscription_id) {
+      const { data: subData } = await supabase
+        .from('subscriptions')
+        .select('*')
+        .eq('id', profileData.subscription_id)
+        .single()
+      if (subData) {
+        setSubscription(subData)
+      }
     }
   }
 
@@ -165,11 +196,68 @@ export default function Profile() {
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold tracking-tight">Meu Perfil</h1>
         {!isEditing && (
-          <Button onClick={() => setIsEditing(true)} className="gap-2">
+          <Button onClick={() => setIsEditing(true)} className="gap-2 shadow-sm">
             <Edit2 className="w-4 h-4" /> Editar Perfil
           </Button>
         )}
       </div>
+
+      {/* Assinatura Card */}
+      <Card className="border-none shadow-elevation bg-gradient-to-br from-card to-card/50 overflow-hidden relative">
+        <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-amber-400 to-orange-500"></div>
+        <CardHeader className="pb-2">
+          <CardTitle className="flex items-center gap-2">
+            <Crown className="w-5 h-5 text-amber-500" /> Planos e Assinatura
+          </CardTitle>
+          <CardDescription>Gerencie seu plano de acesso ao Kinetix.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="p-4 bg-secondary/30 rounded-xl border border-border/50 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div>
+              <div className="flex items-center gap-2 mb-2">
+                <Badge
+                  className={cn(
+                    'text-white border-0 font-bold',
+                    subscription?.status === 'active'
+                      ? 'bg-amber-500 hover:bg-amber-600'
+                      : 'bg-muted-foreground',
+                  )}
+                >
+                  {subscription ? `Premium ${subscription.billing_period}` : 'Plano Grátis'}
+                </Badge>
+                {subscription && (
+                  <span className="text-xs font-medium text-muted-foreground uppercase">
+                    {subscription.status}
+                  </span>
+                )}
+              </div>
+              <p className="text-sm text-foreground/90">
+                {subscription?.status === 'active'
+                  ? 'Acesso completo a todas as funcionalidades de inteligência artificial e treinos.'
+                  : 'Faça upgrade para acessar treinos personalizados e análises avançadas com IA.'}
+              </p>
+              {subscription?.expires_at && subscription.status === 'active' && (
+                <p className="text-xs text-muted-foreground mt-3 flex items-center gap-1">
+                  <CreditCard className="w-3 h-3" /> Próxima renovação:{' '}
+                  {new Date(subscription.expires_at).toLocaleDateString()}
+                </p>
+              )}
+            </div>
+            <Button
+              className={cn(
+                'shrink-0 shadow-sm',
+                subscription?.status === 'active'
+                  ? ''
+                  : 'bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white border-0',
+              )}
+              variant={subscription?.status === 'active' ? 'outline' : 'default'}
+              onClick={() => setShowPaywall(true)}
+            >
+              {subscription?.status === 'active' ? 'Gerenciar Plano' : 'Fazer Upgrade'}
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
 
       <Card className="border-none shadow-subtle bg-primary/5">
         <CardContent className="p-6 flex flex-col md:flex-row items-center md:items-start gap-6">
@@ -429,6 +517,13 @@ export default function Profile() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      <PaywallModal
+        isOpen={showPaywall}
+        onClose={() => setShowPaywall(false)}
+        feature="Acesso Premium"
+        reason="upgrade"
+      />
     </div>
   )
 }
