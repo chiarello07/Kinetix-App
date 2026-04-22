@@ -4,6 +4,8 @@ import { LoginPage } from '@/pages/auth/LoginPage'
 import { Button } from '@/components/ui/button'
 import {
   Activity,
+  Home,
+  ClipboardList,
   LayoutDashboard,
   Utensils,
   Dumbbell,
@@ -45,6 +47,14 @@ export default function Layout() {
           <span className="font-bold text-lg tracking-tight">KINETIX</span>
         </div>
         <nav className="flex-1 overflow-y-auto py-4 px-3 space-y-1">
+          <Link to="/index">
+            <Button
+              variant={location.pathname.startsWith('/index') ? 'secondary' : 'ghost'}
+              className="w-full justify-start font-medium"
+            >
+              <Home className="mr-3 h-4 w-4" /> Início
+            </Button>
+          </Link>
           <Link to="/nutrition">
             <Button
               variant={location.pathname.startsWith('/nutrition') ? 'secondary' : 'ghost'}
@@ -59,6 +69,14 @@ export default function Layout() {
               className="w-full justify-start font-medium"
             >
               <Dumbbell className="mr-3 h-4 w-4" /> Treinos
+            </Button>
+          </Link>
+          <Link to="/assessments">
+            <Button
+              variant={location.pathname.startsWith('/assessment') ? 'secondary' : 'ghost'}
+              className="w-full justify-start font-medium"
+            >
+              <ClipboardList className="mr-3 h-4 w-4" /> Análises
             </Button>
           </Link>
           <Link to="/progress">
@@ -77,8 +95,6 @@ export default function Layout() {
               <UserIcon className="mr-3 h-4 w-4" /> Perfil
             </Button>
           </Link>
-          <div>Análises</div>
-          <div>Início</div>
         </nav>
       </aside>
 
@@ -155,27 +171,48 @@ export default function Layout() {
         </main>
 
         {/* Mobile Navigation Bar */}
-        <nav className="md:hidden h-16 border-t bg-card flex items-center justify-around px-2 sticky bottom-0 z-20">
+        <nav className="md:hidden h-16 border-t bg-card flex items-center justify-start sm:justify-around px-2 overflow-x-auto sticky bottom-0 z-20 [&::-webkit-scrollbar]:hidden gap-2">
+          <Link
+            to="/index"
+            className={`p-2 rounded-xl flex flex-col items-center min-w-[3.5rem] flex-shrink-0 ${location.pathname.startsWith('/index') ? 'text-primary' : 'text-muted-foreground'}`}
+          >
+            <Home className="h-5 w-5" />
+            <span className="text-[10px] mt-1 font-medium truncate">Início</span>
+          </Link>
           <Link
             to="/nutrition"
-            className={`p-2 rounded-xl flex flex-col items-center ${location.pathname.startsWith('/nutrition') ? 'text-primary' : 'text-muted-foreground'}`}
+            className={`p-2 rounded-xl flex flex-col items-center min-w-[3.5rem] flex-shrink-0 ${location.pathname.startsWith('/nutrition') ? 'text-primary' : 'text-muted-foreground'}`}
           >
             <Utensils className="h-5 w-5" />
-            <span className="text-[10px] mt-1 font-medium">Nutrição</span>
+            <span className="text-[10px] mt-1 font-medium truncate">Nutrição</span>
           </Link>
           <Link
             to="/workouts"
-            className={`p-2 rounded-xl flex flex-col items-center ${location.pathname.startsWith('/workout') ? 'text-primary' : 'text-muted-foreground'}`}
+            className={`p-2 rounded-xl flex flex-col items-center min-w-[3.5rem] flex-shrink-0 ${location.pathname.startsWith('/workout') ? 'text-primary' : 'text-muted-foreground'}`}
           >
             <Dumbbell className="h-5 w-5" />
-            <span className="text-[10px] mt-1 font-medium">Treinos</span>
+            <span className="text-[10px] mt-1 font-medium truncate">Treinos</span>
+          </Link>
+          <Link
+            to="/assessments"
+            className={`p-2 rounded-xl flex flex-col items-center min-w-[3.5rem] flex-shrink-0 ${location.pathname.startsWith('/assessment') ? 'text-primary' : 'text-muted-foreground'}`}
+          >
+            <ClipboardList className="h-5 w-5" />
+            <span className="text-[10px] mt-1 font-medium truncate">Análises</span>
           </Link>
           <Link
             to="/progress"
-            className={`p-2 rounded-xl flex flex-col items-center ${location.pathname.startsWith('/progress') ? 'text-primary' : 'text-muted-foreground'}`}
+            className={`p-2 rounded-xl flex flex-col items-center min-w-[3.5rem] flex-shrink-0 ${location.pathname.startsWith('/progress') ? 'text-primary' : 'text-muted-foreground'}`}
           >
             <LineChart className="h-5 w-5" />
-            <span className="text-[10px] mt-1 font-medium">Progresso</span>
+            <span className="text-[10px] mt-1 font-medium truncate">Progresso</span>
+          </Link>
+          <Link
+            to="/profile"
+            className={`p-2 rounded-xl flex flex-col items-center min-w-[3.5rem] flex-shrink-0 ${location.pathname.startsWith('/profile') ? 'text-primary' : 'text-muted-foreground'}`}
+          >
+            <UserIcon className="h-5 w-5" />
+            <span className="text-[10px] mt-1 font-medium truncate">Perfil</span>
           </Link>
         </nav>
       </div>
