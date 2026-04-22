@@ -207,7 +207,7 @@ export default function Profile() {
         <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-amber-400 to-orange-500"></div>
         <CardHeader className="pb-2">
           <CardTitle className="flex items-center gap-2">
-            <Crown className="w-5 h-5 text-amber-500" /> Planos e Assinatura
+            <Crown className="w-5 h-5 text-amber-500" /> Planos Premium
           </CardTitle>
           <CardDescription>Gerencie seu plano de acesso ao Kinetix.</CardDescription>
         </CardHeader>
