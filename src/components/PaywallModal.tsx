@@ -197,12 +197,6 @@ export function PaywallModal({
 
         <div className="text-center mt-6">
           <p className="text-xs text-gray-400 mb-3">Pagamento seguro via Mercado Pago</p>
-          <button
-            onClick={onClose}
-            className="text-gray-400 hover:text-white transition-colors text-sm font-medium underline-offset-4 hover:underline"
-          >
-            Talvez Depois
-          </button>
         </div>
       </div>
     </div>
