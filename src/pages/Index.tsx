@@ -16,7 +16,9 @@ export default function Index() {
           KINETIX
         </h1>
         <h1 className="text-[3.25rem] font-black tracking-tighter text-[#ec4899] leading-[1.1]">
-          Health
+          <div>
+            <br />
+          </div>
         </h1>
       </div>
 
