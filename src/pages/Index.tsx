@@ -1,78 +1,42 @@
 import { Button } from '@/components/ui/button'
 import { Link } from 'react-router-dom'
-import { Activity, Dumbbell, Utensils, LineChart, ClipboardList } from 'lucide-react'
-import { useEffect, useState } from 'react'
-import { supabase } from '@/lib/supabase/client'
-import { useAuth } from '@/hooks/use-auth'
+import { Activity } from 'lucide-react'
 
 export default function Index() {
-  const { user } = useAuth()
-  const [hasData, setHasData] = useState(false)
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    if (user) {
-      checkData()
-    }
-  }, [user])
-
-  const checkData = async () => {
-    try {
-      const { count } = await supabase
-        .from('progress_metrics')
-        .select('*', { count: 'exact', head: true })
-        .eq('user_id', user!.id)
-
-      if (count && count > 0) {
-        setHasData(true)
-      }
-    } catch (e) {
-      console.error(e)
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const firstName =
-    user?.user_metadata?.full_name?.split(' ')[0] || user?.email?.split('@')[0] || 'Atleta'
-
   return (
-    <div className="flex flex-col items-center justify-center min-h-[85vh] text-center p-6 animate-fade-in-up bg-background relative overflow-hidden">
-      <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/5 via-background to-background"></div>
-
-      <div className="w-24 h-24 bg-primary/10 rounded-full flex items-center justify-center mb-6 text-primary shadow-sm ring-1 ring-primary/20">
-        <Activity className="w-12 h-12" />
+    <div className="flex flex-col items-center justify-center min-h-[85vh] text-center p-6 animate-fade-in bg-background">
+      <div className="w-[96px] h-[96px] bg-[#fdf2f8] dark:bg-[#ec4899]/10 rounded-3xl flex items-center justify-center mb-10 transform rotate-6 shadow-sm">
+        <div className="transform -rotate-6">
+          <Activity className="w-12 h-12 text-[#ec4899] stroke-[2.5]" />
+        </div>
       </div>
 
-      <h2 className="text-3xl md:text-4xl font-bold mb-4 tracking-tight">
-        Olá, <span className="text-primary">{firstName}</span>!
-      </h2>
+      <div className="flex flex-col items-center mb-6">
+        <h1 className="text-[3.25rem] font-black tracking-tighter text-slate-900 dark:text-white leading-[1.1] uppercase">
+          KINETIX
+        </h1>
+        <h1 className="text-[3.25rem] font-black tracking-tighter text-[#ec4899] leading-[1.1]">
+          Health
+        </h1>
+      </div>
 
-      <p className="text-muted-foreground max-w-md mb-10 text-lg">
-        {hasData
-          ? 'Bem-vindo de volta! Acesse suas análises, veja seus planos e registre seu progresso hoje.'
-          : 'Seu progresso começa aqui! Acesse a aba de Análises para que a IA gere seus planos inteligentes.'}
+      <p className="text-slate-500 dark:text-slate-400 text-center max-w-[280px] mb-12 text-[1.05rem] leading-relaxed">
+        Sua plataforma integrada de saúde, nutrição e performance.
       </p>
 
-      <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto max-w-md">
+      <div className="flex flex-col gap-4 w-full max-w-[320px]">
         <Button
           asChild
-          size="lg"
-          className="h-14 px-8 font-bold text-lg w-full sm:w-auto shadow-lg hover:-translate-y-1 transition-transform"
+          className="w-full h-14 text-[1.1rem] font-semibold bg-[#ec4899] hover:bg-[#db2777] text-white rounded-[1rem] shadow-sm transition-transform hover:-translate-y-0.5 border-none"
         >
-          <Link to="/assessments">
-            <ClipboardList className="w-5 h-5 mr-2" /> Minhas Análises
-          </Link>
+          <Link to="/assessments">Começar Agora</Link>
         </Button>
         <Button
           asChild
           variant="outline"
-          size="lg"
-          className="h-14 px-8 font-bold text-lg w-full sm:w-auto bg-background hover:-translate-y-1 transition-transform"
+          className="w-full h-14 text-[1.1rem] font-semibold bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-500 dark:text-slate-400 border border-slate-100 dark:border-slate-800 shadow-[0_2px_15px_rgba(0,0,0,0.04)] rounded-[1rem] transition-transform hover:-translate-y-0.5"
         >
-          <Link to="/progress">
-            <LineChart className="w-5 h-5 mr-2" /> Ver Progresso
-          </Link>
+          <Link to="/workouts">Iniciar Treino</Link>
         </Button>
       </div>
     </div>
