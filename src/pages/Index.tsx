@@ -17,9 +17,8 @@ export default function Index() {
         </span>
       </h1>
 
-      <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-12 leading-relaxed">
-        Sua plataforma integrada de saúde, treinos personalizados e análise postural com
-        Inteligência Artificial.
+      <p className="text-muted-foreground max-w-2xl mx-auto mb-12 leading-relaxed text-[1.23rem]">
+        Sua plataforma integrada de saúde, treinos personalizados e dieta inteligente.
       </p>
 
       <div className="flex flex-col sm:flex-row gap-4 w-full max-w-md mx-auto">
