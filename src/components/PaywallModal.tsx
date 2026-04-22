@@ -24,16 +24,6 @@ export function PaywallModal({
 
   const plans = [
     {
-      id: 'monthly',
-      name: 'Mensal',
-      price: 39.9,
-      period: 'mês',
-      freeMonths: 0,
-      savings: null,
-      badge: null,
-      recommended: false,
-    },
-    {
       id: 'trimestral',
       name: 'Trimestral',
       price: 59.9,
@@ -101,7 +91,7 @@ export function PaywallModal({
             <p className="text-white font-bold text-lg">🎉 7 dias grátis para testar!</p>
             <p className="text-white/90 text-sm">Cancele quando quiser, sem compromisso</p>
             <button
-              onClick={() => handleSelectPlan('monthly')}
+              onClick={() => handleSelectPlan('semestral')}
               className="mt-3 bg-white text-orange-600 font-bold px-6 py-2 rounded-full hover:bg-orange-50 transition-colors w-full shadow-sm"
             >
               Iniciar Trial de 7 Dias
@@ -116,7 +106,7 @@ export function PaywallModal({
           </div>
         )}
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
           {plans.map((plan) => (
             <div
               key={plan.id}
