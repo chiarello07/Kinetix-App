@@ -46,7 +46,7 @@ export default function AssessmentsPage() {
           </CardHeader>
           <CardContent>
             <Button asChild className="w-full h-12 font-bold shadow-sm">
-              <Link to="/analysis">Realizar Análise de Treino</Link>
+              <Link to="/analysis">Realizar Análise Corporal</Link>
             </Button>
           </CardContent>
         </Card>
@@ -54,7 +54,7 @@ export default function AssessmentsPage() {
         <Card className="hover:shadow-md transition-shadow border-primary/10 bg-card md:col-span-2">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-xl">
-              <Dumbbell className="w-6 h-6 text-primary" /> Anamnese de Treino (Básica)
+              <Dumbbell className="w-6 h-6 text-primary" /> Anamnese de Treino
             </CardTitle>
             <CardDescription className="text-sm">
               Questionário inicial sobre seu histórico de treinos e objetivos.
