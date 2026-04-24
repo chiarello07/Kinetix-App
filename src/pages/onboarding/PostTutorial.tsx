@@ -42,8 +42,8 @@ export function PostTutorial() {
           <div className="space-y-3">
             <h2 className="text-3xl font-bold">Avaliação Física</h2>
             <p className="text-muted-foreground text-lg">
-              Para criar seu plano perfeito, precisaremos de 4 fotos do seu corpo atual (frente,
-              costas e lados).
+              Para criar seu plano inteligente, precisaremos de 4 fotos do seu corpo atual (frente,
+              costas e lados esquerdo e direito).
             </p>
           </div>
           <div className="flex gap-2 w-full mt-2">
@@ -68,8 +68,9 @@ export function PostTutorial() {
           <div className="space-y-3">
             <h2 className="text-3xl font-bold">Postura e Roupas</h2>
             <p className="text-muted-foreground text-lg">
-              Use roupas íntimas ou de banho. Mantenha os braços relaxados ao lado do corpo e tire
-              as fotos em ambiente claro.
+              Use roupas confortáveis ou de banho<span>&nbsp;(sunga/calção, bikini/maiô)</span>,
+              para um melhor resultado. Mantenha os braços relaxados ao lado do corpo e tire as
+              fotos em ambiente claro.
             </p>
           </div>
           <div className="flex gap-2 w-full mt-2">
@@ -94,7 +95,8 @@ export function PostTutorial() {
           <div className="space-y-3">
             <h2 className="text-3xl font-bold">Tudo Pronto!</h2>
             <p className="text-muted-foreground text-lg">
-              Sua jornada começa agora. Nosso algoritmo vai processar seus dados e criar seu plano.
+              Sua jornada começa agora. Nosso especialista vai processar seus dados e criar seu
+              plano.
             </p>
           </div>
           <div className="flex gap-2 w-full mt-2">
