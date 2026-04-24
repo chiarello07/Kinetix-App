@@ -6,37 +6,58 @@ import { Summary } from './Summary'
 import { PostTutorial } from './PostTutorial'
 import { Progress } from '@/components/ui/progress'
 import { Button } from '@/components/ui/button'
+import { supabase } from '@/lib/supabase/client'
+import { useAuth } from '@/hooks/use-auth'
 
 export default function OnboardingPage() {
   const [step, setStep] = useState(1)
   const [data, setData] = useState<OnboardingData>(INITIAL_DATA)
+  const { user } = useAuth()
 
   const handleUpdate = (updates: Partial<OnboardingData>) => setData((d) => ({ ...d, ...updates }))
 
   const handleSubmit = async () => {
-    setStep(14)
+    setStep(14) // isSubmitting state
     try {
-      const payload = {
-        ...data,
-        imc: (Number(data.weight) / Math.pow(Number(data.height) / 100, 2)).toFixed(2),
-        terms_agreed_at: new Date().toISOString(),
-        terms_version: '1.0',
-        user_agent: navigator.userAgent,
-        ip_address: 'client-side-inferred',
+      if (user) {
+        await supabase.from('profiles').update({ name: data.name }).eq('id', user.id)
+        await supabase.auth.updateUser({ data: { full_name: data.name } })
+
+        const { data: profile } = await supabase
+          .from('nutrition_profiles')
+          .select('id')
+          .eq('user_id', user.id)
+          .single()
+
+        let dob = new Date().toISOString().split('T')[0]
+        if (data.age) {
+          const d = new Date()
+          d.setFullYear(d.getFullYear() - Number(data.age))
+          dob = d.toISOString().split('T')[0]
+        }
+
+        if (profile) {
+          await supabase
+            .from('nutrition_profiles')
+            .update({
+              gender: data.gender,
+              current_weight_kg: Number(data.weight),
+              target_weight_kg: Number(data.targetWeight),
+              height_cm: Number(data.height),
+              primary_goal: data.goal,
+              fitness_level: data.experience,
+              exercise_days_per_week: data.frequency,
+              date_of_birth: dob,
+              onboarding_completed: true,
+              onboarding_completion_date: new Date().toISOString(),
+            })
+            .eq('id', profile.id)
+        }
       }
-
-      // Mock API call to Supabase edge function / backend endpoint
-      await fetch('/api/auth/onboarding/training', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      })
-
-      // Simulate processing
-      await new Promise((r) => setTimeout(r, 2000))
-      setStep(15)
-    } catch {
-      setStep(13)
+      setStep(15) // Tutorial
+    } catch (e) {
+      console.error(e)
+      setStep(13) // Back to summary on error
     }
   }
 

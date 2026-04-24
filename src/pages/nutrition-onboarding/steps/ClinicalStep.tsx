@@ -35,7 +35,7 @@ export function ClinicalStep({ data, updateData }: any) {
           <Label>Frequência Intestinal</Label>
           <Input
             placeholder="Ex: 1x ao dia, a cada 2 dias"
-            className="h-10"
+            className="h-12"
             value={data.intestinalFunction}
             onChange={(e) => updateData({ intestinalFunction: e.target.value })}
           />
@@ -56,7 +56,7 @@ export function ClinicalStep({ data, updateData }: any) {
             onValueChange={([val]) => updateData({ bristolScale: val.toString() })}
             className="w-full"
           />
-          <div className="text-center mt-4 font-semibold text-primary bg-background py-2 rounded-lg border">
+          <div className="text-center mt-4 font-semibold text-primary bg-background py-2 rounded-lg border shadow-sm">
             Tipo Selecionado: {data.bristolScale}
           </div>
         </div>
@@ -71,7 +71,7 @@ export function ClinicalStep({ data, updateData }: any) {
         </div>
 
         {data.medications.length === 0 ? (
-          <p className="text-sm text-muted-foreground italic">
+          <p className="text-sm text-muted-foreground italic bg-secondary/20 p-4 rounded-lg text-center border border-dashed">
             Nenhum adicionado. Clique acima se fizer uso de algo.
           </p>
         ) : (
@@ -79,7 +79,7 @@ export function ClinicalStep({ data, updateData }: any) {
             {data.medications.map((med: any) => (
               <div
                 key={med.id}
-                className="flex gap-2 items-start bg-background p-3 rounded-lg border"
+                className="flex gap-2 items-start bg-background p-3 rounded-lg border shadow-sm"
               >
                 <div className="grid gap-2 flex-1">
                   <Input
@@ -106,7 +106,7 @@ export function ClinicalStep({ data, updateData }: any) {
                   type="button"
                   variant="ghost"
                   size="icon"
-                  className="text-destructive"
+                  className="text-destructive hover:bg-destructive/10"
                   onClick={() => removeMed(med.id)}
                 >
                   <Trash2 className="w-5 h-5" />

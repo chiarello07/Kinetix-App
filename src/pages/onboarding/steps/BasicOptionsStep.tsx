@@ -46,18 +46,21 @@ export function BasicOptionsStep({ title, type, options, value, values, onChange
         <div className="grid gap-3 mt-2">
           {options.map((opt) => {
             const isChecked = values?.includes(opt)
+            const isDisabled = !isChecked && values?.includes('Tudo') && opt !== 'Tudo'
             return (
               <Label
                 key={opt}
                 className={cn(
-                  'flex items-center gap-4 p-5 rounded-xl border-2 cursor-pointer transition-all',
+                  'flex items-center gap-4 p-5 rounded-xl border-2 transition-all',
                   isChecked
                     ? 'border-primary bg-primary/5 shadow-sm'
                     : 'border-muted hover:border-primary/30',
+                  isDisabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer',
                 )}
               >
                 <Checkbox
                   checked={isChecked}
+                  disabled={isDisabled}
                   onCheckedChange={(c) => {
                     if (c) onChange([...(values || []), opt])
                     else onChange((values || []).filter((v: string) => v !== opt))

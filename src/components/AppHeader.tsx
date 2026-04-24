@@ -23,6 +23,9 @@ export function AppHeader() {
     navigate('/')
   }
 
+  const avatarSrc =
+    user?.user_metadata?.avatar_url || `https://img.usecurling.com/ppl/thumbnail?seed=${user?.id}`
+
   return (
     <header className="sticky top-0 z-40 bg-background/80 backdrop-blur-md border-b border-border/50 h-16 flex items-center justify-between px-4 md:px-6">
       <div className="flex items-center gap-2 md:hidden">
@@ -53,7 +56,7 @@ export function AppHeader() {
               className="relative h-9 w-9 rounded-full px-0 hover:bg-transparent"
             >
               <Avatar className="h-9 w-9 border border-border shadow-sm">
-                <AvatarImage src={`https://img.usecurling.com/ppl/thumbnail?seed=${user?.id}`} />
+                <AvatarImage src={avatarSrc} className="object-cover" />
                 <AvatarFallback>
                   <User className="w-4 h-4" />
                 </AvatarFallback>

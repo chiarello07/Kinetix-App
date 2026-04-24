@@ -1,14 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
-import {
-  Save,
-  Edit2,
-  AlertCircle,
-  RefreshCw,
-  User as UserIcon,
-  Camera,
-  Crown,
-  CreditCard,
-} from 'lucide-react'
+import { Save, Edit2, Camera, Crown, CreditCard } from 'lucide-react'
 import {
   Card,
   CardContent,
@@ -31,16 +22,6 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { useToast } from '@/hooks/use-toast'
 import { useAuth } from '@/hooks/use-auth'
 import { supabase } from '@/lib/supabase/client'
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-  DialogFooter,
-} from '@/components/ui/dialog'
-import { detectCriticalChanges, CriticalChange } from '@/lib/utils/profile-utils'
-import { regeneratePlans } from '@/services/regeneration'
 import { Badge } from '@/components/ui/badge'
 import { PaywallModal } from '@/components/PaywallModal'
 import { cn } from '@/lib/utils'
@@ -52,21 +33,21 @@ export default function Profile() {
 
   const [isEditing, setIsEditing] = useState(false)
   const [profile, setProfile] = useState<any>(null)
-  const [formData, setFormData] = useState<any>(null)
+  const [formData, setFormData] = useState<any>({
+    name: '',
+    current_weight_kg: '',
+    height_cm: '',
+    gender: '',
+    age: '',
+  })
   const [isSaving, setIsSaving] = useState(false)
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null)
-  const [fullName, setFullName] = useState('')
 
-  const [criticalChanges, setCriticalChanges] = useState<CriticalChange[]>([])
-  const [showModal, setShowModal] = useState(false)
-  const [isGenerating, setIsGenerating] = useState(false)
-
-  const [subscription, setSubscription] = useState<any>(null)
   const [showPaywall, setShowPaywall] = useState(false)
+  const [subscription, setSubscription] = useState<any>(null)
 
   useEffect(() => {
     if (user) {
-      setFullName(user.user_metadata?.full_name || '')
       setAvatarUrl(
         user.user_metadata?.avatar_url || `https://img.usecurling.com/ppl/large?seed=${user.id}`,
       )
@@ -74,33 +55,42 @@ export default function Profile() {
     }
   }, [user])
 
+  const calculateAge = (dob: string) => {
+    if (!dob) return ''
+    const diff = Date.now() - new Date(dob).getTime()
+    return Math.abs(new Date(diff).getUTCFullYear() - 1970)
+  }
+
   const fetchProfile = async () => {
-    const { data } = await supabase
+    const { data: nutData } = await supabase
       .from('nutrition_profiles')
       .select('*')
       .eq('user_id', user!.id)
       .single()
-
-    if (data) {
-      setProfile(data)
-      setFormData(data)
-    }
-
-    const { data: profileData } = await supabase
+    const { data: profData } = await supabase
       .from('profiles')
-      .select('is_premium, subscription_id')
+      .select('*')
       .eq('id', user!.id)
       .single()
 
-    if (profileData?.subscription_id) {
+    if (nutData) {
+      setProfile(nutData)
+      setFormData({
+        name: profData?.name || user?.user_metadata?.full_name || '',
+        current_weight_kg: nutData.current_weight_kg,
+        height_cm: nutData.height_cm,
+        gender: nutData.gender,
+        age: calculateAge(nutData.date_of_birth),
+      })
+    }
+
+    if (profData?.subscription_id) {
       const { data: subData } = await supabase
         .from('subscriptions')
         .select('*')
-        .eq('id', profileData.subscription_id)
+        .eq('id', profData.subscription_id)
         .single()
-      if (subData) {
-        setSubscription(subData)
-      }
+      if (subData) setSubscription(subData)
     }
   }
 
@@ -109,41 +99,35 @@ export default function Profile() {
       const file = e.target.files[0]
       const url = URL.createObjectURL(file)
       setAvatarUrl(url)
-      await supabase.auth.updateUser({
-        data: { avatar_url: url },
-      })
+      await supabase.auth.updateUser({ data: { avatar_url: url } })
+      await supabase.from('profiles').update({ avatar_url: url }).eq('id', user!.id)
       toast({ title: 'Foto atualizada', description: 'Sua foto de perfil foi atualizada.' })
     }
   }
 
   const handleSave = async () => {
-    if (fullName !== user?.user_metadata?.full_name) {
-      await supabase.auth.updateUser({
-        data: { full_name: fullName },
-      })
-    }
-
-    const changes = detectCriticalChanges(profile, formData)
-
-    if (changes.some((c) => c.severity === 'critical')) {
-      setCriticalChanges(changes)
-      setShowModal(true)
-    } else {
-      await saveProfile()
-    }
-  }
-
-  const saveProfile = async () => {
     setIsSaving(true)
+
+    // Update Auth and Profile Name
+    await supabase.auth.updateUser({ data: { full_name: formData.name } })
+    await supabase.from('profiles').update({ name: formData.name }).eq('id', user!.id)
+
+    // Calculate approx DOB based on age if it was changed
+    const currentAge = calculateAge(profile.date_of_birth)
+    let newDob = profile.date_of_birth
+    if (Number(formData.age) !== currentAge && formData.age) {
+      const d = new Date()
+      d.setFullYear(d.getFullYear() - Number(formData.age))
+      newDob = d.toISOString().split('T')[0]
+    }
+
     const { error } = await supabase
       .from('nutrition_profiles')
       .update({
-        current_weight_kg: formData.current_weight_kg,
-        target_weight_kg: formData.target_weight_kg,
-        primary_goal: formData.primary_goal,
-        exercise_days_per_week: formData.exercise_days_per_week,
-        fitness_level: formData.fitness_level,
-        meals_per_day: formData.meals_per_day,
+        current_weight_kg: Number(formData.current_weight_kg),
+        height_cm: Number(formData.height_cm),
+        gender: formData.gender,
+        date_of_birth: newDob,
       })
       .eq('id', profile.id)
 
@@ -155,32 +139,15 @@ export default function Profile() {
         variant: 'destructive',
       })
     } else {
-      setProfile(formData)
-      setIsEditing(false)
-      setShowModal(false)
-      toast({ title: 'Sucesso', description: 'Perfil atualizado com sucesso' })
-    }
-  }
-
-  const handleRegenerate = async () => {
-    setIsGenerating(true)
-    try {
-      await regeneratePlans(user!.id, profile.id, {
+      setProfile({
+        ...profile,
         current_weight_kg: formData.current_weight_kg,
-        target_weight_kg: formData.target_weight_kg,
-        primary_goal: formData.primary_goal,
-        exercise_days_per_week: formData.exercise_days_per_week,
-        fitness_level: formData.fitness_level,
-        meals_per_day: formData.meals_per_day,
+        height_cm: formData.height_cm,
+        gender: formData.gender,
+        date_of_birth: newDob,
       })
-      setProfile(formData)
       setIsEditing(false)
-      setShowModal(false)
-      toast({ title: 'Sucesso', description: 'Novo treino e plano nutricional gerados!' })
-    } catch (e) {
-      toast({ title: 'Erro', description: 'Falha ao regenerar planos', variant: 'destructive' })
-    } finally {
-      setIsGenerating(false)
+      toast({ title: 'Sucesso', description: 'Perfil atualizado com sucesso' })
     }
   }
 
@@ -202,17 +169,16 @@ export default function Profile() {
         )}
       </div>
 
-      {/* Assinatura Card */}
       <Card className="border-none shadow-elevation bg-gradient-to-br from-card to-card/50 overflow-hidden relative">
         <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-amber-400 to-orange-500"></div>
         <CardHeader className="pb-2">
           <CardTitle className="flex items-center gap-2">
-            <Crown className="w-5 h-5 text-amber-500" /> Planos Premium
+            <Crown className="w-5 h-5 text-amber-500" /> Planos e Assinaturas
           </CardTitle>
           <CardDescription>Gerencie seu plano de acesso ao Kinetix.</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="p-4 bg-secondary/30 rounded-xl border border-border/50 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div className="p-5 bg-secondary/30 rounded-xl border border-border/50 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div>
               <div className="flex items-center gap-2 mb-2">
                 <Badge
@@ -266,8 +232,8 @@ export default function Profile() {
             onClick={() => fileInputRef.current?.click()}
           >
             <Avatar className="w-24 h-24 border-4 border-background shadow-sm transition-transform group-hover:scale-105">
-              <AvatarImage src={avatarUrl || undefined} />
-              <AvatarFallback>
+              <AvatarImage src={avatarUrl || undefined} className="object-cover" />
+              <AvatarFallback className="bg-muted">
                 <UserIcon className="w-10 h-10 text-muted-foreground" />
               </AvatarFallback>
             </Avatar>
@@ -283,16 +249,7 @@ export default function Profile() {
             />
           </div>
           <div className="flex-1 text-center md:text-left space-y-2 mt-4 md:mt-2">
-            {isEditing ? (
-              <Input
-                value={fullName}
-                onChange={(e) => setFullName(e.target.value)}
-                placeholder="Seu Nome Completo"
-                className="text-xl font-bold bg-background max-w-xs mx-auto md:mx-0"
-              />
-            ) : (
-              <h2 className="text-2xl font-bold">{fullName || 'Atleta Kinetix'}</h2>
-            )}
+            <h2 className="text-2xl font-bold">{formData.name || 'Atleta Kinetix'}</h2>
             <p className="text-muted-foreground">{user?.email}</p>
           </div>
         </CardContent>
@@ -301,21 +258,44 @@ export default function Profile() {
       <Card className="border-none shadow-elevation">
         <CardHeader>
           <CardTitle>Informações Essenciais</CardTitle>
-          <CardDescription>
-            Seus dados biométricos principais que guiam nossos planos.
-          </CardDescription>
+          <CardDescription>Seus dados biométricos principais.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="grid sm:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label>Nome</Label>
+              {isEditing ? (
+                <Input
+                  value={formData.name || ''}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                />
+              ) : (
+                <div className="p-2 bg-secondary/20 rounded-md font-medium">
+                  {formData.name || 'Não informado'}
+                </div>
+              )}
+            </div>
+            <div className="space-y-2">
+              <Label>Idade</Label>
+              {isEditing ? (
+                <Input
+                  type="number"
+                  value={formData.age || ''}
+                  onChange={(e) => setFormData({ ...formData, age: e.target.value })}
+                />
+              ) : (
+                <div className="p-2 bg-secondary/20 rounded-md font-medium">
+                  {formData.age || calculateAge(profile.date_of_birth)} anos
+                </div>
+              )}
+            </div>
             <div className="space-y-2">
               <Label>Peso Atual (kg)</Label>
               {isEditing ? (
                 <Input
                   type="number"
                   value={formData.current_weight_kg || ''}
-                  onChange={(e) =>
-                    setFormData({ ...formData, current_weight_kg: Number(e.target.value) })
-                  }
+                  onChange={(e) => setFormData({ ...formData, current_weight_kg: e.target.value })}
                 />
               ) : (
                 <div className="p-2 bg-secondary/20 rounded-md font-medium">
@@ -324,144 +304,63 @@ export default function Profile() {
               )}
             </div>
             <div className="space-y-2">
-              <Label>Peso Objetivo (kg)</Label>
+              <Label>Altura (cm)</Label>
               {isEditing ? (
                 <Input
                   type="number"
-                  value={formData.target_weight_kg || ''}
-                  onChange={(e) =>
-                    setFormData({ ...formData, target_weight_kg: Number(e.target.value) })
-                  }
+                  value={formData.height_cm || ''}
+                  onChange={(e) => setFormData({ ...formData, height_cm: e.target.value })}
                 />
               ) : (
                 <div className="p-2 bg-secondary/20 rounded-md font-medium">
-                  {profile.target_weight_kg} kg
+                  {profile.height_cm} cm
                 </div>
               )}
             </div>
             <div className="space-y-2">
-              <Label>Objetivo Principal</Label>
+              <Label>Gênero</Label>
               {isEditing ? (
                 <Select
-                  value={formData.primary_goal}
-                  onValueChange={(v) => setFormData({ ...formData, primary_goal: v })}
+                  value={formData.gender}
+                  onValueChange={(v) => setFormData({ ...formData, gender: v })}
                 >
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="fat_loss">Perder Gordura</SelectItem>
-                    <SelectItem value="health">Saúde / Manutenção</SelectItem>
-                    <SelectItem value="muscle_gain">Ganhar Músculo</SelectItem>
+                    <SelectItem value="Masculino">Masculino</SelectItem>
+                    <SelectItem value="Feminino">Feminino</SelectItem>
+                    <SelectItem value="outros">Outros</SelectItem>
                   </SelectContent>
                 </Select>
               ) : (
                 <div className="p-2 bg-secondary/20 rounded-md font-medium capitalize">
-                  {profile.primary_goal?.replace('_', ' ')}
-                </div>
-              )}
-            </div>
-            <div className="space-y-2">
-              <Label>Dias de Treino / Semana</Label>
-              {isEditing ? (
-                <Select
-                  value={String(formData.exercise_days_per_week)}
-                  onValueChange={(v) =>
-                    setFormData({ ...formData, exercise_days_per_week: Number(v) })
-                  }
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {[2, 3, 4, 5, 6].map((n) => (
-                      <SelectItem key={n} value={String(n)}>
-                        {n} dias
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              ) : (
-                <div className="p-2 bg-secondary/20 rounded-md font-medium">
-                  {profile.exercise_days_per_week} dias
-                </div>
-              )}
-            </div>
-            <div className="space-y-2">
-              <Label>Nível de Experiência</Label>
-              {isEditing ? (
-                <Select
-                  value={formData.fitness_level}
-                  onValueChange={(v) => setFormData({ ...formData, fitness_level: v })}
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="iniciante">Iniciante</SelectItem>
-                    <SelectItem value="intermediario">Intermediário</SelectItem>
-                    <SelectItem value="avancado">Avançado</SelectItem>
-                  </SelectContent>
-                </Select>
-              ) : (
-                <div className="p-2 bg-secondary/20 rounded-md font-medium capitalize">
-                  {profile.fitness_level}
-                </div>
-              )}
-            </div>
-            <div className="space-y-2">
-              <Label>Refeições por Dia</Label>
-              {isEditing ? (
-                <Select
-                  value={String(formData.meals_per_day || 4)}
-                  onValueChange={(v) => setFormData({ ...formData, meals_per_day: Number(v) })}
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {[3, 4, 5, 6].map((n) => (
-                      <SelectItem key={n} value={String(n)}>
-                        {n} refeições
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              ) : (
-                <div className="p-2 bg-secondary/20 rounded-md font-medium">
-                  {profile.meals_per_day || 4} refeições
+                  {profile.gender}
                 </div>
               )}
             </div>
           </div>
+
+          {profile.onboarding_completed && profile.onboarding_completion_date && (
+            <div className="mt-8 text-sm text-muted-foreground border-t pt-6 bg-secondary/10 p-4 rounded-lg">
+              <h4 className="font-bold text-foreground mb-2">
+                Termo de Consentimento Livre e Esclarecido (TCLE)
+              </h4>
+              <p>
+                Você concordou com os termos da plataforma Kinetix: Análise Postural, Treinamento e
+                Nutrição.
+              </p>
+              <p className="mt-2">
+                <strong>Data de Aceitação:</strong>{' '}
+                {new Date(profile.onboarding_completion_date).toLocaleDateString()}
+              </p>
+              <p className="text-xs mt-1">CRN SOLUÇÕES TECNOLÓGICAS LTDA</p>
+            </div>
+          )}
         </CardContent>
-        <CardFooter className="flex flex-col sm:flex-row gap-3 border-t pt-6 bg-muted/20">
-          <Button
-            variant="outline"
-            className="w-full text-destructive hover:text-destructive hover:bg-destructive/10"
-            onClick={async () => {
-              if (user?.email) {
-                await supabase.auth.resetPasswordForEmail(user.email)
-                toast({
-                  title: 'Email enviado',
-                  description: 'Verifique sua caixa de entrada para redefinir a senha.',
-                })
-              }
-            }}
-          >
-            Alterar Senha
-          </Button>
-        </CardFooter>
         {isEditing && (
           <CardFooter className="flex justify-end gap-3 border-t pt-6 bg-background">
-            <Button
-              variant="outline"
-              onClick={() => {
-                setIsEditing(false)
-                setFormData(profile)
-                setFullName(user?.user_metadata?.full_name || '')
-              }}
-            >
+            <Button variant="outline" onClick={() => setIsEditing(false)}>
               Cancelar
             </Button>
             <Button onClick={handleSave} disabled={isSaving} className="gap-2">
@@ -470,53 +369,6 @@ export default function Profile() {
           </CardFooter>
         )}
       </Card>
-
-      <Dialog open={showModal} onOpenChange={setShowModal}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2 text-destructive">
-              <AlertCircle className="w-5 h-5" /> Mudanças Importantes
-            </DialogTitle>
-            <DialogDescription>
-              Você fez alterações que impactam diretamente seu plano de treino e nutrição.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="space-y-4 py-4">
-            <div className="space-y-3">
-              {criticalChanges.map((change, i) => (
-                <div key={i} className="p-3 bg-secondary/30 rounded-lg text-sm">
-                  <p className="font-semibold">{change.message}</p>
-                  <p className="text-muted-foreground mt-1 text-xs">
-                    De: {change.oldValue} → Para: {change.newValue}
-                  </p>
-                  {change.affectsNutrition && (
-                    <Badge variant="secondary" className="mt-2 text-[10px]">
-                      Afeta Nutrição
-                    </Badge>
-                  )}
-                </div>
-              ))}
-            </div>
-            <p className="text-sm font-medium">
-              Recomendamos gerar um novo treino e plano nutricional para aproveitar melhor essas
-              mudanças.
-            </p>
-          </div>
-          <DialogFooter className="flex flex-col sm:flex-row gap-2">
-            <Button variant="outline" onClick={saveProfile} disabled={isGenerating}>
-              Apenas Salvar
-            </Button>
-            <Button onClick={handleRegenerate} disabled={isGenerating} className="gap-2">
-              {isGenerating ? (
-                <RefreshCw className="w-4 h-4 animate-spin" />
-              ) : (
-                <RefreshCw className="w-4 h-4" />
-              )}
-              Gerar Novo Plano
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
 
       <PaywallModal
         isOpen={showPaywall}

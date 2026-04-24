@@ -22,18 +22,17 @@ export function PostTutorial() {
     else if (/android/.test(ua)) setPlatform('android')
     else setPlatform('desktop')
 
-    // Show PWA instructions on load if mobile
     if (/iphone|ipad|ipod|android/.test(ua)) {
       setPwaOpen(true)
     }
   }, [])
 
   const completeTutorial = () => {
-    navigate('/dashboard')
+    navigate('/assessments')
   }
 
   return (
-    <div className="animate-fade-in flex flex-col items-center justify-center min-h-[80vh] gap-8 text-center px-4">
+    <div className="animate-fade-in flex flex-col items-center justify-center min-h-[80vh] gap-8 text-center px-4 w-full">
       {tutorialStep === 1 && (
         <div className="animate-slide-up flex flex-col items-center gap-6 max-w-sm w-full">
           <div className="w-32 h-32 rounded-full bg-primary/10 flex items-center justify-center text-primary mb-2 shadow-inner">

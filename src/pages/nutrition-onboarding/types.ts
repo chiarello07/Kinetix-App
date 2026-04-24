@@ -1,65 +1,27 @@
-export type MedSupp = { id: string; name: string; dosage: string; frequency: string }
-
 export type NutritionOnboardingData = {
-  age: string
-  height: string
-  weight: string
-  targetWeight: string
-  goal: string
+  diabetesHistory: string
   bodyType: string
-  maxWeight: string
-  minWeight: string
-  wakeTime: string
+  wakeUpTime: string
   sleepTime: string
-  sleepQuality: string
-  fitnessLevel: string
-  exerciseType: string
-  exerciseFrequency: string
-  exerciseDuration: string
-  workActivityLevel: string
-  workHours: string
+  profession: string
   intestinalFunction: string
   bristolScale: string
-  medications: MedSupp[]
-  supplements: MedSupp[]
+  medications: any[]
   mealsPerDay: string
-  mealTimes: Record<number, string>
   waterIntake: string
-  favFruits: string[]
-  favVegetables: string[]
-  mealPreferences: Record<string, string[]>
+  favoriteFoods: string
 }
 
 export const INITIAL_DATA: NutritionOnboardingData = {
-  age: '',
-  height: '',
-  weight: '',
-  targetWeight: '',
-  goal: '',
+  diabetesHistory: '',
   bodyType: '',
-  maxWeight: '',
-  minWeight: '',
-  wakeTime: '',
+  wakeUpTime: '',
   sleepTime: '',
-  sleepQuality: '',
-  fitnessLevel: '',
-  exerciseType: '',
-  exerciseFrequency: '',
-  exerciseDuration: '',
-  workActivityLevel: '',
-  workHours: '',
+  profession: '',
   intestinalFunction: '',
   bristolScale: '4',
   medications: [],
-  supplements: [],
-  mealsPerDay: '3',
-  mealTimes: {},
+  mealsPerDay: '',
   waterIntake: '',
-  favFruits: [],
-  favVegetables: [],
-  mealPreferences: {
-    'Café da Manhã': [],
-    Almoço: [],
-    Jantar: [],
-  },
+  favoriteFoods: '',
 }

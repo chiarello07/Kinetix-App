@@ -1,201 +1,177 @@
-import { useEffect, useState } from 'react'
+import { useState, useEffect } from 'react'
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Link } from 'react-router-dom'
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardFooter,
-} from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Dumbbell, BrainCircuit, Activity, CalendarDays, Target, Flame, Crown } from 'lucide-react'
-import { supabase } from '@/lib/supabase/client'
+import { Play, Calendar, Target, Clock, Dumbbell, ChevronRight } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 import { useAuth } from '@/hooks/use-auth'
-import { cn } from '@/lib/utils'
+import { supabase } from '@/lib/supabase/client'
+import { Badge } from '@/components/ui/badge'
 
 export default function Workouts() {
+  const navigate = useNavigate()
   const { user } = useAuth()
-  const [plans, setPlans] = useState<any[]>([])
+  const [profile, setProfile] = useState<any>(null)
   const [subscription, setSubscription] = useState<any>(null)
-  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    if (user) fetchPlans()
+    if (user) {
+      supabase
+        .from('nutrition_profiles')
+        .select('*')
+        .eq('user_id', user.id)
+        .single()
+        .then(({ data }) => {
+          if (data) setProfile(data)
+        })
+      supabase
+        .from('profiles')
+        .select('subscription_id')
+        .eq('id', user.id)
+        .single()
+        .then(({ data }) => {
+          if (data?.subscription_id) {
+            supabase
+              .from('subscriptions')
+              .select('*')
+              .eq('id', data.subscription_id)
+              .single()
+              .then(({ data: subData }) => {
+                if (subData) setSubscription(subData)
+              })
+          }
+        })
+    }
   }, [user])
 
-  const fetchPlans = async () => {
-    try {
-      const { data } = await supabase
-        .from('periodization')
-        .select('*')
-        .order('created_at', { ascending: false })
-
-      if (data) {
-        setPlans(data)
-      }
-
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('is_premium, subscription_id')
-        .eq('id', user!.id)
-        .single()
-
-      if (profile?.subscription_id) {
-        const { data: subData } = await supabase
-          .from('subscriptions')
-          .select('*')
-          .eq('id', profile.subscription_id)
-          .single()
-        if (subData) {
-          setSubscription(subData)
-        }
-      }
-    } catch (e) {
-      console.error(e)
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const getPlanBadge = () => {
-    if (!subscription || subscription.status !== 'active') return 'Plano Grátis'
-    const b = subscription.billing_period
-    if (b === 'anual') return 'Premium Anual'
-    if (b === 'semestral') return 'Premium Semestral'
-    if (b === 'trimestral') return 'Premium Trimestral'
-    return 'Premium Mensal'
-  }
+  const planName = subscription ? `Premium ${subscription.billing_period}` : 'Plano Grátis'
+  const periodizationWeeks =
+    subscription?.billing_period === 'anual'
+      ? 52
+      : subscription?.billing_period === 'semestral'
+        ? 24
+        : subscription?.billing_period === 'trimestral'
+          ? 12
+          : 4
 
   return (
-    <div className="p-6 max-w-5xl mx-auto space-y-6 animate-fade-in-up pb-24 md:pb-6">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
-        <div className="flex items-center gap-4">
-          <div className="p-3 bg-gradient-to-br from-[#FF1493]/20 to-[#4B0082]/20 rounded-xl text-[#FF1493] shadow-sm">
-            <Dumbbell className="w-8 h-8" />
-          </div>
-          <div>
-            <h1 className="text-3xl font-bold tracking-tight">Meus Treinos</h1>
-            <p className="text-muted-foreground">Sua periodização e evolução diária.</p>
-          </div>
+    <div className="p-6 max-w-4xl mx-auto space-y-6 animate-fade-in-up pb-24 md:pb-6">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">Meus Treinos</h1>
+          <p className="text-muted-foreground mt-1">
+            Sua periodização e rotina de treinos inteligente.
+          </p>
         </div>
-
-        <Badge
-          className={cn(
-            'px-4 py-1.5 shadow-md flex items-center gap-2 text-sm border-0 font-bold',
-            subscription?.status === 'active'
-              ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white'
-              : 'bg-secondary text-foreground',
-          )}
-        >
-          {subscription?.status === 'active' && <Crown className="w-4 h-4" />}
-          {getPlanBadge()}
-        </Badge>
+        <div className="flex flex-col items-end">
+          <Badge
+            variant="secondary"
+            className="px-3 py-1 font-semibold text-sm bg-primary/10 text-primary border-0"
+          >
+            {planName}
+          </Badge>
+          <span className="text-xs text-muted-foreground mt-1">
+            Periodização de {periodizationWeeks} Semanas
+          </span>
+        </div>
       </div>
 
-      <div className="grid md:grid-cols-3 gap-6">
-        <Card className="md:col-span-3 hover:shadow-md transition-all border-l-4 border-l-[#FF1493] bg-gradient-to-r from-card to-card/50">
-          <CardHeader className="pb-2">
-            <CardTitle className="flex items-center gap-2 text-xl">
-              <BrainCircuit className="w-6 h-6 text-[#FF1493]" /> Análise Inteligente IA
-            </CardTitle>
-            <CardDescription className="text-sm">
-              Refaça sua análise postural a qualquer momento para adaptar seu treino à sua evolução
-              biomecânica.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="flex justify-end pt-4">
-            <Button
-              asChild
-              className="font-bold shadow-sm px-8 bg-foreground text-background hover:bg-foreground/90"
-            >
-              <Link to="/analysis">
-                {plans.length > 0 ? 'Refazer Análise Postural' : 'Fazer Primeira Análise'}
-              </Link>
-            </Button>
+      <div className="grid md:grid-cols-3 gap-4 mb-8">
+        <Card className="bg-secondary/30 border-none shadow-sm">
+          <CardContent className="p-4 flex items-center gap-4">
+            <div className="p-3 bg-background rounded-full shadow-sm text-primary">
+              <Target className="w-5 h-5" />
+            </div>
+            <div>
+              <p className="text-sm font-medium text-muted-foreground">Foco</p>
+              <p className="font-bold capitalize">
+                {profile?.primary_goal?.replace('_', ' ') || 'Hipertrofia'}
+              </p>
+            </div>
           </CardContent>
         </Card>
 
-        {loading ? (
-          <div className="md:col-span-3 text-center p-12 text-muted-foreground animate-pulse">
-            Carregando periodização...
-          </div>
-        ) : plans.length > 0 ? (
-          <>
-            <div className="md:col-span-3 mt-4">
-              <h2 className="text-xl font-bold mb-2 flex items-center gap-2">
-                <Target className="w-5 h-5 text-primary" /> Periodização Atual
-              </h2>
+        <Card className="bg-secondary/30 border-none shadow-sm">
+          <CardContent className="p-4 flex items-center gap-4">
+            <div className="p-3 bg-background rounded-full shadow-sm text-primary">
+              <Calendar className="w-5 h-5" />
             </div>
+            <div>
+              <p className="text-sm font-medium text-muted-foreground">Frequência</p>
+              <p className="font-bold">{profile?.exercise_days_per_week || 4}x por semana</p>
+            </div>
+          </CardContent>
+        </Card>
 
-            {plans.map((plan, index) => (
-              <Card
-                key={plan.id}
-                className={cn(
-                  'hover:shadow-md transition-shadow bg-card flex flex-col',
-                  index === 0
-                    ? 'border-primary shadow-subtle relative'
-                    : 'border-border/50 opacity-80',
-                )}
-              >
-                {index === 0 && (
-                  <div className="absolute -top-3 -right-3 bg-gradient-to-r from-primary to-[#FF1493] text-white text-xs font-bold px-3 py-1 rounded-full shadow-md z-10 flex items-center gap-1">
-                    <Flame className="w-3 h-3" /> FASE ATUAL
-                  </div>
-                )}
-                <CardHeader className="pb-3">
-                  <CardTitle className="flex items-center gap-2 text-lg">{plan.name}</CardTitle>
-                  <CardDescription className="text-sm line-clamp-2 min-h-[40px]">
-                    {plan.objective}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="flex-1">
-                  <div className="flex flex-col gap-3 text-sm text-muted-foreground">
-                    <div className="flex items-center gap-2 bg-secondary/30 p-2 rounded-md">
-                      <CalendarDays className="w-4 h-4 text-primary" />
-                      <span className="font-medium text-foreground">{plan.weeks} Semanas</span> de
-                      duração
-                    </div>
-                    {plan.phase && (
-                      <div className="flex items-center gap-2 p-2">
-                        <Activity className="w-4 h-4 text-primary" />
-                        Foco: {plan.phase}
-                      </div>
-                    )}
-                  </div>
-                </CardContent>
-                <CardFooter className="pt-4 border-t bg-secondary/10">
-                  <Button
-                    asChild
-                    className="w-full font-bold shadow-sm"
-                    variant={index === 0 ? 'default' : 'outline'}
-                  >
-                    <Link to="/workout/execute">Visualizar / Iniciar Treino</Link>
-                  </Button>
-                </CardFooter>
-              </Card>
-            ))}
-          </>
-        ) : (
-          <div className="md:col-span-3 p-12 text-center border-2 border-dashed rounded-xl bg-secondary/10 flex flex-col items-center justify-center">
-            <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mb-4">
-              <Dumbbell className="w-10 h-10 text-primary opacity-50" />
+        <Card className="bg-secondary/30 border-none shadow-sm">
+          <CardContent className="p-4 flex items-center gap-4">
+            <div className="p-3 bg-background rounded-full shadow-sm text-primary">
+              <Dumbbell className="w-5 h-5" />
             </div>
-            <h3 className="text-xl font-bold text-foreground mb-2">Nenhum treino gerado ainda</h3>
-            <p className="text-muted-foreground text-sm max-w-md mx-auto mb-6">
-              Faça sua Análise Inteligente para que nossa IA possa construir seu plano de
-              treinamento totalmente personalizado com base nos seus ângulos.
-            </p>
-            <Button
-              asChild
-              size="lg"
-              className="font-bold px-8 shadow-lg bg-gradient-to-r from-[#FF1493] to-[#4B0082]"
-            >
-              <Link to="/analysis">Iniciar Análise Agora</Link>
-            </Button>
+            <div>
+              <p className="text-sm font-medium text-muted-foreground">Nível</p>
+              <p className="font-bold capitalize">{profile?.fitness_level || 'Intermediário'}</p>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      <Card className="border-primary/20 shadow-md bg-gradient-to-br from-card to-card/50 overflow-hidden relative">
+        <div className="absolute top-0 left-0 w-1.5 h-full bg-primary"></div>
+        <CardHeader>
+          <CardTitle className="text-2xl flex items-center justify-between">
+            <span>Treino do Dia: Membros Inferiores</span>
+            <Badge className="bg-primary text-primary-foreground">Hoje</Badge>
+          </CardTitle>
+          <CardDescription className="text-base">
+            Foco em força e correção de assimetria pélvica.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <div className="flex flex-wrap gap-4 text-sm font-medium">
+            <div className="flex items-center gap-1.5 bg-secondary px-3 py-1.5 rounded-md">
+              <Clock className="w-4 h-4 text-muted-foreground" /> 50 min
+            </div>
+            <div className="flex items-center gap-1.5 bg-secondary px-3 py-1.5 rounded-md">
+              <Dumbbell className="w-4 h-4 text-muted-foreground" /> 6 Exercícios
+            </div>
           </div>
-        )}
+
+          <Button
+            className="w-full h-14 text-lg font-bold bg-primary-gradient text-white shadow-lg hover:shadow-primary/30 gap-2"
+            onClick={() => navigate('/workout/execute')}
+          >
+            <Play className="w-5 h-5 fill-current" /> Visualizar / Iniciar Treino
+          </Button>
+        </CardContent>
+      </Card>
+
+      <div className="pt-6">
+        <h2 className="text-xl font-bold mb-4">Próximos Treinos</h2>
+        <div className="grid gap-3">
+          {[
+            { day: 'Amanhã', title: 'Costas e Bíceps', duration: '45 min' },
+            { day: 'Quinta', title: 'Descanso Ativo', duration: '20 min' },
+            { day: 'Sexta', title: 'Peitoral e Tríceps', duration: '50 min' },
+          ].map((workout, i) => (
+            <div
+              key={i}
+              className="flex items-center justify-between p-4 bg-card rounded-xl border hover:border-primary/30 transition-colors cursor-pointer group"
+            >
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-secondary/50 rounded-lg flex items-center justify-center font-bold text-sm text-muted-foreground group-hover:text-primary transition-colors">
+                  {workout.day === 'Amanhã' ? 'Qui' : workout.day === 'Quinta' ? 'Sex' : 'Sab'}
+                </div>
+                <div>
+                  <p className="font-semibold text-foreground group-hover:text-primary transition-colors">
+                    {workout.title}
+                  </p>
+                  <p className="text-sm text-muted-foreground">{workout.duration}</p>
+                </div>
+              </div>
+              <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors" />
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   )

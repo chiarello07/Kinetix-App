@@ -1,23 +1,25 @@
-import { OnboardingData } from './types'
 import { BasicOptionsStep } from './steps/BasicOptionsStep'
-import { BiometricsStep, TargetWeightStep } from './steps/BodySteps'
 import { HealthStep, FrequencyStep, DaysStep } from './steps/ScheduleSteps'
+import { BiometricsStep, TargetWeightStep } from './steps/BodySteps'
 import { PersonalStep } from './steps/PersonalStep'
+import { OnboardingData } from './types'
 
-interface Props {
+export function StepForm({
+  step,
+  data,
+  updateData,
+}: {
   step: number
   data: OnboardingData
-  updateData: (updates: Partial<OnboardingData>) => void
-}
-
-export function StepForm({ step, data, updateData }: Props) {
+  updateData: any
+}) {
   switch (step) {
     case 1:
       return (
         <BasicOptionsStep
           title="Qual seu gênero?"
           type="radio"
-          options={['Masculino', 'Feminino', 'Outro']}
+          options={['Masculino', 'Feminino']}
           value={data.gender}
           onChange={(v) => updateData({ gender: v })}
         />
@@ -27,7 +29,7 @@ export function StepForm({ step, data, updateData }: Props) {
         <BasicOptionsStep
           title="Qual seu objetivo principal?"
           type="radio"
-          options={['Ganho de Massa', 'Perda de Gordura', 'Saúde Geral', 'Força']}
+          options={['Emagrecimento', 'Hipertrofia', 'Saúde e Manutenção']}
           value={data.goal}
           onChange={(v) => updateData({ goal: v })}
         />
@@ -35,9 +37,9 @@ export function StepForm({ step, data, updateData }: Props) {
     case 3:
       return (
         <BasicOptionsStep
-          title="O que te motiva?"
+          title="O que mais te motiva?"
           type="radio"
-          options={['Estética', 'Saúde', 'Confiança', 'Competição']}
+          options={['Estética', 'Força', 'Condicionamento', 'Qualidade de Vida']}
           value={data.motivation}
           onChange={(v) => updateData({ motivation: v })}
         />
@@ -47,9 +49,23 @@ export function StepForm({ step, data, updateData }: Props) {
         <BasicOptionsStep
           title="Quais suas áreas de foco?"
           type="checkbox"
-          options={['Costas', 'Peito', 'Braços', 'Abdômen', 'Pernas', 'Glúteos']}
+          options={[
+            'Peitoral e Braços',
+            'Costas e Ombros',
+            'Pernas e Glúteos',
+            'Abdômen (Core)',
+            'Tudo',
+          ]}
           values={data.focusAreas}
-          onChange={(v) => updateData({ focusAreas: v })}
+          onChange={(v: string[]) => {
+            if (v.includes('Tudo') && !data.focusAreas.includes('Tudo')) {
+              updateData({ focusAreas: ['Tudo'] })
+            } else if (v.includes('Tudo')) {
+              updateData({ focusAreas: v.filter((i) => i !== 'Tudo') })
+            } else {
+              updateData({ focusAreas: v })
+            }
+          }}
         />
       )
     case 5:
@@ -57,7 +73,11 @@ export function StepForm({ step, data, updateData }: Props) {
         <BasicOptionsStep
           title="Qual seu nível de experiência?"
           type="radio"
-          options={['Nunca treinei', '< 6 meses', '6 meses - 1 ano', '1-3 anos', '3+ anos']}
+          options={[
+            'Iniciante (Pouca ou nenhuma experiência)',
+            'Intermediário (Treino há 6+ meses)',
+            'Avançado (Treino há 3+ anos)',
+          ]}
           value={data.experience}
           onChange={(v) => updateData({ experience: v })}
         />
