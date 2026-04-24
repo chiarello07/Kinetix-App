@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
-import { Save, Edit2, Camera, Crown, CreditCard } from 'lucide-react'
+import { Save, Edit2, Camera, Crown, CreditCard, User } from 'lucide-react'
 import {
   Card,
   CardContent,
@@ -234,7 +234,7 @@ export default function Profile() {
             <Avatar className="w-24 h-24 border-4 border-background shadow-sm transition-transform group-hover:scale-105">
               <AvatarImage src={avatarUrl || undefined} className="object-cover" />
               <AvatarFallback className="bg-muted">
-                <UserIcon className="w-10 h-10 text-muted-foreground" />
+                <User className="w-10 h-10 text-muted-foreground" />
               </AvatarFallback>
             </Avatar>
             <div className="absolute inset-0 bg-black/40 rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white">
