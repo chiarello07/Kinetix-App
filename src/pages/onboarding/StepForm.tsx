@@ -19,7 +19,7 @@ export function StepForm({
         <BasicOptionsStep
           title="Qual seu gênero?"
           type="radio"
-          options={['Masculino', 'Feminino']}
+          options={['Masculino', 'Feminino', 'Outro']}
           value={data.gender}
           onChange={(v) => updateData({ gender: v })}
         />
@@ -29,7 +29,7 @@ export function StepForm({
         <BasicOptionsStep
           title="Qual seu objetivo principal?"
           type="radio"
-          options={['Emagrecimento', 'Hipertrofia', 'Saúde e Manutenção']}
+          options={['Emagrecimento', 'Hipertrofia', 'Saúde Geral', 'Força']}
           value={data.goal}
           onChange={(v) => updateData({ goal: v })}
         />
@@ -39,7 +39,7 @@ export function StepForm({
         <BasicOptionsStep
           title="O que mais te motiva?"
           type="radio"
-          options={['Estética', 'Força', 'Condicionamento', 'Qualidade de Vida']}
+          options={['Estética', 'Saúde', 'Condicionamento', 'Qualidade de Vida', 'Competição']}
           value={data.motivation}
           onChange={(v) => updateData({ motivation: v })}
         />
@@ -49,13 +49,7 @@ export function StepForm({
         <BasicOptionsStep
           title="Quais suas áreas de foco?"
           type="checkbox"
-          options={[
-            'Peitoral e Braços',
-            'Costas e Ombros',
-            'Pernas e Glúteos',
-            'Abdômen (Core)',
-            'Tudo',
-          ]}
+          options={['Costas', 'Peito', 'Braços', 'Abdômen', 'Pernas', 'Glúteos', 'Tudo']}
           values={data.focusAreas}
           onChange={(v: string[]) => {
             if (v.includes('Tudo') && !data.focusAreas.includes('Tudo')) {

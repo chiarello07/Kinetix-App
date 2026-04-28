@@ -4,6 +4,7 @@ import { canGoNext } from './utils'
 import { StepForm } from './StepForm'
 import { Summary } from './Summary'
 import { PostTutorial } from './PostTutorial'
+import { useNavigate } from 'react-router-dom'
 import { Progress } from '@/components/ui/progress'
 import { Button } from '@/components/ui/button'
 import { supabase } from '@/lib/supabase/client'
@@ -13,6 +14,11 @@ export default function OnboardingPage() {
   const [step, setStep] = useState(1)
   const [data, setData] = useState<OnboardingData>(INITIAL_DATA)
   const { user } = useAuth()
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [step])
 
   const handleUpdate = (updates: Partial<OnboardingData>) => setData((d) => ({ ...d, ...updates }))
 
@@ -54,14 +60,13 @@ export default function OnboardingPage() {
             .eq('id', profile.id)
         }
       }
-      setStep(15) // Tutorial
+      // Redirect to assessments
+      navigate('/assessments')
     } catch (e) {
       console.error(e)
       setStep(13) // Back to summary on error
     }
   }
-
-  if (step === 15) return <PostTutorial />
 
   const isSummary = step === 13
   const isSubmitting = step === 14

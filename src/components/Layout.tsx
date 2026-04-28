@@ -140,7 +140,13 @@ export default function Layout() {
                   className="relative h-9 w-9 rounded-full border border-border/50"
                 >
                   <Avatar className="h-9 w-9">
-                    <AvatarImage src={`https://img.usecurling.com/ppl/thumbnail?seed=${user.id}`} />
+                    <AvatarImage
+                      src={
+                        user.user_metadata?.avatar_url ||
+                        `https://img.usecurling.com/ppl/thumbnail?seed=${user.id}`
+                      }
+                      className="object-cover w-full h-full"
+                    />
                     <AvatarFallback>
                       <UserIcon className="h-4 w-4 text-muted-foreground" />
                     </AvatarFallback>

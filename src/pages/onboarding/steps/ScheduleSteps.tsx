@@ -4,7 +4,7 @@ import { Label } from '@/components/ui/label'
 import { cn } from '@/lib/utils'
 import { OnboardingData } from '../types'
 
-const HEALTH_OPTIONS = ['Lombar', 'Ombro', 'Joelho', 'Quadril', 'Nenhum']
+const HEALTH_OPTIONS = ['Lombar', 'Ombro', 'Joelho', 'Quadril', 'Tornozelo', 'Nenhum']
 const DAYS = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom']
 
 export function HealthStep({ data, updateData }: { data: OnboardingData; updateData: any }) {
@@ -103,12 +103,16 @@ export function FrequencyStep({ data, updateData }: { data: OnboardingData; upda
 }
 
 export function DaysStep({ data, updateData }: { data: OnboardingData; updateData: any }) {
+  const isComplete = data.trainingDays.length === data.frequency
+
   const handleToggle = (day: string) => {
     const isSelected = data.trainingDays.includes(day)
     if (isSelected) {
       updateData({ trainingDays: data.trainingDays.filter((d) => d !== day) })
     } else {
-      updateData({ trainingDays: [...data.trainingDays, day] })
+      if (data.trainingDays.length < data.frequency) {
+        updateData({ trainingDays: [...data.trainingDays, day] })
+      }
     }
   }
 
@@ -117,26 +121,27 @@ export function DaysStep({ data, updateData }: { data: OnboardingData; updateDat
       <div className="space-y-2">
         <h2 className="text-3xl font-bold text-foreground">Quais dias você prefere?</h2>
         <p className="text-muted-foreground text-lg">
-          Selecione os dias da semana para sua rotina. Pode selecionar todos se desejar
-          flexibilidade.
+          Selecione {data.frequency} dias da semana para sua rotina.
         </p>
       </div>
 
       <div className="grid grid-cols-2 gap-3 mt-4">
         {DAYS.map((day) => {
           const isSelected = data.trainingDays.includes(day)
+          const isDisabled = !isSelected && isComplete
           return (
             <Label
               key={day}
               className={cn(
-                'flex items-center justify-center gap-3 p-5 rounded-xl border-2 cursor-pointer transition-all text-lg font-medium',
-                isSelected
-                  ? 'border-primary bg-primary/5 text-primary shadow-sm'
-                  : 'border-muted hover:border-primary/30',
+                'flex items-center justify-center gap-3 p-5 rounded-xl border-2 transition-all text-lg font-medium',
+                isSelected ? 'border-primary bg-primary/5 text-primary shadow-sm' : 'border-muted',
+                !isSelected && !isDisabled && 'hover:border-primary/30 cursor-pointer',
+                isDisabled && 'opacity-50 cursor-not-allowed',
               )}
             >
               <Checkbox
                 checked={isSelected}
+                disabled={isDisabled}
                 onCheckedChange={() => handleToggle(day)}
                 className="hidden"
               />
@@ -145,6 +150,12 @@ export function DaysStep({ data, updateData }: { data: OnboardingData; updateDat
           )
         })}
       </div>
+
+      {isComplete && (
+        <div className="p-4 bg-green-500/10 text-green-600 dark:text-green-400 rounded-xl font-bold text-center animate-fade-in mt-4">
+          Dias selecionados com sucesso!
+        </div>
+      )}
     </div>
   )
 }

@@ -1,82 +1,31 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { INITIAL_DATA, NutritionOnboardingData } from './types'
-import { canGoNext } from './utils'
-import { StepForm } from './StepForm'
-import { Progress } from '@/components/ui/progress'
 import { Button } from '@/components/ui/button'
+import { Progress } from '@/components/ui/progress'
 import { supabase } from '@/lib/supabase/client'
 import { useAuth } from '@/hooks/use-auth'
-import { saveNutritionProfileStep } from '@/lib/utils/supabase-helpers'
-
-const TOTAL_STEPS = 4
+import { WeightHistoryStep } from './steps/BasicSteps'
+import { MetabolicStep } from './steps/MetabolicStep'
+import { NutritionOnboardingData } from './types'
 
 export default function NutritionOnboardingPage() {
   const [step, setStep] = useState(1)
-  const [data, setData] = useState<NutritionOnboardingData>(INITIAL_DATA)
+  const [data, setData] = useState<NutritionOnboardingData>({
+    maxWeight: '',
+    minWeight: '',
+    diabetesHistory: '',
+    bodyType: '',
+  })
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const navigate = useNavigate()
-
-  const handleUpdate = (updates: Partial<NutritionOnboardingData>) =>
-    setData((d) => ({ ...d, ...updates }))
-
   const { user } = useAuth()
+  const navigate = useNavigate()
 
   useEffect(() => {
     window.scrollTo(0, 0)
   }, [step])
 
-  const mapStepToProfileData = (stepNum: number, currentData: NutritionOnboardingData) => {
-    switch (stepNum) {
-      case 1:
-        return {
-          body_type: currentData.bodyType,
-          hereditary_diseases: currentData.diabetesHistory === 'Sim' ? ['Diabetes'] : [],
-        }
-      case 2:
-        return {
-          wake_up_time: currentData.wakeUpTime,
-          sleep_time: currentData.sleepTime,
-          profession: currentData.profession,
-        }
-      case 3:
-        return {
-          intestinal_function: currentData.intestinalFunction,
-          bristol_scale_type: Number(currentData.bristolScale) || null,
-          medications: currentData.medications,
-        }
-      case 4:
-        return {
-          meals_per_day: Number(currentData.mealsPerDay) || null,
-          water_intake_liters: Number(currentData.waterIntake) || null,
-          foods_cannot_live_without: [currentData.favoriteFoods],
-        }
-      default:
-        return {}
-    }
-  }
-
-  const handleNextStep = async () => {
-    setIsSubmitting(true)
-    try {
-      if (user) {
-        const { data: profile } = await supabase
-          .from('nutrition_profiles')
-          .select('id')
-          .eq('user_id', user.id)
-          .single()
-        if (profile) {
-          const stepData = mapStepToProfileData(step, data)
-          await saveNutritionProfileStep(user.id, profile.id, step, stepData)
-        }
-      }
-      setStep((s) => s + 1)
-    } catch (e) {
-      console.error(e)
-    } finally {
-      setIsSubmitting(false)
-    }
-  }
+  const handleUpdate = (updates: Partial<NutritionOnboardingData>) =>
+    setData((d) => ({ ...d, ...updates }))
 
   const handleSubmit = async () => {
     setIsSubmitting(true)
@@ -87,23 +36,68 @@ export default function NutritionOnboardingPage() {
           .select('id')
           .eq('user_id', user.id)
           .single()
+
         if (profile) {
-          const stepData = mapStepToProfileData(4, data)
-          await saveNutritionProfileStep(user.id, profile.id, 4, stepData)
-          // Intestinal function serves as flag for diet completion in UI
           await supabase
             .from('nutrition_profiles')
             .update({
-              ...stepData,
+              max_weight_kg: Number(data.maxWeight),
+              min_weight_kg: Number(data.minWeight),
+              body_type: data.bodyType,
+              intestinal_function: 'regular',
             })
             .eq('id', profile.id)
         }
       }
-      navigate('/assessments')
+
+      setTimeout(() => {
+        setIsSubmitting(false)
+        navigate('/nutrition')
+      }, 3000)
     } catch (e) {
       console.error(e)
-    } finally {
       setIsSubmitting(false)
+    }
+  }
+
+  const renderStep = () => {
+    switch (step) {
+      case 1:
+        return <WeightHistoryStep data={data} updateData={handleUpdate} />
+      case 2:
+        return <MetabolicStep data={data} updateData={handleUpdate} />
+      case 3:
+        return (
+          <div className="animate-fade-in flex flex-col gap-6">
+            <h2 className="text-3xl font-bold">Hábitos Alimentares</h2>
+            <p className="text-muted-foreground text-lg">Conte-nos sobre sua rotina atual.</p>
+          </div>
+        )
+      case 4:
+        return (
+          <div className="animate-fade-in flex flex-col gap-6">
+            <h2 className="text-3xl font-bold">Consumo de Água</h2>
+            <p className="text-muted-foreground text-lg">Como é sua hidratação?</p>
+          </div>
+        )
+      case 5:
+        return (
+          <div className="animate-fade-in flex flex-col gap-6">
+            <h2 className="text-3xl font-bold">Preferências</h2>
+            <p className="text-muted-foreground text-lg">O que você gosta de comer?</p>
+          </div>
+        )
+      case 6:
+        return (
+          <div className="animate-fade-in flex flex-col gap-6">
+            <h2 className="text-3xl font-bold">Revisão Final</h2>
+            <p className="text-muted-foreground text-lg">
+              Pronto para gerar sua análise nutricional?
+            </p>
+          </div>
+        )
+      default:
+        return null
     }
   }
 
@@ -112,26 +106,25 @@ export default function NutritionOnboardingPage() {
       {!isSubmitting && (
         <div className="mb-8">
           <div className="flex justify-between text-sm font-semibold mb-3 text-muted-foreground">
-            <span>
-              Passo {step} de {TOTAL_STEPS}
-            </span>
-            <span className="text-primary">{Math.round((step / TOTAL_STEPS) * 100)}%</span>
+            <span>Passo {step} de 6</span>
+            <span className="text-primary">{Math.round((step / 6) * 100)}%</span>
           </div>
-          <Progress value={(step / TOTAL_STEPS) * 100} className="h-2.5 bg-primary/10" />
+          <Progress value={(step / 6) * 100} className="h-2.5 bg-primary/10" />
         </div>
       )}
 
       <div className="flex-1 flex flex-col">
         {isSubmitting ? (
-          <div className="flex-1 flex flex-col items-center justify-center animate-fade-in gap-6 text-primary">
+          <div className="flex-1 flex flex-col items-center justify-center animate-fade-in gap-6 text-primary mt-20">
             <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin" />
-            <p className="font-bold text-xl text-foreground">Salvando seus dados...</p>
+            <p className="font-bold text-xl text-foreground">Analisando seu perfil metabólico...</p>
             <p className="text-muted-foreground text-center max-w-[250px]">
-              Sincronizando com seu perfil inteligente.
+              Nossa inteligência artificial está processando seus dados para gerar o melhor plano
+              nutricional.
             </p>
           </div>
         ) : (
-          <StepForm step={step} data={data} updateData={handleUpdate} />
+          renderStep()
         )}
       </div>
 
@@ -146,21 +139,19 @@ export default function NutritionOnboardingPage() {
               Voltar
             </Button>
           )}
-          {step < TOTAL_STEPS ? (
+          {step < 6 ? (
             <Button
-              className="flex-[2] h-14 text-lg font-bold bg-primary-gradient text-white shadow-lg transition-all disabled:opacity-50"
-              disabled={!canGoNext(step, data)}
-              onClick={handleNextStep}
+              className="flex-[2] h-14 text-lg font-bold bg-primary-gradient text-white border-0 shadow-lg hover:shadow-primary/30 transition-all"
+              onClick={() => setStep((s) => s + 1)}
             >
               Continuar
             </Button>
           ) : (
             <Button
-              className="flex-[2] h-14 text-lg font-bold bg-primary-gradient text-white shadow-lg transition-all disabled:opacity-50"
-              disabled={!canGoNext(step, data)}
+              className="flex-[2] h-14 text-lg font-bold bg-primary-gradient text-white border-0 shadow-lg hover:shadow-primary/30 transition-all"
               onClick={handleSubmit}
             >
-              Finalizar
+              Finalizar Avaliação
             </Button>
           )}
         </div>

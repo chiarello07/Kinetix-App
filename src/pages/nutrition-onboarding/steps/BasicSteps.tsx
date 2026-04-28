@@ -1,63 +1,6 @@
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 
-export function PersonalDataStep({ data, updateData }: any) {
-  return (
-    <div className="animate-fade-in flex flex-col gap-6">
-      <h2 className="text-3xl font-bold text-foreground">Dados Pessoais</h2>
-      <div className="grid gap-4">
-        <div className="grid gap-2">
-          <Label>Idade (mín. 16)</Label>
-          <Input
-            type="number"
-            min="16"
-            placeholder="Ex: 25"
-            className="h-12"
-            value={data.age}
-            onChange={(e) => updateData({ age: e.target.value })}
-          />
-        </div>
-        <div className="grid gap-2">
-          <Label>Altura (cm)</Label>
-          <Input
-            type="number"
-            min="100"
-            max="250"
-            placeholder="Ex: 175"
-            className="h-12"
-            value={data.height}
-            onChange={(e) => updateData({ height: e.target.value })}
-          />
-        </div>
-        <div className="grid gap-2">
-          <Label>Peso Atual (kg)</Label>
-          <Input
-            type="number"
-            min="30"
-            max="300"
-            placeholder="Ex: 70"
-            className="h-12"
-            value={data.weight}
-            onChange={(e) => updateData({ weight: e.target.value })}
-          />
-        </div>
-        <div className="grid gap-2">
-          <Label>Peso Alvo (Opcional - kg)</Label>
-          <Input
-            type="number"
-            min="30"
-            max="300"
-            placeholder="Ex: 65"
-            className="h-12"
-            value={data.targetWeight}
-            onChange={(e) => updateData({ targetWeight: e.target.value })}
-          />
-        </div>
-      </div>
-    </div>
-  )
-}
-
 export function WeightHistoryStep({ data, updateData }: any) {
   return (
     <div className="animate-fade-in flex flex-col gap-6">

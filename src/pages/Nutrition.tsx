@@ -93,9 +93,6 @@ export default function Nutrition() {
                       </p>
                     </div>
                   </div>
-                  <Button asChild variant="outline" className="w-full font-semibold">
-                    <Link to="/nutrition-assessments">Refazer Avaliação</Link>
-                  </Button>
                 </div>
               ) : (
                 <Button asChild className="w-full h-12 font-bold shadow-sm">

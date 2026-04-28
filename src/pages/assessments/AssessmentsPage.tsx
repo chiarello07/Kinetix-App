@@ -65,8 +65,8 @@ export default function AssessmentsPage() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="flex flex-col sm:flex-row gap-3 w-full">
-              <Button asChild className="w-full h-12 font-bold shadow-sm flex-1">
+            <div className="flex flex-col gap-3 w-full">
+              <Button asChild className="w-full h-12 font-bold shadow-sm">
                 <Link to="/onboarding">
                   {trainingCompleted ? 'Refazer Questionário' : 'Responder Questionário'}
                 </Link>
@@ -76,7 +76,7 @@ export default function AssessmentsPage() {
                   <DialogTrigger asChild>
                     <Button
                       variant="outline"
-                      className="h-12 font-bold shadow-sm flex-1 border-primary/50 text-primary hover:bg-primary/5"
+                      className="w-full h-12 font-bold shadow-sm border-primary/50 text-primary hover:bg-primary/5"
                     >
                       Ver Resultados
                     </Button>

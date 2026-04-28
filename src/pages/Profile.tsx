@@ -102,6 +102,7 @@ export default function Profile() {
       await supabase.auth.updateUser({ data: { avatar_url: url } })
       await supabase.from('profiles').update({ avatar_url: url }).eq('id', user!.id)
       toast({ title: 'Foto atualizada', description: 'Sua foto de perfil foi atualizada.' })
+      setTimeout(() => window.location.reload(), 1000)
     }
   }
 
@@ -232,7 +233,7 @@ export default function Profile() {
             onClick={() => fileInputRef.current?.click()}
           >
             <Avatar className="w-24 h-24 border-4 border-background shadow-sm transition-transform group-hover:scale-105">
-              <AvatarImage src={avatarUrl || undefined} className="object-cover" />
+              <AvatarImage src={avatarUrl || undefined} className="object-cover w-full h-full" />
               <AvatarFallback className="bg-muted">
                 <User className="w-10 h-10 text-muted-foreground" />
               </AvatarFallback>
@@ -258,7 +259,9 @@ export default function Profile() {
       <Card className="border-none shadow-elevation">
         <CardHeader>
           <CardTitle>Informações Essenciais</CardTitle>
-          <CardDescription>Seus dados biométricos principais.</CardDescription>
+          <CardDescription>
+            <br />
+          </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="grid sm:grid-cols-2 gap-4">
@@ -354,7 +357,9 @@ export default function Profile() {
                 <strong>Data de Aceitação:</strong>{' '}
                 {new Date(profile.onboarding_completion_date).toLocaleDateString()}
               </p>
-              <p className="text-xs mt-1">CRN SOLUÇÕES TECNOLÓGICAS LTDA</p>
+              <p className="text-xs mt-1">
+                <br />
+              </p>
             </div>
           )}
         </CardContent>
