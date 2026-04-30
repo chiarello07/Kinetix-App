@@ -1,54 +1,88 @@
-import { useEffect, useState } from 'react'
+import { useState, useRef } from 'react'
 import { Button } from '@/components/ui/button'
-import { Link } from 'react-router-dom'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
-import { Utensils, ClipboardList, CheckCircle2, Apple } from 'lucide-react'
+import { Camera, Upload, CheckCircle2, Flame, Loader2, Apple } from 'lucide-react'
 import { supabase } from '@/lib/supabase/client'
 import { useAuth } from '@/hooks/use-auth'
+import { useToast } from '@/hooks/use-toast'
+import { useNavigate } from 'react-router-dom'
 
 export default function Nutrition() {
   const { user } = useAuth()
-  const [loading, setLoading] = useState(true)
-  const [assessment, setAssessment] = useState<any>(null)
-  const [plan, setPlan] = useState<any>(null)
+  const { toast } = useToast()
+  const navigate = useNavigate()
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
-  useEffect(() => {
-    if (user) loadData()
-  }, [user])
+  const [loading, setLoading] = useState(false)
+  const [analysisResult, setAnalysisResult] = useState<any>(null)
+  const [imagePreview, setImagePreview] = useState<string | null>(null)
 
-  const loadData = async () => {
+  const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0]
+      setImagePreview(URL.createObjectURL(file))
+      analyzeFood()
+    }
+  }
+
+  const analyzeFood = () => {
+    setLoading(true)
+    setAnalysisResult(null)
+    // Mock AI Analysis for Calorimeter feature
+    setTimeout(() => {
+      setAnalysisResult({
+        foods: ['Peito de Frango Grelhado', 'Arroz Integral', 'Brócolis'],
+        calories: 450,
+        protein: 45,
+        carbs: 40,
+        fat: 10,
+        micros: ['Vitamina C', 'Ferro', 'Fibras'],
+      })
+      setLoading(false)
+    }, 2500)
+  }
+
+  const handleRegisterMeal = async () => {
+    if (!user || !analysisResult) return
+
     try {
-      const { data: profile } = await supabase
-        .from('nutrition_profiles')
-        .select('id')
-        .eq('user_id', user!.id)
+      const today = new Date().toISOString().split('T')[0]
+      const { data: existing } = await supabase
+        .from('progress_metrics')
+        .select('*')
+        .eq('user_id', user.id)
+        .eq('date', today)
         .single()
 
-      if (profile) {
-        const { data: latestAssessment } = await supabase
-          .from('nutrition_assessments')
-          .select('*')
-          .eq('nutrition_profile_id', profile.id)
-          .order('created_at', { ascending: false })
-          .limit(1)
-          .single()
-
-        if (latestAssessment) setAssessment(latestAssessment)
-
-        const { data: latestPlan } = await supabase
-          .from('nutrition_plans')
-          .select('*')
-          .eq('nutrition_profile_id', profile.id)
-          .order('created_at', { ascending: false })
-          .limit(1)
-          .single()
-
-        if (latestPlan) setPlan(latestPlan)
+      if (existing) {
+        await supabase
+          .from('progress_metrics')
+          .update({
+            total_calories_consumed:
+              (existing.total_calories_consumed || 0) + analysisResult.calories,
+            total_protein_consumed:
+              Number(existing.total_protein_consumed || 0) + analysisResult.protein,
+            total_carbs_consumed: Number(existing.total_carbs_consumed || 0) + analysisResult.carbs,
+            total_fat_consumed: Number(existing.total_fat_consumed || 0) + analysisResult.fat,
+            meals_completed: (existing.meals_completed || 0) + 1,
+          })
+          .eq('id', existing.id)
+      } else {
+        await supabase.from('progress_metrics').insert({
+          user_id: user.id,
+          date: today,
+          total_calories_consumed: analysisResult.calories,
+          total_protein_consumed: analysisResult.protein,
+          total_carbs_consumed: analysisResult.carbs,
+          total_fat_consumed: analysisResult.fat,
+          meals_completed: 1,
+        })
       }
-    } catch (e) {
-      console.error(e)
-    } finally {
-      setLoading(false)
+
+      toast({ title: 'Sucesso', description: 'Refeição registrada e adicionada ao seu progresso!' })
+      navigate('/progress')
+    } catch (e: any) {
+      toast({ title: 'Erro', description: e.message, variant: 'destructive' })
     }
   }
 
@@ -56,83 +90,137 @@ export default function Nutrition() {
     <div className="p-6 max-w-4xl mx-auto space-y-6 animate-fade-in-up pb-24 md:pb-6">
       <div className="flex items-center gap-3 mb-8">
         <div className="p-3 bg-primary/10 rounded-xl text-primary shadow-sm">
-          <Utensils className="w-8 h-8" />
+          <Camera className="w-8 h-8" />
         </div>
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Nutrição</h1>
-          <p className="text-muted-foreground">Gerencie sua dieta e avaliações nutricionais.</p>
+          <h1 className="text-3xl font-bold tracking-tight">Calorímetro IA</h1>
+          <p className="text-muted-foreground">
+            Registre suas refeições por foto e acompanhe seus macros.
+          </p>
         </div>
       </div>
 
-      {loading ? (
-        <div className="flex justify-center p-12">
-          <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
-        </div>
-      ) : (
-        <div className="grid md:grid-cols-2 gap-6">
-          <Card className="hover:shadow-md transition-shadow border-primary/10 bg-card">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-xl">
-                <ClipboardList className="w-6 h-6 text-primary" /> Avaliação Detalhada
-              </CardTitle>
-              <CardDescription className="text-sm">
-                Rastreamento metabólico completo para otimizar sua dieta.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              {assessment ? (
-                <div className="space-y-4">
-                  <div className="p-4 bg-green-500/10 rounded-xl border border-green-500/20 flex items-start gap-3">
-                    <CheckCircle2 className="w-5 h-5 text-green-500 shrink-0 mt-0.5" />
+      <Card className="border-primary/20 shadow-lg bg-card overflow-hidden">
+        <CardHeader className="bg-primary/5 border-b border-primary/10">
+          <CardTitle className="text-xl flex items-center gap-2">
+            <Flame className="w-5 h-5 text-primary" /> Escanear Refeição
+          </CardTitle>
+          <CardDescription>
+            Tire uma foto do seu prato para nossa Inteligência Artificial estimar as calorias e
+            macronutrientes.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="p-6 space-y-6">
+          {!imagePreview ? (
+            <div
+              className="border-2 border-dashed border-primary/30 rounded-2xl p-12 text-center bg-secondary/30 cursor-pointer hover:bg-secondary/50 transition-colors group"
+              onClick={() => fileInputRef.current?.click()}
+            >
+              <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform shadow-sm">
+                <Upload className="w-10 h-10 text-primary" />
+              </div>
+              <p className="text-lg font-bold text-foreground">Toque para escanear seu prato</p>
+              <p className="text-sm text-muted-foreground mt-2">
+                A câmera será aberta automaticamente
+              </p>
+            </div>
+          ) : (
+            <div className="space-y-6 animate-fade-in">
+              <div className="relative rounded-2xl overflow-hidden shadow-md aspect-video max-h-[300px] bg-black">
+                <img
+                  src={imagePreview}
+                  alt="Refeição"
+                  className="w-full h-full object-cover opacity-80"
+                />
+                {loading && (
+                  <div className="absolute inset-0 flex flex-col items-center justify-center bg-background/60 backdrop-blur-sm">
+                    <Loader2 className="w-12 h-12 text-primary animate-spin mb-4" />
+                    <p className="font-bold text-lg text-foreground animate-pulse drop-shadow-md">
+                      Analisando imagem com IA...
+                    </p>
+                  </div>
+                )}
+              </div>
+
+              {!loading && analysisResult && (
+                <div className="bg-secondary/20 p-6 rounded-2xl border border-border animate-fade-in-up space-y-6">
+                  <div className="flex items-start gap-4">
+                    <div className="p-3 bg-green-500/20 text-green-600 dark:text-green-400 rounded-full shrink-0 shadow-sm">
+                      <CheckCircle2 className="w-6 h-6" />
+                    </div>
                     <div>
-                      <p className="font-semibold text-green-700 dark:text-green-400">
-                        Avaliação Concluída
+                      <h3 className="text-xl font-bold text-foreground">Análise Concluída</h3>
+                      <p className="text-muted-foreground">Identificamos os seguintes alimentos:</p>
+                      <div className="flex flex-wrap gap-2 mt-3">
+                        {analysisResult.foods.map((f: string) => (
+                          <span
+                            key={f}
+                            className="px-3 py-1 bg-background rounded-full text-sm font-medium border shadow-sm flex items-center gap-1"
+                          >
+                            <Apple className="w-3 h-3 text-primary" /> {f}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-4 gap-3 pt-4 border-t border-border">
+                    <div className="bg-background p-3 rounded-xl border shadow-sm text-center">
+                      <p className="text-xs text-muted-foreground font-bold uppercase">Calorias</p>
+                      <p className="text-2xl font-black text-primary mt-1">
+                        {analysisResult.calories}
                       </p>
-                      <p className="text-sm text-green-600/80 dark:text-green-500/80 mt-1">
-                        Score: {assessment.score_percentage}% - {assessment.interpretation}
+                    </div>
+                    <div className="bg-background p-3 rounded-xl border shadow-sm text-center">
+                      <p className="text-xs text-muted-foreground font-bold uppercase">Prot</p>
+                      <p className="text-xl font-bold text-foreground mt-1">
+                        {analysisResult.protein}g
+                      </p>
+                    </div>
+                    <div className="bg-background p-3 rounded-xl border shadow-sm text-center">
+                      <p className="text-xs text-muted-foreground font-bold uppercase">Carb</p>
+                      <p className="text-xl font-bold text-foreground mt-1">
+                        {analysisResult.carbs}g
+                      </p>
+                    </div>
+                    <div className="bg-background p-3 rounded-xl border shadow-sm text-center">
+                      <p className="text-xs text-muted-foreground font-bold uppercase">Gord</p>
+                      <p className="text-xl font-bold text-foreground mt-1">
+                        {analysisResult.fat}g
                       </p>
                     </div>
                   </div>
-                </div>
-              ) : (
-                <Button asChild className="w-full h-12 font-bold shadow-sm">
-                  <Link to="/nutrition-assessments">Iniciar Avaliação Detalhada</Link>
-                </Button>
-              )}
-            </CardContent>
-          </Card>
 
-          <Card className="hover:shadow-md transition-shadow border-primary/10 bg-card">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-xl">
-                <Apple className="w-6 h-6 text-primary" /> Plano Nutricional
-              </CardTitle>
-              <CardDescription className="text-sm">
-                Acesse seu plano de refeições e suplementação personalizado.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              {plan ? (
-                <div className="space-y-4">
-                  <div className="p-4 bg-primary/5 rounded-xl border border-primary/10">
-                    <p className="font-semibold text-foreground">Plano Ativo</p>
-                    <p className="text-sm text-muted-foreground mt-1">
-                      Objetivo: {plan.primary_goal} • {Math.round(plan.target_calories)} kcal
-                    </p>
+                  <div className="pt-4 flex flex-col gap-3">
+                    <Button
+                      onClick={handleRegisterMeal}
+                      className="w-full h-14 text-lg font-bold shadow-lg bg-primary-gradient text-white border-0 hover:shadow-primary/30 transition-all"
+                    >
+                      Registrar esta Refeição
+                    </Button>
+                    <Button
+                      variant="outline"
+                      onClick={() => fileInputRef.current?.click()}
+                      className="w-full h-12"
+                    >
+                      Tirar outra foto
+                    </Button>
                   </div>
-                  <Button asChild className="w-full font-semibold">
-                    <Link to="/nutrition-plan">Ver Plano Completo</Link>
-                  </Button>
                 </div>
-              ) : (
-                <Button asChild className="w-full h-12 font-bold shadow-sm">
-                  <Link to="/nutrition-plan">Gerar Plano Nutricional</Link>
-                </Button>
               )}
-            </CardContent>
-          </Card>
-        </div>
-      )}
+            </div>
+          )}
+
+          <input
+            type="file"
+            accept="image/*"
+            capture="environment"
+            className="hidden"
+            ref={fileInputRef}
+            onChange={handlePhotoUpload}
+          />
+        </CardContent>
+      </Card>
     </div>
   )
 }

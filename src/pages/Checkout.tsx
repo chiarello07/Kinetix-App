@@ -107,7 +107,7 @@ export default function CheckoutPage() {
           </CardTitle>
           <CardDescription>
             {status === 'loading' && 'Aguarde enquanto preparamos seu ambiente premium...'}
-            {status === 'success' && 'Bem-vindo ao PosturAI Premium!'}
+            {status === 'success' && 'Bem-vindo ao Kinetix Premium!'}
           </CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col items-center justify-center py-6">

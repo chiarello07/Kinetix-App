@@ -140,7 +140,7 @@ export default function Workouts() {
             className="w-full h-14 text-lg font-bold bg-primary-gradient text-white shadow-lg hover:shadow-primary/30 gap-2"
             onClick={() => navigate('/workout/execute')}
           >
-            <Play className="w-5 h-5 fill-current" /> Visualizar / Iniciar Treino
+            <Play className="w-5 h-5 fill-current" /> Visualizar Treino
           </Button>
         </CardContent>
       </Card>

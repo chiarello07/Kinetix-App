@@ -79,11 +79,15 @@ export function generatePlan(params: GeneratePlanParams): WorkoutPlan {
           notes: 'Aquecimento em intensidade leve.',
         })
 
-        let mainSets = objective === 'Hypertrophy' ? 4 : objective === 'Strength' ? 4 : 3
+        let mainSets = objective === 'Hypertrophy' ? 5 : objective === 'Strength' ? 5 : 4
         let mainReps =
-          objective === 'Hypertrophy' ? '8-12' : objective === 'Strength' ? '4-6' : '12-15'
-        let mainRpe = objective === 'Hypertrophy' ? 8 : objective === 'Strength' ? 9 : 7
-        let mainRest = objective === 'Strength' ? 120 : 90
+          objective === 'Hypertrophy'
+            ? '8-12 (Foco na falha)'
+            : objective === 'Strength'
+              ? '3-5'
+              : '12-15'
+        let mainRpe = objective === 'Hypertrophy' ? 9 : objective === 'Strength' ? 10 : 8
+        let mainRest = objective === 'Strength' ? 180 : 90
 
         if (isDeload) {
           mainSets = 2
@@ -92,17 +96,18 @@ export function generatePlan(params: GeneratePlanParams): WorkoutPlan {
           mainRest = 60
         }
 
-        const dayCorrectives = correctiveExercises.slice(idx * 2, idx * 2 + 2)
+        // Reduzido foco em corretivos para focar em hipertrofia bodybuilder
+        const dayCorrectives = correctiveExercises.slice(idx * 1, idx * 1 + 1)
         dayCorrectives.forEach((c) => {
           sessionExercises.push({
             id: generateId(),
             exerciseId: c.ex.id,
             exercise: c.ex,
             category: 'Main',
-            sets: mainSets,
-            reps: mainReps,
-            restTimeSeconds: mainRest,
-            rpe: mainRpe,
+            sets: 3,
+            reps: '10-12',
+            restTimeSeconds: 60,
+            rpe: 7,
             notes: c.ex.executionNotes,
             targetDeviationId: c.devId,
           })
@@ -140,21 +145,6 @@ export function generatePlan(params: GeneratePlanParams): WorkoutPlan {
             notes: a.executionNotes,
           })
         })
-
-        if (mobilities.length > 0) {
-          const mob = mobilities[idx % mobilities.length]
-          sessionExercises.push({
-            id: generateId(),
-            exerciseId: mob.id,
-            exercise: mob,
-            category: 'Cool-down',
-            sets: 1,
-            reps: '30s cada lado',
-            restTimeSeconds: 0,
-            rpe: 3,
-            notes: 'Foque na respiração.',
-          })
-        }
 
         const totalSets = sessionExercises.reduce((acc, curr) => acc + curr.sets, 0)
         const avgSetTime = 45

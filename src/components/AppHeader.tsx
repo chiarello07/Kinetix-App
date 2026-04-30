@@ -23,8 +23,7 @@ export function AppHeader() {
     navigate('/')
   }
 
-  const avatarSrc =
-    user?.user_metadata?.avatar_url || `https://img.usecurling.com/ppl/thumbnail?seed=${user?.id}`
+  const avatarSrc = user?.user_metadata?.avatar_url
 
   return (
     <header className="sticky top-0 z-40 bg-background/80 backdrop-blur-md border-b border-border/50 h-16 flex items-center justify-between px-4 md:px-6">

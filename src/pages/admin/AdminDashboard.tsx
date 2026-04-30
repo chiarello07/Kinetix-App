@@ -6,11 +6,6 @@ import { Users, Activity, DollarSign, TrendingUp } from 'lucide-react'
 export default function AdminDashboard() {
   const { user } = useAuth()
 
-  // Restrição de acesso
-  if (user?.email !== 'christianochiarello@gmail.com') {
-    return <Navigate to="/" replace />
-  }
-
   return (
     <div className="p-6 max-w-6xl mx-auto space-y-8 animate-fade-in-up pb-24 md:pb-6">
       <div>

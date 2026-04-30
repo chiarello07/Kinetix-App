@@ -48,9 +48,7 @@ export default function Profile() {
 
   useEffect(() => {
     if (user) {
-      setAvatarUrl(
-        user.user_metadata?.avatar_url || `https://img.usecurling.com/ppl/large?seed=${user.id}`,
-      )
+      setAvatarUrl(user.user_metadata?.avatar_url || null)
       fetchProfile()
     }
   }, [user])
@@ -249,9 +247,32 @@ export default function Profile() {
               onChange={handleAvatarChange}
             />
           </div>
-          <div className="flex-1 text-center md:text-left space-y-2 mt-4 md:mt-2">
-            <h2 className="text-2xl font-bold">{formData.name || 'Atleta Kinetix'}</h2>
-            <p className="text-muted-foreground">{user?.email}</p>
+          <div className="flex-1 flex flex-col md:flex-row items-center md:items-start justify-between gap-4 mt-4 md:mt-2 w-full">
+            <div className="text-center md:text-left space-y-2">
+              <h2 className="text-2xl font-bold">{formData.name || 'Atleta Kinetix'}</h2>
+              <p className="text-muted-foreground">{user?.email}</p>
+            </div>
+            <Button
+              variant="outline"
+              size="sm"
+              className="whitespace-nowrap shadow-sm"
+              onClick={async () => {
+                if (!user?.email) return
+                const { error } = await supabase.auth.resetPasswordForEmail(user.email, {
+                  redirectTo: `${window.location.origin}/profile`,
+                })
+                if (error) {
+                  toast({ title: 'Erro', description: error.message, variant: 'destructive' })
+                } else {
+                  toast({
+                    title: 'Sucesso',
+                    description: 'E-mail de redefinição de senha enviado.',
+                  })
+                }
+              }}
+            >
+              Alterar Senha
+            </Button>
           </div>
         </CardContent>
       </Card>
@@ -380,6 +401,23 @@ export default function Profile() {
         onClose={() => setShowPaywall(false)}
         feature="Acesso Premium"
         reason="upgrade"
+      />
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `
+        [role="dialog"] button[aria-label="Close"], 
+        [data-radix-collection-item] {
+          color: hsl(var(--foreground)) !important;
+          opacity: 0.8 !important;
+          background: hsl(var(--secondary)) !important;
+          border-radius: 50% !important;
+          padding: 4px !important;
+        }
+        [role="dialog"] button[aria-label="Close"]:hover {
+          opacity: 1 !important;
+        }
+      `,
+        }}
       />
     </div>
   )
