@@ -93,7 +93,7 @@ export default function Nutrition() {
           <Camera className="w-8 h-8" />
         </div>
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Calorímetro IA</h1>
+          <h1 className="text-3xl font-bold tracking-tight">Contador de Calorias</h1>
           <p className="text-muted-foreground">
             Registre suas refeições por foto e acompanhe seus macros.
           </p>
