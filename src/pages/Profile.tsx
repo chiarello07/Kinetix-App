@@ -371,7 +371,7 @@ export default function Profile() {
                 Termo de Consentimento Livre e Esclarecido (TCLE)
               </h4>
               <p>
-                Você concordou com os termos da plataforma Kinetix: Análise Postural, Treinamento e
+                Você concordou com os termos da plataforma Kinetix: Análise Corporal, Treinamento e
                 Nutrição.
               </p>
               <p className="mt-2">
