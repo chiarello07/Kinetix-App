@@ -169,7 +169,7 @@ export default function ProgressPage() {
                   <div className="p-2 bg-secondary rounded-lg">
                     <Utensils className="w-5 h-5 text-primary" />
                   </div>
-                  <h3 className="font-bold text-muted-foreground">Refeições Logadas</h3>
+                  <h3 className="font-bold text-muted-foreground">Refeições</h3>
                 </div>
                 <div className="text-4xl font-black">{data.metrics.nutrition.mealsLogged}</div>
                 <p className="text-sm text-green-500 font-medium mt-1">

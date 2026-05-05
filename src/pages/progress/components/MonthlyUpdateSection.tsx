@@ -62,7 +62,7 @@ export function MonthlyUpdateSection() {
               Atualização Mensal Inteligente
             </CardTitle>
             <CardDescription className="text-primary/80 mt-1">
-              Análise completa com IA dos seus últimos 30 dias de progresso.
+              Análise completa dos seus últimos 30 dias de progresso.
             </CardDescription>
           </div>
           <Button
