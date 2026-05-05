@@ -37,8 +37,8 @@ export default function Index() {
           variant="outline"
           className="w-full text-lg h-14 font-bold border-2 border-[#FF1493]/20 hover:border-[#FF1493]/50 hover:bg-[#FF1493]/5 text-foreground"
         >
-          <Link to="/workouts">
-            <Play className="w-5 h-5 mr-2 text-[#FF1493]" /> Iniciar Treino
+          <Link to="/workout/execute">
+            <Play className="w-5 h-5 mr-2 text-[#FF1493]" /> Iniciar Treino Hoje
           </Link>
         </Button>
       </div>

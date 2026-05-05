@@ -1,4 +1,3 @@
-import { exercisesDB, deviationMappings, prohibitedMappings } from './mockDatabase'
 import type {
   WorkoutPlan,
   Mesocycle,
@@ -19,39 +18,111 @@ export type GeneratePlanParams = {
 
 const generateId = () => Math.random().toString(36).substring(2, 9)
 
+const tier1Exercises: Exercise[] = [
+  {
+    id: 'c1',
+    name: 'Prancha Isométrica',
+    type: 'Compound',
+    targetMuscles: ['Core'],
+    description: '',
+    executionNotes: '',
+  },
+  {
+    id: 'p1',
+    name: 'Supino Reto com Barra',
+    type: 'Compound',
+    targetMuscles: ['Peito'],
+    description: '',
+    executionNotes: '',
+  },
+  {
+    id: 'p2',
+    name: 'Supino Inclinado com Halteres',
+    type: 'Compound',
+    targetMuscles: ['Peito'],
+    description: '',
+    executionNotes: '',
+  },
+  {
+    id: 'b1',
+    name: 'Puxada Frontal (Lat Pulldown)',
+    type: 'Compound',
+    targetMuscles: ['Costas'],
+    description: '',
+    executionNotes: '',
+  },
+  {
+    id: 'b2',
+    name: 'Remada Curvada com Barra',
+    type: 'Compound',
+    targetMuscles: ['Costas'],
+    description: '',
+    executionNotes: '',
+  },
+  {
+    id: 'l1',
+    name: 'Agachamento Livre com Barra',
+    type: 'Compound',
+    targetMuscles: ['Pernas'],
+    description: '',
+    executionNotes: '',
+  },
+  {
+    id: 'l2',
+    name: 'Leg Press 45º',
+    type: 'Compound',
+    targetMuscles: ['Pernas'],
+    description: '',
+    executionNotes: '',
+  },
+  {
+    id: 'l5',
+    name: 'Levantamento Terra Romeno (RDL)',
+    type: 'Compound',
+    targetMuscles: ['Pernas'],
+    description: '',
+    executionNotes: '',
+  },
+  {
+    id: 's1',
+    name: 'Desenvolvimento Militar com Barra',
+    type: 'Compound',
+    targetMuscles: ['Ombros'],
+    description: '',
+    executionNotes: '',
+  },
+  {
+    id: 'a1',
+    name: 'Rosca Direta com Barra',
+    type: 'Isolation',
+    targetMuscles: ['Bíceps'],
+    description: '',
+    executionNotes: '',
+  },
+  {
+    id: 'a4',
+    name: 'Tríceps Pulley com Corda',
+    type: 'Isolation',
+    targetMuscles: ['Tríceps'],
+    description: '',
+    executionNotes: '',
+  },
+  {
+    id: 'ca1',
+    name: 'Panturrilha em Pé (Máquina)',
+    type: 'Isolation',
+    targetMuscles: ['Panturrilhas'],
+    description: '',
+    executionNotes: '',
+  },
+]
+
 export function generatePlan(params: GeneratePlanParams): WorkoutPlan {
   const { durationWeeks, trainingDays, focusAreas, weightKg, posturalScore, deviations } = params
 
   const periodizationType =
     durationWeeks === 13 ? 'Linear' : durationWeeks === 26 ? 'Undulating' : 'Block'
   const medicalClearanceRequired = posturalScore < 60
-
-  const prohibitedIds = new Set<string>()
-  deviations.forEach((dev) => {
-    const prohibited = prohibitedMappings[dev.id] || []
-    prohibited.forEach((id) => prohibitedIds.add(id))
-  })
-
-  const correctiveExercises: { ex: Exercise; devId: string }[] = []
-  deviations.forEach((dev) => {
-    const mappings = deviationMappings[dev.id] || []
-    mappings.forEach((m) => {
-      if (!prohibitedIds.has(m.exerciseId) && exercisesDB[m.exerciseId]) {
-        correctiveExercises.push({ ex: exercisesDB[m.exerciseId], devId: dev.id })
-      }
-    })
-  })
-
-  const allExercises = Object.values(exercisesDB)
-  const accessories = allExercises.filter((e) => e.type === 'Isolation' && !prohibitedIds.has(e.id))
-
-  const cardios = allExercises.filter((e) => e.type === 'Cardio' && !prohibitedIds.has(e.id))
-  const defaultWarmup =
-    cardios.length > 0
-      ? cardios[0]
-      : { ...allExercises[0], name: 'Aquecimento Geral', type: 'Cardio' as const }
-
-  const mobilities = allExercises.filter((e) => e.type === 'Mobility' && !prohibitedIds.has(e.id))
 
   const mesocycles: Mesocycle[] = []
   let currentWeek = 1
@@ -67,57 +138,25 @@ export function generatePlan(params: GeneratePlanParams): WorkoutPlan {
       const sessions: TrainingSession[] = trainingDays.map((day, idx) => {
         const sessionExercises: SessionExercise[] = []
 
-        sessionExercises.push({
-          id: generateId(),
-          exerciseId: defaultWarmup.id,
-          exercise: defaultWarmup,
-          category: 'Warm-up',
-          sets: 1,
-          reps: '5 min',
-          restTimeSeconds: 0,
-          rpe: 4,
-          notes: 'Aquecimento em intensidade leve.',
-        })
-
-        let mainSets = objective === 'Hypertrophy' ? 5 : objective === 'Strength' ? 5 : 4
+        let mainSets = objective === 'Hypertrophy' ? 4 : objective === 'Strength' ? 5 : 3
         let mainReps =
           objective === 'Hypertrophy'
-            ? '8-12 (Foco na falha)'
+            ? '8-12 (Até a falha)'
             : objective === 'Strength'
-              ? '3-5'
-              : '12-15'
-        let mainRpe = objective === 'Hypertrophy' ? 9 : objective === 'Strength' ? 10 : 8
+              ? '3-6'
+              : '10-15'
+        let mainRpe = objective === 'Hypertrophy' ? 9 : objective === 'Strength' ? 9 : 8
         let mainRest = objective === 'Strength' ? 180 : 90
 
         if (isDeload) {
           mainSets = 2
-          mainReps = '10'
+          mainReps = '12'
           mainRpe = 6
           mainRest = 60
         }
 
-        // Reduzido foco em corretivos para focar em hipertrofia bodybuilder
-        const dayCorrectives = correctiveExercises.slice(idx * 1, idx * 1 + 1)
-        dayCorrectives.forEach((c) => {
-          sessionExercises.push({
-            id: generateId(),
-            exerciseId: c.ex.id,
-            exercise: c.ex,
-            category: 'Main',
-            sets: 3,
-            reps: '10-12',
-            restTimeSeconds: 60,
-            rpe: 7,
-            notes: c.ex.executionNotes,
-            targetDeviationId: c.devId,
-          })
-        })
-
-        const compounds = allExercises.filter(
-          (e) => e.type === 'Compound' && !prohibitedIds.has(e.id),
-        )
-        if (compounds.length > 0) {
-          const comp = compounds[idx % compounds.length]
+        for (let i = 0; i < 5; i++) {
+          const comp = tier1Exercises[(idx * 5 + i) % tier1Exercises.length]
           sessionExercises.push({
             id: generateId(),
             exerciseId: comp.id,
@@ -127,24 +166,10 @@ export function generatePlan(params: GeneratePlanParams): WorkoutPlan {
             reps: mainReps,
             restTimeSeconds: mainRest,
             rpe: mainRpe,
-            notes: comp.executionNotes,
+            notes:
+              'Foco na cadência e controle do movimento. Máxima eficiência de recrutamento muscular.',
           })
         }
-
-        const dayAccessories = accessories.slice(idx * 2, idx * 2 + 2)
-        dayAccessories.forEach((a) => {
-          sessionExercises.push({
-            id: generateId(),
-            exerciseId: a.id,
-            exercise: a,
-            category: 'Accessory',
-            sets: isDeload ? 2 : 3,
-            reps: isDeload ? '12' : '10-15',
-            restTimeSeconds: 60,
-            rpe: isDeload ? 6 : 7,
-            notes: a.executionNotes,
-          })
-        })
 
         const totalSets = sessionExercises.reduce((acc, curr) => acc + curr.sets, 0)
         const avgSetTime = 45
@@ -185,11 +210,10 @@ export function generatePlan(params: GeneratePlanParams): WorkoutPlan {
   }
 
   if (durationWeeks === 13) {
-    mesocycles.push(createMeso('Meso 1 - Adaptação', 'Adaptation', 3))
-    mesocycles.push(createMeso('Meso 2 - Hipertrofia', 'Hypertrophy', 3))
-    mesocycles.push(createMeso('Meso 3 - Força Base', 'Strength', 3))
-    mesocycles.push(createMeso('Meso 4 - Transição', 'Deload', 1))
-    mesocycles.push(createMeso('Meso 5 - Potência', 'Power', 3))
+    mesocycles.push(createMeso('Meso 1 - Adaptação Tensional', 'Hypertrophy', 4))
+    mesocycles.push(createMeso('Meso 2 - Volume e Hipertrofia', 'Hypertrophy', 4))
+    mesocycles.push(createMeso('Meso 3 - Choque e Densidade', 'Strength', 4))
+    mesocycles.push(createMeso('Meso 4 - Recuperação Ativa', 'Deload', 1))
   } else if (durationWeeks === 26) {
     for (let i = 0; i < 6; i++) {
       const obj = i % 2 === 0 ? 'Hypertrophy' : 'Strength'
@@ -208,7 +232,7 @@ export function generatePlan(params: GeneratePlanParams): WorkoutPlan {
   return {
     id: generateId(),
     userId: 'user-1',
-    name: `Plano Periodizado ${durationWeeks} Semanas`,
+    name: `Plano Estruturado ${durationWeeks} Semanas (Motor Tier 1)`,
     durationWeeks,
     periodizationType,
     createdAt: new Date().toISOString(),

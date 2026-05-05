@@ -4,6 +4,7 @@ import { Input } from '@/components/ui/input'
 import { useNavigate } from 'react-router-dom'
 import { Dumbbell, ArrowRight, Play, Pause, CheckCircle } from 'lucide-react'
 import { BorgScaleScreen } from './BorgScaleScreen'
+import { WorkoutSummaryScreen } from './WorkoutSummaryScreen'
 import { supabase } from '@/lib/supabase/client'
 import { useAuth } from '@/hooks/use-auth'
 
@@ -11,16 +12,17 @@ export default function WorkoutExecutionPage() {
   const [timeElapsed, setTimeElapsed] = useState(0)
   const [isPaused, setIsPaused] = useState(false)
   const [currentSet, setCurrentSet] = useState(1)
-  const [showBorg, setShowBorg] = useState(false)
+  const [step, setStep] = useState<'execution' | 'borg' | 'summary'>('execution')
+  const [rpe, setRpe] = useState(5)
   const [weights, setWeights] = useState<Record<number, string>>({ 1: '60', 2: '60', 3: '60' })
   const navigate = useNavigate()
   const { user } = useAuth()
 
   useEffect(() => {
-    if (isPaused || showBorg) return
+    if (isPaused || step !== 'execution') return
     const timer = setInterval(() => setTimeElapsed((t) => t + 1), 1000)
     return () => clearInterval(timer)
-  }, [isPaused, showBorg])
+  }, [isPaused, step])
 
   const formatTime = (seconds: number) => {
     const h = Math.floor(seconds / 3600)
@@ -32,12 +34,19 @@ export default function WorkoutExecutionPage() {
   }
 
   const handleFinishWorkout = () => {
-    setShowBorg(true)
+    setStep('borg')
   }
 
-  const handleBorgComplete = async (rpe: number) => {
+  const handleBorgComplete = (selectedRpe: number) => {
+    setRpe(selectedRpe)
+    setStep('summary')
+  }
+
+  const handleSummaryFinish = async () => {
     if (user) {
       const today = new Date().toISOString().split('T')[0]
+      const totalWeight = Object.values(weights).reduce((a, b) => a + Number(b || 0), 0)
+
       const { data: existing } = await supabase
         .from('progress_metrics')
         .select('*')
@@ -51,6 +60,7 @@ export default function WorkoutExecutionPage() {
           .update({
             workouts_completed: (existing.workouts_completed || 0) + 1,
             total_time: (existing.total_time || 0) + Math.floor(timeElapsed / 60),
+            total_weight: (existing.total_weight || 0) + totalWeight,
             avg_borg_rpe: rpe,
           })
           .eq('id', existing.id)
@@ -60,15 +70,50 @@ export default function WorkoutExecutionPage() {
           date: today,
           workouts_completed: 1,
           total_time: Math.floor(timeElapsed / 60),
+          total_weight: totalWeight,
           avg_borg_rpe: rpe,
         })
       }
+
+      await supabase.from('workout_sessions').insert({
+        user_id: user.id,
+        training_plan_id: 'motor-treino-tier1',
+        day_index: new Date().getDay(),
+        workout_date: today,
+        start_time: new Date(Date.now() - timeElapsed * 1000).toISOString(),
+        end_time: new Date().toISOString(),
+        exercises_completed: weights,
+        total_time: timeElapsed,
+        total_rest_time: 0,
+        total_session_time: timeElapsed,
+        total_volume: 36,
+        total_weight: totalWeight,
+        borg_rpe: rpe,
+      })
     }
     navigate('/progress')
   }
 
-  if (showBorg) {
+  if (step === 'borg') {
     return <BorgScaleScreen onComplete={handleBorgComplete} />
+  }
+
+  if (step === 'summary') {
+    const totalWeight = Object.values(weights).reduce((a, b) => a + Number(b || 0), 0)
+    const caloriesBurned = Math.round((timeElapsed / 60) * 6)
+    const summary = {
+      totalTime: timeElapsed,
+      totalVolume: 36,
+      totalWeight,
+      caloriesBurned,
+      borgRPE: rpe,
+      message:
+        'Treino finalizado com sucesso! Suas métricas foram salvas e sua evolução registrada.',
+      exercisesSummary: [
+        { name: 'Agachamento Livre', sets: 3, reps: 12, weight: weights[3] || '60' },
+      ],
+    }
+    return <WorkoutSummaryScreen summary={summary} onFinish={handleSummaryFinish} />
   }
 
   return (
@@ -123,10 +168,9 @@ export default function WorkoutExecutionPage() {
                 <div className="flex items-center gap-1 bg-background/50 rounded-md px-2 py-1">
                   <Input
                     type="number"
-                    value={weights[set]}
+                    value={weights[set] || ''}
                     onChange={(e) => setWeights({ ...weights, [set]: e.target.value })}
                     className={`w-16 h-8 text-center font-bold ${set === currentSet ? 'text-foreground' : ''}`}
-                    disabled={set < currentSet}
                   />
                   <span className="text-sm font-medium">kg</span>
                 </div>
@@ -150,7 +194,7 @@ export default function WorkoutExecutionPage() {
 
       <div className="fixed bottom-0 left-0 right-0 p-6 bg-background/80 backdrop-blur-md border-t z-50">
         <Button
-          className="w-full max-w-md mx-auto flex h-16 text-xl font-bold shadow-[0_0_40px_-10px_rgba(var(--primary),0.5)] bg-primary-gradient text-white animate-pulse-slow border-0 transition-transform active:scale-95"
+          className="w-full max-w-md mx-auto flex h-16 text-xl font-bold shadow-[0_0_40px_-10px_rgba(var(--primary),0.5)] bg-primary text-primary-foreground animate-pulse-slow border-0 transition-transform active:scale-95"
           onClick={handleFinishWorkout}
         >
           <CheckCircle className="w-6 h-6 mr-2" />
