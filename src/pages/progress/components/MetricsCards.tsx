@@ -11,25 +11,25 @@ export function MetricsCardsWorkout({ metrics }: { metrics: any }) {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <MetricCard
           title="Total Reps"
-          value={metrics.totalReps.toLocaleString()}
+          value={(metrics.totalReps || 0).toLocaleString()}
           sub="reps completadas"
           icon={Activity}
         />
         <MetricCard
           title="Carga Total"
-          value={`${(metrics.totalWeight / 1000).toFixed(1)}k`}
+          value={`${((metrics.totalWeight || 0) / 1000).toFixed(1)}k`}
           sub="kg levantados"
           icon={Dumbbell}
         />
         <MetricCard
           title="Tempo Total"
-          value={`${Math.floor(metrics.totalTime / 3600)}h ${Math.floor((metrics.totalTime % 3600) / 60)}m`}
+          value={`${Math.floor((metrics.totalTime || 0) / 3600)}h ${Math.floor(((metrics.totalTime || 0) % 3600) / 60)}m`}
           sub="treinando"
           icon={Clock}
         />
         <MetricCard
           title="Queimadas"
-          value={metrics.caloriesBurned.toLocaleString()}
+          value={(metrics.caloriesBurned || 0).toLocaleString()}
           sub="kcal estimadas"
           icon={Flame}
         />
@@ -48,25 +48,25 @@ export function MetricsCardsNutrition({ metrics }: { metrics: any }) {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <MetricCard
           title="Calorias Consumidas"
-          value={metrics.caloriesConsumed.toLocaleString()}
-          sub={`${metrics.adherenceRate}% aderência`}
+          value={(metrics.caloriesConsumed || 0).toLocaleString()}
+          sub={`${metrics.adherenceRate || 0}% aderência`}
           icon={Flame}
         />
         <MetricCard
           title="Proteína"
-          value={`${metrics.proteinConsumed}g`}
+          value={`${metrics.proteinConsumed || 0}g`}
           sub="consumidas"
           icon={Beef}
         />
         <MetricCard
           title="Carboidratos"
-          value={`${metrics.carbsConsumed}g`}
+          value={`${metrics.carbsConsumed || 0}g`}
           sub="consumidos"
           icon={Wheat}
         />
         <MetricCard
           title="Gorduras"
-          value={`${metrics.fatConsumed}g`}
+          value={`${metrics.fatConsumed || 0}g`}
           sub="consumidas"
           icon={Droplet}
         />

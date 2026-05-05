@@ -1,10 +1,21 @@
 import { useState, useEffect } from 'react'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Calendar, Target, Clock, Dumbbell, ChevronRight, Eye, Layers } from 'lucide-react'
+import {
+  Calendar,
+  Target,
+  Clock,
+  Dumbbell,
+  ChevronRight,
+  Eye,
+  Layers,
+  TrendingUp,
+  Activity,
+} from 'lucide-react'
 import { useAuth } from '@/hooks/use-auth'
 import { supabase } from '@/lib/supabase/client'
 import { Badge } from '@/components/ui/badge'
+import { Progress } from '@/components/ui/progress'
 import {
   Dialog,
   DialogContent,
@@ -59,13 +70,86 @@ export default function Workouts() {
           ? 12
           : 4
 
+  const currentWeek = 3
+  const progressPercent = Math.min(100, Math.round((currentWeek / periodizationWeeks) * 100))
+
+  const getPhaseDetails = () => {
+    if (periodizationWeeks >= 24) {
+      if (currentWeek <= 12)
+        return {
+          name: 'Bloco 1: Capacidade e Base',
+          desc: 'Semanas 1-12 • Foco em capacidade de trabalho e base aeróbica/anaeróbica.',
+          goal: 'Aumento da densidade mitocondrial e correção de assimetrias motoras.',
+          next: 'Bloco 2: Especialização e Densidade (Intensidade máxima)',
+          volume: 80,
+          intensity: 60,
+        }
+      return {
+        name: 'Bloco 2: Especialização',
+        desc: 'Semanas 13-24 • Identificação de grupos com menor evolução e aumento de densidade.',
+        goal: 'Hipertrofia miofibrilar e recrutamento de fibras tipo II.',
+        next: 'Manutenção e Novos PRs',
+        volume: 60,
+        intensity: 90,
+      }
+    } else {
+      if (currentWeek <= 4)
+        return {
+          name: 'Mês 1: Base e Adaptação',
+          desc: 'Semanas 1-4 • Foco em técnica, adaptação anatômica e consistência.',
+          goal: 'Construção de base de força nos exercícios Tier 1.',
+          next: 'Mês 2: Progressão e Acúmulo de Volume',
+          volume: 70,
+          intensity: 65,
+        }
+      if (currentWeek <= 8)
+        return {
+          name: 'Mês 2: Desenvolvimento',
+          desc: 'Semanas 5-8 • Aumento progressivo de volume.',
+          goal: 'Hipertrofia máxima e resistência muscular localizada.',
+          next: 'Mês 3: Intensificação e Pico de Performance',
+          volume: 90,
+          intensity: 75,
+        }
+      return {
+        name: 'Mês 3: Consolidação',
+        desc: 'Semanas 9-12 • Aumento de intensidade e redução de volume.',
+        goal: 'Força máxima e pico de performance neural.',
+        next: 'Deload Ativo e Novo Ciclo',
+        volume: 50,
+        intensity: 95,
+      }
+    }
+  }
+
+  const phase = getPhaseDetails()
+
+  const trainingDaysArray = profile?.work_days?.length
+    ? profile.work_days
+    : ['Segunda', 'Terça', 'Quinta', 'Sexta'].slice(0, profile?.exercise_days_per_week || 4)
+
+  const upcomingWorkouts = trainingDaysArray.map((day: string, i: number) => {
+    const titles = [
+      'Membros Inferiores (Tier 1)',
+      'Peito, Ombros e Tríceps (Push)',
+      'Costas e Bíceps (Pull)',
+      'Full Body (Intensidade)',
+      'Core e Mobilidade',
+    ]
+    return {
+      day,
+      title: titles[i % titles.length],
+      duration: '50 min',
+    }
+  })
+
   return (
     <div className="p-6 max-w-4xl mx-auto space-y-6 animate-fade-in-up pb-24 md:pb-6">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Meus Treinos</h1>
+          <h1 className="text-3xl font-bold tracking-tight">Periodização</h1>
           <p className="text-muted-foreground mt-1">
-            Sua periodização e rotina de treinos focada em resultados.
+            Motor Kinetix: Resultados reais focados em performance.
           </p>
         </div>
         <div className="flex flex-col items-start md:items-end">
@@ -76,7 +160,7 @@ export default function Workouts() {
             {planName}
           </Badge>
           <span className="text-xs text-muted-foreground mt-1">
-            Periodização de {periodizationWeeks} Semanas
+            Plano Estratégico de {periodizationWeeks} Semanas
           </span>
         </div>
       </div>
@@ -88,7 +172,7 @@ export default function Workouts() {
               <Target className="w-5 h-5" />
             </div>
             <div>
-              <p className="text-sm font-medium text-muted-foreground">Foco</p>
+              <p className="text-sm font-medium text-muted-foreground">Foco Principal</p>
               <p className="font-bold capitalize">
                 {profile?.primary_goal?.replace('_', ' ') || 'Hipertrofia'}
               </p>
@@ -127,9 +211,9 @@ export default function Workouts() {
           <CardHeader>
             <CardTitle className="text-xl flex items-center justify-between">
               <span>Treino de Hoje</span>
-              <Badge className="bg-primary text-primary-foreground">Atual</Badge>
+              <Badge className="bg-primary text-primary-foreground">Dia 1</Badge>
             </CardTitle>
-            <CardDescription>Membros Inferiores (Foco em Força e Hipertrofia)</CardDescription>
+            <CardDescription>Foco em Exercícios Tier 1 (Âncoras de Resultado)</CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
             <div className="flex flex-wrap gap-4 text-sm font-medium">
@@ -150,28 +234,44 @@ export default function Workouts() {
                 </DialogTrigger>
                 <DialogContent className="max-h-[80vh] overflow-y-auto">
                   <DialogHeader>
-                    <DialogTitle>Treino do Dia: Inferiores</DialogTitle>
+                    <DialogTitle>Membros Inferiores (Tier 1)</DialogTitle>
                     <DialogDescription>
-                      Exercícios baseados nos princípios de Tier 1 para máximo resultado.
+                      Priorize a sobrecarga progressiva e a execução impecável nos exercícios
+                      âncora.
                     </DialogDescription>
                   </DialogHeader>
                   <div className="space-y-4 mt-4">
                     {[
-                      { name: 'Agachamento Livre com Barra', sets: '4', reps: '8-10' },
-                      { name: 'Leg Press 45º', sets: '3', reps: '10-12' },
-                      { name: 'Cadeira Extensora', sets: '3', reps: '12-15' },
-                      { name: 'Levantamento Terra Romeno', sets: '4', reps: '8-10' },
-                      { name: 'Mesa Flexora', sets: '3', reps: '12-15' },
-                      { name: 'Panturrilha Sentado', sets: '4', reps: '15-20' },
+                      {
+                        name: 'Agachamento Livre com Barra',
+                        sets: '4',
+                        reps: '8-10',
+                        tier: 'Tier 1',
+                      },
+                      { name: 'Leg Press 45º', sets: '3', reps: '10-12', tier: 'Tier 1' },
+                      {
+                        name: 'Levantamento Terra Romeno',
+                        sets: '4',
+                        reps: '8-10',
+                        tier: 'Tier 1',
+                      },
+                      { name: 'Cadeira Extensora', sets: '3', reps: '12-15', tier: 'Tier 2' },
+                      { name: 'Mesa Flexora', sets: '3', reps: '12-15', tier: 'Tier 2' },
+                      { name: 'Prancha Isométrica', sets: '3', reps: '45s', tier: 'Tier 1' },
                     ].map((ex, i) => (
                       <div
                         key={i}
                         className="p-4 bg-secondary/30 rounded-lg flex items-center justify-between"
                       >
                         <div>
-                          <h4 className="font-bold">{ex.name}</h4>
+                          <div className="flex items-center gap-2 mb-1">
+                            <h4 className="font-bold">{ex.name}</h4>
+                            <Badge variant="outline" className="text-[10px] py-0 h-4">
+                              {ex.tier}
+                            </Badge>
+                          </div>
                           <p className="text-sm text-muted-foreground">
-                            {ex.sets} séries de {ex.reps} reps
+                            {ex.sets} séries • {ex.reps} reps • RPE 8
                           </p>
                         </div>
                       </div>
@@ -187,17 +287,21 @@ export default function Workouts() {
           <CardHeader>
             <CardTitle className="text-xl flex items-center gap-2">
               <Layers className="w-5 h-5 text-primary" />
-              Sua Periodização
+              Dashboard Estratégico
             </CardTitle>
-            <CardDescription>
-              Planejamento estratégico de {periodizationWeeks} semanas.
-            </CardDescription>
+            <CardDescription>Acompanhamento do seu macrociclo atual.</CardDescription>
           </CardHeader>
           <CardContent>
-            <p className="text-sm text-muted-foreground mb-6">
-              O motor de treino do Kinetix divide sua evolução em blocos estruturados (mesociclos)
-              para garantir progresso contínuo e evitar platôs.
-            </p>
+            <div className="mb-4">
+              <div className="flex justify-between text-sm mb-1">
+                <span className="font-medium text-muted-foreground">Evolução do Ciclo</span>
+                <span className="font-bold text-primary">{progressPercent}%</span>
+              </div>
+              <Progress value={progressPercent} className="h-2" />
+              <p className="text-xs text-muted-foreground mt-2 text-right">
+                Semana {currentWeek} de {periodizationWeeks}
+              </p>
+            </div>
 
             <Dialog>
               <DialogTrigger asChild>
@@ -205,47 +309,65 @@ export default function Workouts() {
                   variant="outline"
                   className="w-full gap-2 font-bold border-primary/20 hover:bg-primary/5"
                 >
-                  <Calendar className="w-4 h-4" /> Detalhes do Ciclo
+                  <TrendingUp className="w-4 h-4" /> Ver Periodização Detalhada
                 </Button>
               </DialogTrigger>
-              <DialogContent className="max-h-[80vh] overflow-y-auto">
+              <DialogContent className="max-h-[85vh] overflow-y-auto">
                 <DialogHeader>
-                  <DialogTitle>Macro e Mesociclos</DialogTitle>
+                  <DialogTitle className="text-2xl text-primary">Macrociclo Kinetix</DialogTitle>
                   <DialogDescription>
-                    Evolução estruturada para seu objetivo de{' '}
-                    {profile?.primary_goal || 'Hipertrofia'}.
+                    Nenhuma sessão é isolada. Seu treino é um sistema de evolução contínua.
                   </DialogDescription>
                 </DialogHeader>
-                <div className="space-y-4 mt-4">
-                  <div className="p-4 border border-primary/20 bg-primary/5 rounded-lg relative overflow-hidden">
-                    <div className="absolute top-0 right-0 w-1 h-full bg-primary"></div>
-                    <h4 className="font-bold text-primary mb-1">Meso 1: Construção de Base</h4>
-                    <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                      Semanas 1-4 • Atual
-                    </p>
-                    <p className="text-sm mt-2 leading-relaxed">
-                      Foco no aprendizado motor e construção de força nos exercícios Tier 1. Volume
-                      moderado e progressão linear de cargas.
-                    </p>
+                <div className="space-y-6 mt-4">
+                  <div className="p-5 border border-primary/20 bg-primary/5 rounded-xl relative overflow-hidden shadow-sm">
+                    <div className="absolute top-0 left-0 w-1.5 h-full bg-primary"></div>
+                    <div className="flex justify-between items-start mb-2">
+                      <h4 className="font-black text-lg text-foreground">{phase.name}</h4>
+                      <Badge className="bg-primary text-primary-foreground">Atual</Badge>
+                    </div>
+                    <p className="text-sm font-medium text-muted-foreground mb-4">{phase.desc}</p>
+
+                    <div className="space-y-4">
+                      <div>
+                        <p className="text-xs uppercase tracking-wider font-bold text-muted-foreground mb-1">
+                          Objetivo Fisiológico
+                        </p>
+                        <p className="text-sm bg-background p-3 rounded-md border border-border/50 font-medium">
+                          <Activity className="w-4 h-4 inline-block mr-2 text-primary" />
+                          {phase.goal}
+                        </p>
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-4 pt-2">
+                        <div>
+                          <div className="flex justify-between text-xs mb-1 font-medium">
+                            <span>Volume Alvo</span>
+                            <span>{phase.volume}%</span>
+                          </div>
+                          <Progress value={phase.volume} className="h-1.5" />
+                        </div>
+                        <div>
+                          <div className="flex justify-between text-xs mb-1 font-medium">
+                            <span>Intensidade Alvo</span>
+                            <span>{phase.intensity}%</span>
+                          </div>
+                          <Progress
+                            value={phase.intensity}
+                            className="h-1.5 bg-secondary [&>div]:bg-orange-500"
+                          />
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                  <div className="p-4 border rounded-lg opacity-80">
-                    <h4 className="font-bold mb-1">Meso 2: Hipertrofia Tensional</h4>
-                    <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                      Semanas 5-8
-                    </p>
-                    <p className="text-sm mt-2 leading-relaxed">
-                      Aumento do volume total de treino. Maior foco na conexão mente-músculo e
-                      exaustão metabólica.
-                    </p>
-                  </div>
-                  <div className="p-4 border rounded-lg opacity-80">
-                    <h4 className="font-bold mb-1">Meso 3: Intensificação e Choque</h4>
-                    <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                      Semanas 9-12
-                    </p>
-                    <p className="text-sm mt-2 leading-relaxed">
-                      Redução do volume e aumento drástico da intensidade. Aplicação de técnicas
-                      avançadas e proximidade total à falha mecânica.
+
+                  <div className="p-4 border border-border rounded-xl bg-secondary/20">
+                    <h4 className="font-bold text-sm uppercase tracking-wider text-muted-foreground mb-2 flex items-center gap-2">
+                      <ChevronRight className="w-4 h-4" /> Próximo Bloco
+                    </h4>
+                    <p className="text-sm font-medium">
+                      Prepare-se para:{' '}
+                      <span className="text-foreground font-bold">{phase.next}</span>
                     </p>
                   </div>
                 </div>
@@ -258,27 +380,24 @@ export default function Workouts() {
       <div className="pt-2">
         <h2 className="text-xl font-bold mb-4">Próximos Treinos do Microciclo</h2>
         <div className="grid gap-3">
-          {[
-            { day: 'Amanhã', title: 'Peito, Ombros e Tríceps (Push)', duration: '55 min' },
-            { day: 'Quinta', title: 'Costas e Bíceps (Pull)', duration: '50 min' },
-            { day: 'Sábado', title: 'Full Body (Intensidade)', duration: '45 min' },
-          ].map((workout, i) => (
+          {upcomingWorkouts.map((workout, i) => (
             <div
               key={i}
-              className="flex items-center justify-between p-4 bg-card rounded-xl border hover:border-primary/30 transition-colors cursor-pointer group"
+              className="flex items-center justify-between p-4 bg-card rounded-xl border hover:border-primary/30 transition-colors group cursor-default"
             >
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-secondary/50 rounded-lg flex items-center justify-center font-bold text-sm text-muted-foreground group-hover:text-primary transition-colors">
-                  {workout.day === 'Amanhã' ? 'Qua' : workout.day === 'Quinta' ? 'Qui' : 'Sáb'}
+                <div className="w-12 h-12 bg-secondary/50 rounded-lg flex items-center justify-center font-bold text-sm text-muted-foreground group-hover:text-primary transition-colors uppercase">
+                  {workout.day.substring(0, 3)}
                 </div>
                 <div>
                   <p className="font-semibold text-foreground group-hover:text-primary transition-colors">
                     {workout.title}
                   </p>
-                  <p className="text-sm text-muted-foreground">{workout.duration}</p>
+                  <p className="text-sm text-muted-foreground">
+                    {workout.duration} • Foco em Tier 1
+                  </p>
                 </div>
               </div>
-              <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors" />
             </div>
           ))}
         </div>

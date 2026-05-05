@@ -14,6 +14,8 @@ export type GeneratePlanParams = {
   weightKg: number
   posturalScore: number
   deviations: any[]
+  fitnessLevel?: string
+  primaryGoal?: string
 }
 
 const generateId = () => Math.random().toString(36).substring(2, 9)
@@ -22,6 +24,22 @@ const tier1Exercises: Exercise[] = [
   {
     id: 'c1',
     name: 'Prancha Isométrica',
+    type: 'Compound',
+    targetMuscles: ['Core'],
+    description: '',
+    executionNotes: '',
+  },
+  {
+    id: 'c2',
+    name: 'Ponte de Glúteos',
+    type: 'Compound',
+    targetMuscles: ['Glúteos'],
+    description: '',
+    executionNotes: '',
+  },
+  {
+    id: 'c3',
+    name: 'Bird-Dog',
     type: 'Compound',
     targetMuscles: ['Core'],
     description: '',
@@ -44,6 +62,14 @@ const tier1Exercises: Exercise[] = [
     executionNotes: '',
   },
   {
+    id: 'p3',
+    name: 'Flexão de Braço (Push-up)',
+    type: 'Compound',
+    targetMuscles: ['Peito', 'Tríceps'],
+    description: '',
+    executionNotes: '',
+  },
+  {
     id: 'b1',
     name: 'Puxada Frontal (Lat Pulldown)',
     type: 'Compound',
@@ -60,10 +86,18 @@ const tier1Exercises: Exercise[] = [
     executionNotes: '',
   },
   {
+    id: 'b3',
+    name: 'Levantamento Terra (Deadlift)',
+    type: 'Compound',
+    targetMuscles: ['Costas', 'Posterior'],
+    description: '',
+    executionNotes: '',
+  },
+  {
     id: 'l1',
     name: 'Agachamento Livre com Barra',
     type: 'Compound',
-    targetMuscles: ['Pernas'],
+    targetMuscles: ['Quadríceps', 'Glúteos'],
     description: '',
     executionNotes: '',
   },
@@ -71,22 +105,54 @@ const tier1Exercises: Exercise[] = [
     id: 'l2',
     name: 'Leg Press 45º',
     type: 'Compound',
-    targetMuscles: ['Pernas'],
+    targetMuscles: ['Quadríceps'],
+    description: '',
+    executionNotes: '',
+  },
+  {
+    id: 'l3',
+    name: 'Afundo com Halteres',
+    type: 'Compound',
+    targetMuscles: ['Quadríceps'],
+    description: '',
+    executionNotes: '',
+  },
+  {
+    id: 'l4',
+    name: 'Levantamento Terra Romeno (RDL)',
+    type: 'Compound',
+    targetMuscles: ['Posterior', 'Glúteos'],
     description: '',
     executionNotes: '',
   },
   {
     id: 'l5',
-    name: 'Levantamento Terra Romeno (RDL)',
+    name: 'Mesa Flexora',
+    type: 'Isolation',
+    targetMuscles: ['Posterior'],
+    description: '',
+    executionNotes: '',
+  },
+  {
+    id: 'l6',
+    name: 'Elevação Pélvica com Barra',
     type: 'Compound',
-    targetMuscles: ['Pernas'],
+    targetMuscles: ['Glúteos'],
     description: '',
     executionNotes: '',
   },
   {
     id: 's1',
-    name: 'Desenvolvimento Militar com Barra',
+    name: 'Desenvolvimento Militar',
     type: 'Compound',
+    targetMuscles: ['Ombros'],
+    description: '',
+    executionNotes: '',
+  },
+  {
+    id: 's2',
+    name: 'Elevação Lateral com Halteres',
+    type: 'Isolation',
     targetMuscles: ['Ombros'],
     description: '',
     executionNotes: '',
@@ -100,7 +166,7 @@ const tier1Exercises: Exercise[] = [
     executionNotes: '',
   },
   {
-    id: 'a4',
+    id: 'a2',
     name: 'Tríceps Pulley com Corda',
     type: 'Isolation',
     targetMuscles: ['Tríceps'],
@@ -109,7 +175,7 @@ const tier1Exercises: Exercise[] = [
   },
   {
     id: 'ca1',
-    name: 'Panturrilha em Pé (Máquina)',
+    name: 'Panturrilha em Pé',
     type: 'Isolation',
     targetMuscles: ['Panturrilhas'],
     description: '',
@@ -118,7 +184,15 @@ const tier1Exercises: Exercise[] = [
 ]
 
 export function generatePlan(params: GeneratePlanParams): WorkoutPlan {
-  const { durationWeeks, trainingDays, focusAreas, weightKg, posturalScore, deviations } = params
+  const {
+    durationWeeks,
+    trainingDays,
+    focusAreas,
+    weightKg,
+    posturalScore,
+    deviations,
+    primaryGoal,
+  } = params
 
   const periodizationType =
     durationWeeks === 13 ? 'Linear' : durationWeeks === 26 ? 'Undulating' : 'Block'
@@ -127,63 +201,62 @@ export function generatePlan(params: GeneratePlanParams): WorkoutPlan {
   const mesocycles: Mesocycle[] = []
   let currentWeek = 1
 
-  const createMeso = (name: string, objective: string, length: number): Mesocycle => {
+  const createMeso = (
+    name: string,
+    objective: string,
+    length: number,
+    phase: 'Acumulo' | 'Intensificacao' | 'Deload',
+  ): Mesocycle => {
     const startWeek = currentWeek
     const endWeek = currentWeek + length - 1
     const microcycles: Microcycle[] = []
 
     for (let w = startWeek; w <= endWeek; w++) {
-      const isDeload = w === endWeek || w % 4 === 0
+      const isDeload = phase === 'Deload' || w === endWeek
 
       const sessions: TrainingSession[] = trainingDays.map((day, idx) => {
         const sessionExercises: SessionExercise[] = []
 
-        let mainSets = objective === 'Hypertrophy' ? 4 : objective === 'Strength' ? 5 : 3
-        let mainReps =
-          objective === 'Hypertrophy'
-            ? '8-12 (Até a falha)'
-            : objective === 'Strength'
-              ? '3-6'
-              : '10-15'
-        let mainRpe = objective === 'Hypertrophy' ? 9 : objective === 'Strength' ? 9 : 8
-        let mainRest = objective === 'Strength' ? 180 : 90
+        let baseSets = phase === 'Acumulo' ? 4 : phase === 'Intensificacao' ? 3 : 2
+        let baseReps = phase === 'Acumulo' ? '10-15' : phase === 'Intensificacao' ? '6-8' : '12-15'
+        let baseRpe = phase === 'Acumulo' ? 8 : phase === 'Intensificacao' ? 9 : 6
+        let restTime = phase === 'Intensificacao' ? 120 : 90
 
-        if (isDeload) {
-          mainSets = 2
-          mainReps = '12'
-          mainRpe = 6
-          mainRest = 60
+        if (primaryGoal === 'força') {
+          baseReps = phase === 'Acumulo' ? '5-8' : '3-5'
+          baseSets += 1
+          restTime = 180
         }
 
-        for (let i = 0; i < 5; i++) {
-          const comp = tier1Exercises[(idx * 5 + i) % tier1Exercises.length]
+        for (let i = 0; i < 6; i++) {
+          const exercise = tier1Exercises[(idx * 6 + i) % tier1Exercises.length]
+          const isTier1 = exercise.type === 'Compound'
+
           sessionExercises.push({
             id: generateId(),
-            exerciseId: comp.id,
-            exercise: comp,
-            category: 'Main',
-            sets: mainSets,
-            reps: mainReps,
-            restTimeSeconds: mainRest,
-            rpe: mainRpe,
-            notes:
-              'Foco na cadência e controle do movimento. Máxima eficiência de recrutamento muscular.',
+            exerciseId: exercise.id,
+            exercise: exercise,
+            category: isTier1 ? 'Main' : 'Accessory',
+            sets: isTier1 ? baseSets : Math.max(1, baseSets - 1),
+            reps: baseReps,
+            restTimeSeconds: restTime,
+            rpe: isTier1 ? baseRpe : Math.max(5, baseRpe - 1),
+            notes: isTier1
+              ? 'Foco total em sobrecarga progressiva e execução técnica. Movimento âncora do dia (Tier 1).'
+              : 'Exercício de suporte para volume e correção (Tier 2/3).',
           })
         }
 
         const totalSets = sessionExercises.reduce((acc, curr) => acc + curr.sets, 0)
         const avgSetTime = 45
-        const avgRestTime =
-          sessionExercises.reduce((acc, curr) => acc + curr.sets * curr.restTimeSeconds, 0) /
-          Math.max(1, totalSets)
         const durationMinutes =
-          Math.round((totalSets * avgSetTime + totalSets * avgRestTime) / 60) + 10
+          Math.round((totalSets * avgSetTime + totalSets * restTime) / 60) + 10
         const estimatedCalories = Math.round(((6.0 * 3.5 * weightKg) / 200) * durationMinutes)
 
         return {
           id: generateId(),
           dayOfWeek: day,
-          name: `Treino de ${day} - ${objective}`,
+          name: `Treino de ${day} - Foco Tier 1`,
           estimatedDurationMinutes: durationMinutes,
           estimatedCalories,
           exercises: sessionExercises,
@@ -210,29 +283,71 @@ export function generatePlan(params: GeneratePlanParams): WorkoutPlan {
   }
 
   if (durationWeeks === 13) {
-    mesocycles.push(createMeso('Meso 1 - Adaptação Tensional', 'Hypertrophy', 4))
-    mesocycles.push(createMeso('Meso 2 - Volume e Hipertrofia', 'Hypertrophy', 4))
-    mesocycles.push(createMeso('Meso 3 - Choque e Densidade', 'Strength', 4))
-    mesocycles.push(createMeso('Meso 4 - Recuperação Ativa', 'Deload', 1))
+    mesocycles.push(
+      createMeso(
+        'Mês 1 - Adaptação Tensional (Base)',
+        'Adaptação Anatômica e Consistência',
+        4,
+        'Acumulo',
+      ),
+    )
+    mesocycles.push(
+      createMeso(
+        'Mês 2 - Volume e Hipertrofia (Desenvolvimento)',
+        'Hipertrofia e Resistência',
+        4,
+        'Acumulo',
+      ),
+    )
+    mesocycles.push(
+      createMeso(
+        'Mês 3 - Choque e Densidade (Consolidação)',
+        'Força Máxima e Pico de Performance',
+        4,
+        'Intensificacao',
+      ),
+    )
+    mesocycles.push(createMeso('Mês 4 - Recuperação Ativa', 'Deload e Reparo', 1, 'Deload'))
   } else if (durationWeeks === 26) {
-    for (let i = 0; i < 6; i++) {
-      const obj = i % 2 === 0 ? 'Hypertrophy' : 'Strength'
-      mesocycles.push(createMeso(`Bloco ${i + 1} - ${obj}`, obj, 4))
-    }
-    mesocycles.push(createMeso('Transição Final', 'Deload', 2))
+    mesocycles.push(
+      createMeso('Bloco 1 - Capacidade de Trabalho', 'Base Aeróbica/Anaeróbica', 8, 'Acumulo'),
+    )
+    mesocycles.push(
+      createMeso('Bloco 2 - Construção e Volume', 'Hipertrofia Sustentada', 8, 'Acumulo'),
+    )
+    mesocycles.push(
+      createMeso(
+        'Bloco 3 - Especialização e Densidade',
+        'Refinamento e Pontos Fracos',
+        8,
+        'Intensificacao',
+      ),
+    )
+    mesocycles.push(createMeso('Transição Final', 'Deload', 2, 'Deload'))
   } else {
-    for (let i = 0; i < 13; i++) {
-      const phase = i % 3 === 0 ? 'Accumulation' : i % 3 === 1 ? 'Transmutation' : 'Realization'
-      const obj =
-        phase === 'Accumulation' ? 'Hypertrophy' : phase === 'Transmutation' ? 'Strength' : 'Power'
-      mesocycles.push(createMeso(`Bloco ${i + 1} - ${phase}`, obj, 4))
-    }
+    mesocycles.push(
+      createMeso('Trimestre 1 - Fundação', 'Correção de assimetrias e base', 12, 'Acumulo'),
+    )
+    mesocycles.push(
+      createMeso('Trimestre 2 - Hipertrofia Máxima', 'Acúmulo de volume', 13, 'Acumulo'),
+    )
+    mesocycles.push(
+      createMeso(
+        'Trimestre 3 - Força Máxima e Potência',
+        'Cargas máximas e RPE 9',
+        13,
+        'Intensificacao',
+      ),
+    )
+    mesocycles.push(
+      createMeso('Trimestre 4 - Consolidação e PRs', 'Manutenção ativa e testes', 14, 'Deload'),
+    )
   }
 
   return {
     id: generateId(),
     userId: 'user-1',
-    name: `Plano Estruturado ${durationWeeks} Semanas (Motor Tier 1)`,
+    name: `Plano Estruturado ${durationWeeks} Semanas (Motor Kinetix)`,
     durationWeeks,
     periodizationType,
     createdAt: new Date().toISOString(),
