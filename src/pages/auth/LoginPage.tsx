@@ -14,7 +14,6 @@ export function LoginPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [fullName, setFullName] = useState('')
-  const [phone, setPhone] = useState('')
   const [birthDate, setBirthDate] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
@@ -75,7 +74,6 @@ export function LoginPage() {
     } else {
       const result = await signUp(email, password, {
         full_name: fullName,
-        phone,
         birth_date: birthDate,
       })
       if (result.success) {
@@ -116,15 +114,6 @@ export function LoginPage() {
                     placeholder="Nome Completo"
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
-                    required
-                  />
-                </div>
-                <div className="space-y-2 animate-fade-in">
-                  <Input
-                    type="tel"
-                    placeholder="Telefone"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
                     required
                   />
                 </div>

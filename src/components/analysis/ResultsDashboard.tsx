@@ -23,6 +23,10 @@ import { useWorkoutStore } from '@/stores/use-workout-store'
 import { useNavigate } from 'react-router-dom'
 import { RadarChart, PolarGrid, PolarAngleAxis, Radar } from 'recharts'
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart'
+import { PaywallModal } from '@/components/PaywallModal'
+import { useAuth } from '@/hooks/use-auth'
+import { supabase } from '@/lib/supabase/client'
+import { useState, useEffect } from 'react'
 
 interface ResultsDashboardProps {
   result: AnalysisResult
@@ -32,8 +36,33 @@ interface ResultsDashboardProps {
 export function ResultsDashboard({ result, onReset }: ResultsDashboardProps) {
   const { generateWorkout, isGenerating } = useWorkoutStore()
   const navigate = useNavigate()
+  const { user } = useAuth()
+  const [showPaywall, setShowPaywall] = useState(false)
+  const [isPremium, setIsPremium] = useState(false)
+
+  useEffect(() => {
+    const checkPremium = async () => {
+      if (user) {
+        const { data } = await supabase
+          .from('profiles')
+          .select('is_premium')
+          .eq('id', user.id)
+          .single()
+        if (data?.is_premium) {
+          setIsPremium(true)
+        } else {
+          setShowPaywall(true)
+        }
+      }
+    }
+    checkPremium()
+  }, [user])
 
   const handleGenerateWorkout = async () => {
+    if (!isPremium) {
+      setShowPaywall(true)
+      return
+    }
     try {
       await generateWorkout(result.id, result.deviations)
       navigate('/workouts')
@@ -259,6 +288,12 @@ export function ResultsDashboard({ result, onReset }: ResultsDashboardProps) {
           {isGenerating ? 'Gerando Plano Personalizado...' : 'Acessar Meu Treino'}
         </Button>
       </div>
+
+      <PaywallModal
+        isOpen={showPaywall}
+        onClose={() => setShowPaywall(false)}
+        reason="trial_not_started"
+      />
     </div>
   )
 }

@@ -41,14 +41,15 @@ export default function Profile() {
     age: '',
   })
   const [isSaving, setIsSaving] = useState(false)
-  const [avatarUrl, setAvatarUrl] = useState<string | null>(null)
+  const [avatarUrl, setAvatarUrl] = useState<string | undefined>(undefined)
 
   const [showPaywall, setShowPaywall] = useState(false)
   const [subscription, setSubscription] = useState<any>(null)
 
   useEffect(() => {
     if (user) {
-      setAvatarUrl(user.user_metadata?.avatar_url || null)
+      const src = user.user_metadata?.avatar_url
+      setAvatarUrl(src && src.trim() !== '' ? src : undefined)
       fetchProfile()
     }
   }, [user])
@@ -178,17 +179,19 @@ export default function Profile() {
         </CardHeader>
         <CardContent>
           <div className="p-5 bg-secondary/30 rounded-xl border border-border/50 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-            <div>
+            <div className="flex-1">
               <div className="flex items-center gap-2 mb-2">
                 <Badge
                   className={cn(
                     'text-white border-0 font-bold',
                     subscription?.status === 'active'
                       ? 'bg-amber-500 hover:bg-amber-600'
-                      : 'bg-muted-foreground',
+                      : 'bg-primary hover:bg-primary/90',
                   )}
                 >
-                  {subscription ? `Premium ${subscription.billing_period}` : 'Plano Grátis'}
+                  {subscription?.status === 'active'
+                    ? `Premium ${subscription.billing_period}`
+                    : '7 Dias de Teste Grátis'}
                 </Badge>
                 {subscription && (
                   <span className="text-xs font-medium text-muted-foreground uppercase">
@@ -199,7 +202,7 @@ export default function Profile() {
               <p className="text-sm text-foreground/90">
                 {subscription?.status === 'active'
                   ? 'Acesso completo a todas as funcionalidades de inteligência artificial e treinos.'
-                  : 'Faça upgrade para acessar treinos personalizados e análises avançadas com IA.'}
+                  : 'Você tem 7 dias para degustar o app gratuitamente. Escolha um plano para ativar o teste e garantir seu acesso contínuo.'}
               </p>
               {subscription?.expires_at && subscription.status === 'active' && (
                 <p className="text-xs text-muted-foreground mt-3 flex items-center gap-1">
@@ -207,10 +210,26 @@ export default function Profile() {
                   {new Date(subscription.expires_at).toLocaleDateString()}
                 </p>
               )}
+
+              {subscription?.status === 'active' && (
+                <Button
+                  variant="link"
+                  className="text-destructive p-0 h-auto mt-4 text-xs hover:text-destructive/80 hover:no-underline"
+                  onClick={() => {
+                    toast({
+                      title: 'Cancelamento',
+                      description:
+                        'Para cancelar, acesse o portal de pagamentos ou contate o suporte.',
+                    })
+                  }}
+                >
+                  Cancelar Assinatura
+                </Button>
+              )}
             </div>
             <Button
               className={cn(
-                'shrink-0 shadow-sm',
+                'shrink-0 shadow-sm mt-4 sm:mt-0',
                 subscription?.status === 'active'
                   ? ''
                   : 'bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white border-0',
@@ -218,7 +237,7 @@ export default function Profile() {
               variant={subscription?.status === 'active' ? 'outline' : 'default'}
               onClick={() => setShowPaywall(true)}
             >
-              {subscription?.status === 'active' ? 'Gerenciar Plano' : 'Fazer Upgrade'}
+              {subscription?.status === 'active' ? 'Mudar Plano' : 'Ativar Plano'}
             </Button>
           </div>
         </CardContent>
@@ -231,7 +250,7 @@ export default function Profile() {
             onClick={() => fileInputRef.current?.click()}
           >
             <Avatar className="w-24 h-24 border-4 border-background shadow-sm transition-transform group-hover:scale-105">
-              <AvatarImage src={avatarUrl || undefined} className="object-cover w-full h-full" />
+              <AvatarImage src={avatarUrl} className="object-cover w-full h-full" />
               <AvatarFallback className="bg-muted">
                 <User className="w-10 h-10 text-muted-foreground" />
               </AvatarFallback>
@@ -247,32 +266,34 @@ export default function Profile() {
               onChange={handleAvatarChange}
             />
           </div>
-          <div className="flex-1 flex flex-col md:flex-row items-center md:items-start justify-between gap-4 mt-4 md:mt-2 w-full">
-            <div className="text-center md:text-left space-y-2">
+          <div className="flex-1 flex flex-col items-center md:items-start mt-4 md:mt-2 w-full">
+            <div className="text-center md:text-left space-y-2 w-full">
               <h2 className="text-2xl font-bold">{formData.name || 'Atleta Kinetix'}</h2>
-              <p className="text-muted-foreground">{user?.email}</p>
+              <div className="flex flex-col sm:flex-row items-center gap-3">
+                <p className="text-muted-foreground">{user?.email}</p>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="whitespace-nowrap shadow-sm h-7 px-3 text-xs rounded-full"
+                  onClick={async () => {
+                    if (!user?.email) return
+                    const { error } = await supabase.auth.resetPasswordForEmail(user.email, {
+                      redirectTo: `${window.location.origin}/profile`,
+                    })
+                    if (error) {
+                      toast({ title: 'Erro', description: error.message, variant: 'destructive' })
+                    } else {
+                      toast({
+                        title: 'Sucesso',
+                        description: 'E-mail de redefinição de senha enviado.',
+                      })
+                    }
+                  }}
+                >
+                  Alterar Senha
+                </Button>
+              </div>
             </div>
-            <Button
-              variant="outline"
-              size="sm"
-              className="whitespace-nowrap shadow-sm"
-              onClick={async () => {
-                if (!user?.email) return
-                const { error } = await supabase.auth.resetPasswordForEmail(user.email, {
-                  redirectTo: `${window.location.origin}/profile`,
-                })
-                if (error) {
-                  toast({ title: 'Erro', description: error.message, variant: 'destructive' })
-                } else {
-                  toast({
-                    title: 'Sucesso',
-                    description: 'E-mail de redefinição de senha enviado.',
-                  })
-                }
-              }}
-            >
-              Alterar Senha
-            </Button>
           </div>
         </CardContent>
       </Card>
@@ -359,7 +380,9 @@ export default function Profile() {
                 </Select>
               ) : (
                 <div className="p-2 bg-secondary/20 rounded-md font-medium capitalize">
-                  {profile.gender}
+                  {!profile.onboarding_completed && profile.gender === 'outros'
+                    ? 'Não informado'
+                    : profile.gender}
                 </div>
               )}
             </div>

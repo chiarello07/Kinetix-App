@@ -24,6 +24,7 @@ export function AppHeader() {
   }
 
   const avatarSrc = user?.user_metadata?.avatar_url
+  const validAvatar = avatarSrc && avatarSrc.trim() !== '' ? avatarSrc : undefined
 
   return (
     <header className="sticky top-0 z-40 bg-background/80 backdrop-blur-md border-b border-border/50 h-16 flex items-center justify-between px-4 md:px-6">
@@ -55,7 +56,7 @@ export function AppHeader() {
               className="relative h-9 w-9 rounded-full px-0 hover:bg-transparent"
             >
               <Avatar className="h-9 w-9 border border-border shadow-sm">
-                <AvatarImage src={avatarSrc} className="object-cover" />
+                <AvatarImage src={validAvatar} className="object-cover" />
                 <AvatarFallback>
                   <User className="w-4 h-4" />
                 </AvatarFallback>

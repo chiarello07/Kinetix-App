@@ -1,5 +1,6 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { INITIAL_DATA, OnboardingData } from './types'
+import { PaywallModal } from '@/components/PaywallModal'
 import { canGoNext } from './utils'
 import { StepForm } from './StepForm'
 import { Summary } from './Summary'
@@ -15,6 +16,7 @@ export default function OnboardingPage() {
   const [data, setData] = useState<OnboardingData>(INITIAL_DATA)
   const { user } = useAuth()
   const navigate = useNavigate()
+  const [showPaywall, setShowPaywall] = useState(false)
 
   useEffect(() => {
     window.scrollTo(0, 0)
@@ -60,8 +62,18 @@ export default function OnboardingPage() {
             .eq('id', profile.id)
         }
       }
-      // Redirect to assessments
-      navigate('/assessments')
+      // Check premium
+      const { data: prof } = await supabase
+        .from('profiles')
+        .select('is_premium')
+        .eq('id', user?.id)
+        .single()
+      if (prof?.is_premium) {
+        navigate('/assessments')
+      } else {
+        setStep(13) // Back to summary
+        setShowPaywall(true)
+      }
     } catch (e) {
       console.error(e)
       setStep(13) // Back to summary on error
@@ -119,6 +131,12 @@ export default function OnboardingPage() {
           </Button>
         </div>
       )}
+
+      <PaywallModal
+        isOpen={showPaywall}
+        onClose={() => setShowPaywall(false)}
+        reason="trial_not_started"
+      />
     </div>
   )
 }

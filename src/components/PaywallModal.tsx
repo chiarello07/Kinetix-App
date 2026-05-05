@@ -84,7 +84,10 @@ export function PaywallModal({ isOpen, onClose, feature, reason, onSelectPlan }:
           {reason === 'trial_not_started' && (
             <div className="bg-gradient-to-r from-amber-500 to-orange-500 rounded-lg p-4 mb-8 text-center max-w-md mx-auto">
               <p className="text-white font-bold text-lg">🎉 7 dias grátis para testar!</p>
-              <p className="text-white/90 text-sm">Cancele quando quiser, sem compromisso</p>
+              <p className="text-white/90 text-sm">
+                Insira os dados de pagamento para liberar o período de teste. Cancele quando quiser,
+                sem compromisso.
+              </p>
             </div>
           )}
 
