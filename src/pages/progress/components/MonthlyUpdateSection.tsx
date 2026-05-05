@@ -59,7 +59,7 @@ export function MonthlyUpdateSection() {
           <div>
             <CardTitle className="flex items-center gap-2 text-primary">
               <CalendarDays className="w-5 h-5" />
-              Atualização Mensal Inteligente
+              Atualização Mensal
             </CardTitle>
             <CardDescription className="text-primary/80 mt-1">
               Análise completa dos seus últimos 30 dias de progresso.
