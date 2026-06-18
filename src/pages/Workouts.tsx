@@ -213,7 +213,7 @@ export default function Workouts() {
               <span>Treino de Hoje</span>
               <Badge className="bg-primary text-primary-foreground">Dia 1</Badge>
             </CardTitle>
-            <CardDescription>Foco em Exercícios Tier 1 (Âncoras de Resultado)</CardDescription>
+            <CardDescription>Foco em Exercícios (Âncoras de Resultado)</CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
             <div className="flex flex-wrap gap-4 text-sm font-medium">
@@ -234,7 +234,7 @@ export default function Workouts() {
                 </DialogTrigger>
                 <DialogContent className="max-h-[80vh] overflow-y-auto">
                   <DialogHeader>
-                    <DialogTitle>Membros Inferiores (Tier 1)</DialogTitle>
+                    <DialogTitle>Membros Inferiores</DialogTitle>
                     <DialogDescription>
                       Priorize a sobrecarga progressiva e a execução impecável nos exercícios
                       âncora.
@@ -266,9 +266,6 @@ export default function Workouts() {
                         <div>
                           <div className="flex items-center gap-2 mb-1">
                             <h4 className="font-bold">{ex.name}</h4>
-                            <Badge variant="outline" className="text-[10px] py-0 h-4">
-                              {ex.tier}
-                            </Badge>
                           </div>
                           <p className="text-sm text-muted-foreground">
                             {ex.sets} séries • {ex.reps} reps • RPE 8
