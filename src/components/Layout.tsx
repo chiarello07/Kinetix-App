@@ -45,8 +45,7 @@ export default function Layout() {
       <aside className="w-64 border-r bg-card flex-col hidden md:flex z-10 shadow-sm">
         <div className="h-16 flex items-center px-6 border-b">
           <Link to="/index" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-            <img src={kinetixLogo} alt="Kinetix Logo" className="h-8 w-auto" />
-            <span className="font-bold text-lg tracking-tight">Kinetix</span>
+            <img src={kinetixLogo} alt="Kinetix Logo" className="h-8 w-auto ml-[75px]" />
           </Link>
         </div>
         <nav className="flex-1 overflow-y-auto py-4 px-3 space-y-1">
