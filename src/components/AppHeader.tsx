@@ -13,7 +13,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { useAuth } from '@/hooks/use-auth'
 import { useNavigate, Link } from 'react-router-dom'
-import kinetixLogo from '@/assets/horizontalkinetix.applogo-22ef1.png'
+import kinetixLogo from '@/assets/kinetix.apptransp-ce18b.png'
 
 export function AppHeader() {
   const { user, signOut } = useAuth()
@@ -30,7 +30,10 @@ export function AppHeader() {
   return (
     <header className="sticky top-0 z-40 bg-background/80 backdrop-blur-md border-b border-border/50 h-16 flex items-center justify-between px-4 md:px-6">
       <div className="flex items-center gap-2 md:hidden">
-        <img src={kinetixLogo} alt="Kinetix Logo" className="h-7 w-auto" />
+        <Link to="/index" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+          <img src={kinetixLogo} alt="Kinetix Logo" className="h-8 w-auto" />
+          <span className="font-bold text-lg tracking-tight">Kinetix</span>
+        </Link>
       </div>
       <div className="hidden md:block">
         <h2 className="text-sm font-medium text-muted-foreground">

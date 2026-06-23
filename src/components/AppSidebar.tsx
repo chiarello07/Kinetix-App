@@ -12,7 +12,7 @@ import {
   SidebarMenuItem,
 } from '@/components/ui/sidebar'
 import { cn } from '@/lib/utils'
-import kinetixLogo from '@/assets/horizontalkinetix.applogo-22ef1.png'
+import kinetixLogo from '@/assets/kinetix.apptransp-ce18b.png'
 
 const items = [
   { title: 'Início', url: '/index', icon: Home },
@@ -29,7 +29,10 @@ export function AppSidebar() {
   return (
     <Sidebar className="border-r hidden md:flex bg-background">
       <SidebarHeader className="p-4 flex flex-row items-center gap-3 border-b border-border/50 h-16">
-        <img src={kinetixLogo} alt="Kinetix Logo" className="h-7 w-auto" />
+        <Link to="/index" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+          <img src={kinetixLogo} alt="Kinetix Logo" className="h-8 w-auto" />
+          <span className="font-bold text-lg tracking-tight">Kinetix</span>
+        </Link>
       </SidebarHeader>
       <SidebarContent className="pt-4">
         <SidebarGroup>
