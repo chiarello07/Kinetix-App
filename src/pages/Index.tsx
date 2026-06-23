@@ -5,6 +5,7 @@ import { useAuth } from '@/hooks/use-auth'
 import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase/client'
 import { Card, CardContent } from '@/components/ui/card'
+import logoImg from '@/assets/kinetix.applogotransparente-63ee2.png'
 
 export default function Index() {
   const { user } = useAuth()
@@ -40,9 +41,11 @@ export default function Index() {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[80vh] text-center px-4 animate-fade-in-up py-12">
-      <div className="w-24 h-24 bg-gradient-to-br from-[#FF1493] to-[#4B0082] rounded-3xl flex items-center justify-center shadow-xl shadow-primary/20 mb-8 transform -rotate-6">
-        <span className="text-4xl font-black text-white rotate-6">K</span>
-      </div>
+      <img
+        src={logoImg}
+        alt="Kinetix App Logo"
+        className="h-20 md:h-24 w-auto max-w-full object-contain mb-8"
+      />
 
       <h1 className="text-5xl md:text-6xl font-black tracking-tighter mb-6 bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/70">
         KINETIX <span className="text-[#FF1493]">App</span>
