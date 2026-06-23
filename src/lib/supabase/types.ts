@@ -1,11 +1,17 @@
 // AVOID UPDATING THIS FILE DIRECTLY. It is automatically generated.
-export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[]
+export type Json =
+  | string
+  | number
+  | boolean
+  | null
+  | { [key: string]: Json | undefined }
+  | Json[]
 
 export type Database = {
   // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: '14.4'
+    PostgrestVersion: "14.4"
   }
   public: {
     Tables: {
@@ -78,11 +84,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: 'ai_food_identifications_food_log_id_fkey'
-            columns: ['food_log_id']
+            foreignKeyName: "ai_food_identifications_food_log_id_fkey"
+            columns: ["food_log_id"]
             isOneToOne: false
-            referencedRelation: 'food_logs'
-            referencedColumns: ['id']
+            referencedRelation: "food_logs"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -146,11 +152,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: 'assessment_responses_nutrition_assessment_id_fkey'
-            columns: ['nutrition_assessment_id']
+            foreignKeyName: "assessment_responses_nutrition_assessment_id_fkey"
+            columns: ["nutrition_assessment_id"]
             isOneToOne: false
-            referencedRelation: 'nutrition_assessments'
-            referencedColumns: ['id']
+            referencedRelation: "nutrition_assessments"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -196,11 +202,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: 'audit_log_admin_id_fkey'
-            columns: ['admin_id']
+            foreignKeyName: "audit_log_admin_id_fkey"
+            columns: ["admin_id"]
             isOneToOne: false
-            referencedRelation: 'admin_users'
-            referencedColumns: ['id']
+            referencedRelation: "admin_users"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -237,11 +243,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: 'challenge_participations_challenge_id_fkey'
-            columns: ['challenge_id']
+            foreignKeyName: "challenge_participations_challenge_id_fkey"
+            columns: ["challenge_id"]
             isOneToOne: false
-            referencedRelation: 'challenges'
-            referencedColumns: ['id']
+            referencedRelation: "challenges"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -380,11 +386,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: 'daily_summaries_nutrition_plan_id_fkey'
-            columns: ['nutrition_plan_id']
+            foreignKeyName: "daily_summaries_nutrition_plan_id_fkey"
+            columns: ["nutrition_plan_id"]
             isOneToOne: false
-            referencedRelation: 'nutrition_plans'
-            referencedColumns: ['id']
+            referencedRelation: "nutrition_plans"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -406,18 +412,18 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: 'decision_matrix_deviation_id_fkey'
-            columns: ['deviation_id']
+            foreignKeyName: "decision_matrix_deviation_id_fkey"
+            columns: ["deviation_id"]
             isOneToOne: false
-            referencedRelation: 'deviations'
-            referencedColumns: ['id']
+            referencedRelation: "deviations"
+            referencedColumns: ["id"]
           },
           {
-            foreignKeyName: 'decision_matrix_exercise_id_fkey'
-            columns: ['exercise_id']
+            foreignKeyName: "decision_matrix_exercise_id_fkey"
+            columns: ["exercise_id"]
             isOneToOne: false
-            referencedRelation: 'exercises'
-            referencedColumns: ['id']
+            referencedRelation: "exercises"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -649,11 +655,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: 'food_logs_nutrition_plan_id_fkey'
-            columns: ['nutrition_plan_id']
+            foreignKeyName: "food_logs_nutrition_plan_id_fkey"
+            columns: ["nutrition_plan_id"]
             isOneToOne: false
-            referencedRelation: 'nutrition_plans'
-            referencedColumns: ['id']
+            referencedRelation: "nutrition_plans"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -699,11 +705,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: 'food_substitutes_meal_food_id_fkey'
-            columns: ['meal_food_id']
+            foreignKeyName: "food_substitutes_meal_food_id_fkey"
+            columns: ["meal_food_id"]
             isOneToOne: false
-            referencedRelation: 'meal_foods'
-            referencedColumns: ['id']
+            referencedRelation: "meal_foods"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -905,18 +911,18 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: 'meal_foods_food_id_fkey'
-            columns: ['food_id']
+            foreignKeyName: "meal_foods_food_id_fkey"
+            columns: ["food_id"]
             isOneToOne: false
-            referencedRelation: 'foods'
-            referencedColumns: ['id']
+            referencedRelation: "foods"
+            referencedColumns: ["id"]
           },
           {
-            foreignKeyName: 'meal_foods_meal_plan_id_fkey'
-            columns: ['meal_plan_id']
+            foreignKeyName: "meal_foods_meal_plan_id_fkey"
+            columns: ["meal_plan_id"]
             isOneToOne: false
-            referencedRelation: 'meal_plans'
-            referencedColumns: ['id']
+            referencedRelation: "meal_plans"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -965,11 +971,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: 'meal_plans_nutrition_plan_id_fkey'
-            columns: ['nutrition_plan_id']
+            foreignKeyName: "meal_plans_nutrition_plan_id_fkey"
+            columns: ["nutrition_plan_id"]
             isOneToOne: false
-            referencedRelation: 'nutrition_plans'
-            referencedColumns: ['id']
+            referencedRelation: "nutrition_plans"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -1111,11 +1117,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: 'nutrition_assessments_nutrition_profile_id_fkey'
-            columns: ['nutrition_profile_id']
+            foreignKeyName: "nutrition_assessments_nutrition_profile_id_fkey"
+            columns: ["nutrition_profile_id"]
             isOneToOne: false
-            referencedRelation: 'nutrition_profiles'
-            referencedColumns: ['id']
+            referencedRelation: "nutrition_profiles"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -1188,11 +1194,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: 'nutrition_onboarding_steps_nutrition_profile_id_fkey'
-            columns: ['nutrition_profile_id']
+            foreignKeyName: "nutrition_onboarding_steps_nutrition_profile_id_fkey"
+            columns: ["nutrition_profile_id"]
             isOneToOne: false
-            referencedRelation: 'nutrition_profiles'
-            referencedColumns: ['id']
+            referencedRelation: "nutrition_profiles"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -1280,11 +1286,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: 'nutrition_plans_nutrition_profile_id_fkey'
-            columns: ['nutrition_profile_id']
+            foreignKeyName: "nutrition_plans_nutrition_profile_id_fkey"
+            columns: ["nutrition_profile_id"]
             isOneToOne: false
-            referencedRelation: 'nutrition_profiles'
-            referencedColumns: ['id']
+            referencedRelation: "nutrition_profiles"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -1531,11 +1537,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: 'profiles_subscription_id_fkey'
-            columns: ['subscription_id']
+            foreignKeyName: "profiles_subscription_id_fkey"
+            columns: ["subscription_id"]
             isOneToOne: false
-            referencedRelation: 'subscriptions'
-            referencedColumns: ['id']
+            referencedRelation: "subscriptions"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -1740,11 +1746,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: 'supplementation_plans_nutrition_plan_id_fkey'
-            columns: ['nutrition_plan_id']
+            foreignKeyName: "supplementation_plans_nutrition_plan_id_fkey"
+            columns: ["nutrition_plan_id"]
             isOneToOne: false
-            referencedRelation: 'nutrition_plans'
-            referencedColumns: ['id']
+            referencedRelation: "nutrition_plans"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -1920,31 +1926,33 @@ export type Database = {
   }
 }
 
-type DatabaseWithoutInternals = Omit<Database, '__InternalSupabase'>
+type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">
 
-type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, 'public'>]
+type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">]
 
 export type Tables<
   DefaultSchemaTableNameOrOptions extends
-    | keyof (DefaultSchema['Tables'] & DefaultSchema['Views'])
+    | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
     | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
-    ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables'] &
-        DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Views'])
+    ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+        DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
     : never = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
-  ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables'] &
-      DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Views'])[TableName] extends {
+  ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+      DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
       Row: infer R
     }
     ? R
     : never
-  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema['Tables'] & DefaultSchema['Views'])
-    ? (DefaultSchema['Tables'] & DefaultSchema['Views'])[DefaultSchemaTableNameOrOptions] extends {
+  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])
+    ? (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
         Row: infer R
       }
       ? R
@@ -1953,23 +1961,23 @@ export type Tables<
 
 export type TablesInsert<
   DefaultSchemaTableNameOrOptions extends
-    | keyof DefaultSchema['Tables']
+    | keyof DefaultSchema["Tables"]
     | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
-    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables']
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
     : never = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
-  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables'][TableName] extends {
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
       Insert: infer I
     }
     ? I
     : never
-  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema['Tables']
-    ? DefaultSchema['Tables'][DefaultSchemaTableNameOrOptions] extends {
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
         Insert: infer I
       }
       ? I
@@ -1978,23 +1986,23 @@ export type TablesInsert<
 
 export type TablesUpdate<
   DefaultSchemaTableNameOrOptions extends
-    | keyof DefaultSchema['Tables']
+    | keyof DefaultSchema["Tables"]
     | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
-    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables']
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
     : never = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
-  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables'][TableName] extends {
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
       Update: infer U
     }
     ? U
     : never
-  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema['Tables']
-    ? DefaultSchema['Tables'][DefaultSchemaTableNameOrOptions] extends {
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
         Update: infer U
       }
       ? U
@@ -2003,36 +2011,36 @@ export type TablesUpdate<
 
 export type Enums<
   DefaultSchemaEnumNameOrOptions extends
-    | keyof DefaultSchema['Enums']
+    | keyof DefaultSchema["Enums"]
     | { schema: keyof DatabaseWithoutInternals },
   EnumName extends DefaultSchemaEnumNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
-    ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions['schema']]['Enums']
+    ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
     : never = never,
 > = DefaultSchemaEnumNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
-  ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions['schema']]['Enums'][EnumName]
-  : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema['Enums']
-    ? DefaultSchema['Enums'][DefaultSchemaEnumNameOrOptions]
+  ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
+  : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
+    ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
     : never
 
 export type CompositeTypes<
   PublicCompositeTypeNameOrOptions extends
-    | keyof DefaultSchema['CompositeTypes']
+    | keyof DefaultSchema["CompositeTypes"]
     | { schema: keyof DatabaseWithoutInternals },
   CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
-    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions['schema']]['CompositeTypes']
+    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
     : never = never,
 > = PublicCompositeTypeNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
-  ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions['schema']]['CompositeTypes'][CompositeTypeName]
-  : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema['CompositeTypes']
-    ? DefaultSchema['CompositeTypes'][PublicCompositeTypeNameOrOptions]
+  ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
+  : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
+    ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
     : never
 
 export const Constants = {
@@ -2041,1224 +2049,3 @@ export const Constants = {
   },
 } as const
 
-// ====== DATABASE EXTENDED CONTEXT (auto-generated) ======
-// This section contains actual PostgreSQL column types, constraints, RLS policies,
-// functions, triggers, indexes and materialized views not present in the type definitions above.
-// IMPORTANT: The TypeScript types above map UUID, TEXT, VARCHAR all to "string".
-// Use the COLUMN TYPES section below to know the real PostgreSQL type for each column.
-// Always use the correct PostgreSQL type when writing SQL migrations.
-
-// --- COLUMN TYPES (actual PostgreSQL types) ---
-// Use this to know the real database type when writing migrations.
-// "string" in TypeScript types above may be uuid, text, varchar, timestamptz, etc.
-// Table: admin_users
-//   id: uuid (not null, default: gen_random_uuid())
-//   email: character varying (not null)
-//   name: character varying (not null)
-//   password_hash: character varying (not null)
-//   role: character varying (not null, default: 'moderator'::character varying)
-//   permissions: jsonb (nullable, default: '{}'::jsonb)
-//   created_at: timestamp without time zone (nullable, default: now())
-//   last_login: timestamp without time zone (nullable)
-// Table: ai_food_identifications
-//   id: uuid (not null, default: gen_random_uuid())
-//   food_log_id: uuid (not null)
-//   input_type: character varying (nullable)
-//   input_url: text (nullable)
-//   identified_foods: jsonb (nullable)
-//   raw_ai_response: jsonb (nullable)
-//   user_confirmed: boolean (nullable, default: false)
-//   user_corrections: jsonb (nullable)
-//   created_at: timestamp without time zone (nullable, default: now())
-// Table: app_settings
-//   id: uuid (not null, default: gen_random_uuid())
-//   setting_key: character varying (not null)
-//   setting_value: jsonb (not null)
-//   description: text (nullable)
-//   updated_at: timestamp without time zone (nullable, default: now())
-// Table: assessment_responses
-//   id: uuid (not null, default: gen_random_uuid())
-//   nutrition_assessment_id: uuid (not null)
-//   question_id: character varying (not null)
-//   question_text: text (not null)
-//   question_category: character varying (nullable)
-//   answer_type: character varying (nullable)
-//   answer_value: text (nullable)
-//   answer_score: integer (nullable)
-//   created_at: timestamp with time zone (nullable, default: now())
-// Table: audit_log
-//   id: uuid (not null, default: gen_random_uuid())
-//   admin_id: uuid (nullable)
-//   admin_email: character varying (nullable)
-//   action: character varying (not null)
-//   entity: character varying (not null)
-//   entity_id: character varying (nullable)
-//   old_value: jsonb (nullable)
-//   new_value: jsonb (nullable)
-//   ip_address: character varying (nullable)
-//   user_agent: text (nullable)
-//   created_at: timestamp without time zone (nullable, default: now())
-// Table: challenge_participations
-//   id: uuid (not null, default: gen_random_uuid())
-//   user_id: uuid (not null)
-//   challenge_id: uuid (not null)
-//   progress: integer (not null, default: 0)
-//   progress_details: jsonb (nullable)
-//   completed_at: timestamp with time zone (nullable)
-//   created_at: timestamp with time zone (nullable, default: now())
-//   updated_at: timestamp with time zone (nullable, default: now())
-// Table: challenges
-//   id: uuid (not null, default: gen_random_uuid())
-//   name: character varying (not null)
-//   description: text (nullable)
-//   rules: text (nullable)
-//   reward_points: integer (not null, default: 100)
-//   reward_badge: character varying (nullable)
-//   start_date: timestamp with time zone (not null)
-//   end_date: timestamp with time zone (not null)
-//   difficulty: character varying (not null)
-//   category: character varying (not null)
-//   is_active: boolean (nullable, default: true)
-//   created_at: timestamp with time zone (nullable, default: now())
-//   updated_at: timestamp with time zone (nullable, default: now())
-// Table: daily_summaries
-//   id: uuid (not null, default: gen_random_uuid())
-//   nutrition_plan_id: uuid (not null)
-//   user_id: uuid (not null)
-//   summary_date: date (not null)
-//   total_calories_consumed: numeric (nullable, default: 0)
-//   total_protein_consumed: numeric (nullable, default: 0)
-//   total_carbs_consumed: numeric (nullable, default: 0)
-//   total_fat_consumed: numeric (nullable, default: 0)
-//   target_calories: numeric (nullable)
-//   target_protein: numeric (nullable)
-//   target_carbs: numeric (nullable)
-//   target_fat: numeric (nullable)
-//   calories_remaining: numeric (nullable)
-//   protein_remaining: numeric (nullable)
-//   carbs_remaining: numeric (nullable)
-//   fat_remaining: numeric (nullable)
-//   calories_percentage: numeric (nullable)
-//   protein_percentage: numeric (nullable)
-//   carbs_percentage: numeric (nullable)
-//   fat_percentage: numeric (nullable)
-//   meals_logged: integer (nullable, default: 0)
-//   meal_logs: jsonb (nullable, default: '[]'::jsonb)
-//   completed: boolean (nullable, default: false)
-//   exceeded: boolean (nullable, default: false)
-//   created_at: timestamp without time zone (nullable, default: now())
-//   updated_at: timestamp without time zone (nullable, default: now())
-// Table: decision_matrix
-//   deviation_id: uuid (not null)
-//   exercise_id: uuid (not null)
-//   priority: integer (nullable, default: 1)
-// Table: deviations
-//   id: uuid (not null, default: gen_random_uuid())
-//   type: character varying (not null)
-//   name: character varying (not null)
-//   description: text (nullable)
-//   region: character varying (nullable)
-//   affected_muscles: _text (nullable)
-//   weak_muscles: _text (nullable)
-//   tight_muscles: _text (nullable)
-//   scientific_reference: text (nullable)
-//   created_at: timestamp without time zone (nullable, default: now())
-//   updated_at: timestamp without time zone (nullable, default: now())
-// Table: exercises
-//   id: uuid (not null, default: gen_random_uuid())
-//   name: character varying (not null)
-//   description: text (nullable)
-//   tier: character varying (not null)
-//   primary_muscles: _text (not null)
-//   secondary_muscles: _text (nullable)
-//   corrective_for: _uuid (nullable, default: '{}'::uuid[])
-//   contraindicated_for: _uuid (nullable, default: '{}'::uuid[])
-//   safety_notes: text (nullable)
-//   progression_cues: text (nullable)
-//   scientific_reference: text (nullable)
-//   video_url: character varying (nullable)
-//   image_url: character varying (nullable)
-//   created_at: timestamp without time zone (nullable, default: now())
-//   updated_at: timestamp without time zone (nullable, default: now())
-// Table: food_database
-//   id: uuid (not null, default: gen_random_uuid())
-//   usda_fdc_id: character varying (nullable)
-//   food_name: character varying (not null)
-//   food_category: character varying (nullable)
-//   brand_name: character varying (nullable)
-//   calories_per_100g: numeric (nullable)
-//   protein_per_100g: numeric (nullable)
-//   carbs_per_100g: numeric (nullable)
-//   fat_per_100g: numeric (nullable)
-//   fiber_per_100g: numeric (nullable)
-//   sugar_per_100g: numeric (nullable)
-//   micronutrients: jsonb (nullable)
-//   allergens: _text (nullable)
-//   is_processed: boolean (nullable, default: false)
-//   glycemic_index: integer (nullable)
-//   last_synced: timestamp without time zone (nullable)
-//   created_at: timestamp without time zone (nullable, default: now())
-// Table: food_logs
-//   id: uuid (not null, default: gen_random_uuid())
-//   nutrition_plan_id: uuid (not null)
-//   user_id: uuid (not null)
-//   log_date: date (not null)
-//   log_time: time without time zone (nullable)
-//   meal_type: character varying (nullable)
-//   input_method: character varying (not null)
-//   input_data: jsonb (nullable)
-//   foods: jsonb (not null)
-//   total_calories: numeric (nullable)
-//   total_protein_grams: numeric (nullable)
-//   total_carbs_grams: numeric (nullable)
-//   total_fat_grams: numeric (nullable)
-//   ai_confidence: numeric (nullable)
-//   ai_analysis: jsonb (nullable)
-//   confirmed: boolean (nullable, default: false)
-//   confirmed_at: timestamp without time zone (nullable)
-//   edited: boolean (nullable, default: false)
-//   edited_at: timestamp without time zone (nullable)
-//   created_at: timestamp without time zone (nullable, default: now())
-//   updated_at: timestamp without time zone (nullable, default: now())
-// Table: food_substitutes
-//   id: uuid (not null, default: gen_random_uuid())
-//   meal_food_id: uuid (not null)
-//   substitute_food_name: character varying (not null)
-//   substitute_quantity: numeric (nullable)
-//   substitute_unit: character varying (nullable)
-//   equivalent_calories: numeric (nullable)
-//   equivalent_protein: numeric (nullable)
-//   equivalent_carbs: numeric (nullable)
-//   equivalent_fat: numeric (nullable)
-//   substitution_ratio: numeric (nullable)
-//   created_at: timestamp with time zone (nullable, default: now())
-// Table: foods
-//   id: uuid (not null, default: gen_random_uuid())
-//   name: character varying (not null)
-//   description: text (nullable)
-//   category: character varying (not null)
-//   calories_per_100g: numeric (nullable)
-//   protein_per_100g: numeric (nullable)
-//   carbs_per_100g: numeric (nullable)
-//   fat_per_100g: numeric (nullable)
-//   fiber_per_100g: numeric (nullable)
-//   micronutrients: jsonb (nullable)
-//   allergens: _text (nullable)
-//   is_processed: boolean (nullable, default: false)
-//   glycemic_index: integer (nullable)
-//   glycemic_load: integer (nullable)
-//   created_at: timestamp with time zone (nullable, default: now())
-//   updated_at: timestamp with time zone (nullable, default: now())
-// Table: gamification_profiles
-//   id: uuid (not null, default: gen_random_uuid())
-//   user_id: uuid (not null)
-//   total_points: integer (nullable, default: 0)
-//   points_this_week: integer (nullable, default: 0)
-//   points_this_month: integer (nullable, default: 0)
-//   current_streak: integer (nullable, default: 0)
-//   longest_streak: integer (nullable, default: 0)
-//   level: integer (nullable, default: 1)
-//   experience_points: integer (nullable, default: 0)
-//   badges: jsonb (nullable, default: '[]'::jsonb)
-//   created_at: timestamp with time zone (nullable, default: now())
-//   updated_at: timestamp with time zone (nullable, default: now())
-// Table: leaderboards
-//   id: uuid (not null, default: gen_random_uuid())
-//   user_id: uuid (not null)
-//   user_name: character varying (nullable)
-//   user_avatar: text (nullable)
-//   rank: integer (not null)
-//   total_points: integer (not null, default: 0)
-//   period: character varying (not null)
-//   workouts_completed: integer (nullable, default: 0)
-//   meals_logged: integer (nullable, default: 0)
-//   streak_days: integer (nullable, default: 0)
-//   nutrition_adherence: numeric (nullable, default: 0)
-//   updated_at: timestamp with time zone (nullable, default: now())
-//   created_at: timestamp with time zone (nullable, default: now())
-// Table: meal_foods
-//   id: uuid (not null, default: gen_random_uuid())
-//   meal_plan_id: uuid (not null)
-//   food_id: uuid (nullable)
-//   food_name: character varying (not null)
-//   food_category: character varying (nullable)
-//   quantity: numeric (nullable)
-//   unit: character varying (nullable)
-//   calories: numeric (nullable)
-//   protein_grams: numeric (nullable)
-//   carbs_grams: numeric (nullable)
-//   fat_grams: numeric (nullable)
-//   fiber_grams: numeric (nullable)
-//   created_at: timestamp with time zone (nullable, default: now())
-// Table: meal_plans
-//   id: uuid (not null, default: gen_random_uuid())
-//   nutrition_plan_id: uuid (not null)
-//   meal_type: character varying (not null)
-//   meal_number: integer (nullable)
-//   scheduled_time: time without time zone (nullable)
-//   calories: numeric (nullable)
-//   protein_grams: numeric (nullable)
-//   carbs_grams: numeric (nullable)
-//   fat_grams: numeric (nullable)
-//   meal_options: jsonb (nullable)
-//   created_at: timestamp with time zone (nullable, default: now())
-//   updated_at: timestamp with time zone (nullable, default: now())
-// Table: monthly_metrics
-//   id: uuid (not null, default: gen_random_uuid())
-//   user_id: uuid (not null)
-//   cycle_number: integer (not null)
-//   start_date: date (not null)
-//   end_date: date (not null)
-//   workout_completion_rate: numeric (nullable)
-//   nutrition_adherence_rate: numeric (nullable)
-//   weight_change: numeric (nullable)
-//   progression_percent: numeric (nullable)
-//   created_at: timestamp with time zone (nullable, default: now())
-// Table: monthly_reports
-//   id: uuid (not null, default: gen_random_uuid())
-//   user_id: uuid (not null)
-//   cycle_number: integer (not null)
-//   start_date: date (not null)
-//   end_date: date (not null)
-//   metrics: jsonb (not null)
-//   summary: text (not null)
-//   recommendations: jsonb (not null)
-//   regenerated_training_plan_id: uuid (nullable)
-//   regenerated_meal_plan_id: uuid (nullable)
-//   generated_at: timestamp with time zone (nullable, default: now())
-//   created_at: timestamp with time zone (nullable, default: now())
-// Table: nutrition_assessments
-//   id: uuid (not null, default: gen_random_uuid())
-//   nutrition_profile_id: uuid (not null)
-//   assessment_type: character varying (not null)
-//   assessment_name: character varying (not null)
-//   responses: jsonb (not null)
-//   total_score: integer (nullable)
-//   max_score: integer (nullable)
-//   score_percentage: numeric (nullable)
-//   interpretation: character varying (nullable)
-//   interpretation_text: text (nullable)
-//   recommendations: _text (nullable)
-//   completed: boolean (nullable, default: false)
-//   completed_at: timestamp with time zone (nullable)
-//   created_at: timestamp with time zone (nullable, default: now())
-//   updated_at: timestamp with time zone (nullable, default: now())
-// Table: nutrition_chat_messages
-//   id: uuid (not null, default: gen_random_uuid())
-//   user_id: uuid (not null)
-//   role: character varying (not null)
-//   content: text (not null)
-//   created_at: timestamp with time zone (nullable, default: now())
-// Table: nutrition_onboarding_steps
-//   id: uuid (not null, default: gen_random_uuid())
-//   nutrition_profile_id: uuid (not null)
-//   step_number: integer (not null)
-//   step_name: character varying (not null)
-//   completed: boolean (nullable, default: false)
-//   completed_at: timestamp with time zone (nullable)
-//   skipped: boolean (nullable, default: false)
-//   data: jsonb (nullable)
-//   validation_errors: _text (nullable)
-//   is_valid: boolean (nullable, default: false)
-//   created_at: timestamp with time zone (nullable, default: now())
-//   updated_at: timestamp with time zone (nullable, default: now())
-// Table: nutrition_plans
-//   id: uuid (not null, default: gen_random_uuid())
-//   nutrition_profile_id: uuid (not null)
-//   plan_name: character varying (not null)
-//   plan_description: text (nullable)
-//   start_date: date (not null)
-//   end_date: date (not null)
-//   duration_days: integer (nullable)
-//   primary_goal: character varying (not null)
-//   basal_metabolic_rate: numeric (nullable)
-//   total_daily_energy_expenditure: numeric (nullable)
-//   activity_factor: numeric (nullable)
-//   target_calories: numeric (nullable)
-//   protein_grams: numeric (nullable)
-//   carbs_grams: numeric (nullable)
-//   fat_grams: numeric (nullable)
-//   micronutrients: jsonb (nullable)
-//   water_liters_per_day: numeric (nullable)
-//   meals_per_day: integer (nullable)
-//   meal_times: jsonb (nullable)
-//   metabolic_adjustment: numeric (nullable)
-//   dysbiosis_adjustments: _text (nullable)
-//   eating_behavior_notes: text (nullable)
-//   status: character varying (not null, default: 'active'::character varying)
-//   created_at: timestamp with time zone (nullable, default: now())
-//   updated_at: timestamp with time zone (nullable, default: now())
-// Table: nutrition_profiles
-//   id: uuid (not null, default: gen_random_uuid())
-//   user_id: uuid (not null)
-//   gender: character varying (not null)
-//   date_of_birth: date (not null)
-//   height_cm: numeric (not null)
-//   current_weight_kg: numeric (not null)
-//   target_weight_kg: numeric (not null)
-//   primary_goal: character varying (not null)
-//   goal_description: text (nullable)
-//   body_type: character varying (nullable)
-//   body_type_image_url: text (nullable)
-//   body_type_confidence: numeric (nullable)
-//   max_weight_kg: numeric (nullable)
-//   min_weight_kg: numeric (nullable)
-//   weight_history: jsonb (nullable)
-//   wake_up_time: time without time zone (nullable)
-//   sleep_time: time without time zone (nullable)
-//   sleep_quality: character varying (nullable)
-//   fitness_level: character varying (not null)
-//   fitness_level_description: text (nullable)
-//   exercise_types: _text (not null)
-//   exercise_days_per_week: integer (nullable)
-//   exercise_duration_minutes: integer (nullable)
-//   profession: character varying (nullable)
-//   work_activity_level: character varying (nullable)
-//   work_days: _text (nullable)
-//   work_hours_per_day: integer (nullable)
-//   hereditary_diseases: _text (nullable)
-//   current_treatments: _text (nullable)
-//   medications: jsonb (nullable)
-//   supplements: jsonb (nullable)
-//   intestinal_function: character varying (nullable)
-//   bristol_scale_type: integer (nullable)
-//   food_allergies: _text (nullable)
-//   food_intolerances: _text (nullable)
-//   meals_per_day: integer (nullable)
-//   preferred_meal_times: jsonb (nullable)
-//   water_intake_liters: numeric (nullable)
-//   foods_to_avoid: _text (nullable)
-//   foods_cannot_live_without: _text (nullable)
-//   favorite_fruits: _text (nullable)
-//   favorite_vegetables: _text (nullable)
-//   favorite_breakfast_foods: _text (nullable)
-//   favorite_lunch_foods: _text (nullable)
-//   favorite_snack_foods: _text (nullable)
-//   favorite_dinner_foods: _text (nullable)
-//   favorite_supper_foods: _text (nullable)
-//   onboarding_completed: boolean (nullable, default: false)
-//   onboarding_completion_date: timestamp without time zone (nullable)
-//   status: character varying (not null, default: 'in_progress'::character varying)
-//   created_at: timestamp with time zone (nullable, default: now())
-//   updated_at: timestamp with time zone (nullable, default: now())
-// Table: periodization
-//   id: uuid (not null, default: gen_random_uuid())
-//   name: character varying (not null)
-//   weeks: integer (not null)
-//   objective: text (not null)
-//   parameters: jsonb (not null)
-//   cardio: text (nullable)
-//   expectations: text (nullable)
-//   phase: character varying (nullable)
-//   created_at: timestamp without time zone (nullable, default: now())
-//   updated_at: timestamp without time zone (nullable, default: now())
-// Table: profiles
-//   id: uuid (not null)
-//   is_premium: boolean (nullable, default: false)
-//   trial_started_at: timestamp with time zone (nullable)
-//   subscription_id: uuid (nullable)
-//   created_at: timestamp with time zone (nullable, default: now())
-//   updated_at: timestamp with time zone (nullable, default: now())
-//   last_activity_at: timestamp without time zone (nullable, default: now())
-//   name: text (nullable)
-//   email: text (nullable)
-//   avatar_url: text (nullable)
-// Table: progress_metrics
-//   id: uuid (not null, default: gen_random_uuid())
-//   user_id: uuid (not null)
-//   date: date (not null)
-//   week_of_year: integer (nullable)
-//   month_of_year: integer (nullable)
-//   year: integer (nullable)
-//   total_reps: integer (nullable, default: 0)
-//   total_weight: integer (nullable, default: 0)
-//   total_time: integer (nullable, default: 0)
-//   calories_burned: integer (nullable, default: 0)
-//   avg_borg_rpe: numeric (nullable)
-//   workouts_completed: integer (nullable, default: 0)
-//   total_calories_consumed: integer (nullable, default: 0)
-//   total_protein_consumed: numeric (nullable, default: 0)
-//   total_carbs_consumed: numeric (nullable, default: 0)
-//   total_fat_consumed: numeric (nullable, default: 0)
-//   nutrition_adherence_rate: numeric (nullable, default: 0)
-//   meals_completed: integer (nullable, default: 0)
-//   calorie_balance: integer (nullable, default: 0)
-//   balance_status: character varying (nullable)
-//   created_at: timestamp with time zone (nullable, default: now())
-//   updated_at: timestamp with time zone (nullable, default: now())
-// Table: social_connections
-//   id: uuid (not null, default: gen_random_uuid())
-//   user_id: uuid (not null)
-//   friend_id: uuid (not null)
-//   status: character varying (not null)
-//   created_at: timestamp with time zone (nullable, default: now())
-//   accepted_at: timestamp with time zone (nullable)
-// Table: subscriptions
-//   id: uuid (not null, default: gen_random_uuid())
-//   user_id: uuid (not null)
-//   plan_id: character varying (not null)
-//   stripe_subscription_id: character varying (nullable)
-//   stripe_customer_id: character varying (nullable)
-//   stripe_price_id: character varying (nullable)
-//   billing_period: character varying (not null, default: 'monthly'::character varying)
-//   free_months_granted: integer (nullable, default: 0)
-//   started_at: timestamp with time zone (not null, default: now())
-//   expires_at: timestamp with time zone (not null)
-//   cancelled_at: timestamp with time zone (nullable)
-//   status: character varying (not null, default: 'active'::character varying)
-//   auto_renew: boolean (nullable, default: true)
-//   created_at: timestamp with time zone (nullable, default: now())
-//   updated_at: timestamp with time zone (nullable, default: now())
-// Table: supplementation_plans
-//   id: uuid (not null, default: gen_random_uuid())
-//   nutrition_plan_id: uuid (not null)
-//   supplement_name: character varying (not null)
-//   supplement_type: character varying (nullable)
-//   dosage: numeric (nullable)
-//   dosage_unit: character varying (nullable)
-//   frequency: character varying (nullable)
-//   rationale: text (nullable)
-//   scientific_reference: character varying (nullable)
-//   recommended: boolean (nullable, default: true)
-//   optional: boolean (nullable, default: false)
-//   created_at: timestamp with time zone (nullable, default: now())
-// Table: user_activity_log
-//   id: uuid (not null, default: gen_random_uuid())
-//   user_id: uuid (nullable)
-//   action: character varying (not null)
-//   entity: character varying (not null)
-//   entity_id: character varying (nullable)
-//   details: jsonb (nullable)
-//   ip_address: character varying (nullable)
-//   user_agent: text (nullable)
-//   created_at: timestamp without time zone (nullable, default: now())
-// Table: user_badges
-//   id: uuid (not null, default: gen_random_uuid())
-//   user_id: uuid (not null)
-//   badge_type: character varying (not null)
-//   earned_at: timestamp with time zone (not null, default: now())
-//   metadata: jsonb (nullable)
-//   created_at: timestamp with time zone (nullable, default: now())
-// Table: user_points
-//   id: uuid (not null, default: gen_random_uuid())
-//   user_id: uuid (not null)
-//   point_type: character varying (not null)
-//   amount: integer (not null)
-//   reason: text (nullable)
-//   earned_at: timestamp with time zone (not null, default: now())
-//   created_at: timestamp with time zone (nullable, default: now())
-// Table: workout_sessions
-//   id: uuid (not null, default: gen_random_uuid())
-//   user_id: uuid (not null)
-//   training_plan_id: character varying (not null)
-//   day_index: integer (not null)
-//   workout_date: date (not null)
-//   start_time: timestamp without time zone (not null)
-//   end_time: timestamp without time zone (not null)
-//   exercises_completed: jsonb (not null)
-//   total_time: integer (not null)
-//   total_rest_time: integer (not null)
-//   total_session_time: integer (not null)
-//   total_volume: integer (not null)
-//   total_weight: integer (not null)
-//   calories_burned: integer (nullable)
-//   borg_rpe: integer (not null)
-//   nutrition_integration: jsonb (nullable)
-//   created_at: timestamp without time zone (nullable, default: now())
-//   updated_at: timestamp without time zone (nullable, default: now())
-
-// --- CONSTRAINTS ---
-// Table: admin_users
-//   UNIQUE admin_users_email_key: UNIQUE (email)
-//   PRIMARY KEY admin_users_pkey: PRIMARY KEY (id)
-// Table: ai_food_identifications
-//   FOREIGN KEY ai_food_identifications_food_log_id_fkey: FOREIGN KEY (food_log_id) REFERENCES food_logs(id) ON DELETE CASCADE
-//   PRIMARY KEY ai_food_identifications_pkey: PRIMARY KEY (id)
-// Table: app_settings
-//   PRIMARY KEY app_settings_pkey: PRIMARY KEY (id)
-//   UNIQUE app_settings_setting_key_key: UNIQUE (setting_key)
-// Table: assessment_responses
-//   FOREIGN KEY assessment_responses_nutrition_assessment_id_fkey: FOREIGN KEY (nutrition_assessment_id) REFERENCES nutrition_assessments(id) ON DELETE CASCADE
-//   PRIMARY KEY assessment_responses_pkey: PRIMARY KEY (id)
-// Table: audit_log
-//   FOREIGN KEY audit_log_admin_id_fkey: FOREIGN KEY (admin_id) REFERENCES admin_users(id) ON DELETE SET NULL
-//   PRIMARY KEY audit_log_pkey: PRIMARY KEY (id)
-// Table: challenge_participations
-//   FOREIGN KEY challenge_participations_challenge_id_fkey: FOREIGN KEY (challenge_id) REFERENCES challenges(id) ON DELETE CASCADE
-//   PRIMARY KEY challenge_participations_pkey: PRIMARY KEY (id)
-//   CHECK challenge_participations_progress_check: CHECK (((progress >= 0) AND (progress <= 100)))
-//   UNIQUE challenge_participations_user_id_challenge_id_key: UNIQUE (user_id, challenge_id)
-//   FOREIGN KEY challenge_participations_user_id_fkey: FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE
-// Table: challenges
-//   CHECK challenges_category_check: CHECK (((category)::text = ANY ((ARRAY['consistency'::character varying, 'strength'::character varying, 'endurance'::character varying, 'posture'::character varying, 'nutrition'::character varying, 'balanced'::character varying])::text[])))
-//   CHECK challenges_check: CHECK ((end_date > start_date))
-//   CHECK challenges_difficulty_check: CHECK (((difficulty)::text = ANY ((ARRAY['easy'::character varying, 'medium'::character varying, 'hard'::character varying])::text[])))
-//   PRIMARY KEY challenges_pkey: PRIMARY KEY (id)
-// Table: daily_summaries
-//   FOREIGN KEY daily_summaries_nutrition_plan_id_fkey: FOREIGN KEY (nutrition_plan_id) REFERENCES nutrition_plans(id) ON DELETE CASCADE
-//   PRIMARY KEY daily_summaries_pkey: PRIMARY KEY (id)
-//   FOREIGN KEY daily_summaries_user_id_fkey: FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE
-//   UNIQUE daily_summaries_user_id_summary_date_key: UNIQUE (user_id, summary_date)
-// Table: decision_matrix
-//   FOREIGN KEY decision_matrix_deviation_id_fkey: FOREIGN KEY (deviation_id) REFERENCES deviations(id) ON DELETE CASCADE
-//   FOREIGN KEY decision_matrix_exercise_id_fkey: FOREIGN KEY (exercise_id) REFERENCES exercises(id) ON DELETE CASCADE
-//   PRIMARY KEY decision_matrix_pkey: PRIMARY KEY (deviation_id, exercise_id)
-// Table: deviations
-//   UNIQUE deviations_name_key: UNIQUE (name)
-//   PRIMARY KEY deviations_pkey: PRIMARY KEY (id)
-// Table: exercises
-//   UNIQUE exercises_name_key: UNIQUE (name)
-//   PRIMARY KEY exercises_pkey: PRIMARY KEY (id)
-// Table: food_database
-//   PRIMARY KEY food_database_pkey: PRIMARY KEY (id)
-//   UNIQUE food_database_usda_fdc_id_key: UNIQUE (usda_fdc_id)
-// Table: food_logs
-//   FOREIGN KEY food_logs_nutrition_plan_id_fkey: FOREIGN KEY (nutrition_plan_id) REFERENCES nutrition_plans(id) ON DELETE CASCADE
-//   PRIMARY KEY food_logs_pkey: PRIMARY KEY (id)
-//   FOREIGN KEY food_logs_user_id_fkey: FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE
-// Table: food_substitutes
-//   FOREIGN KEY food_substitutes_meal_food_id_fkey: FOREIGN KEY (meal_food_id) REFERENCES meal_foods(id) ON DELETE CASCADE
-//   PRIMARY KEY food_substitutes_pkey: PRIMARY KEY (id)
-// Table: foods
-//   UNIQUE foods_name_key: UNIQUE (name)
-//   PRIMARY KEY foods_pkey: PRIMARY KEY (id)
-// Table: gamification_profiles
-//   PRIMARY KEY gamification_profiles_pkey: PRIMARY KEY (id)
-//   FOREIGN KEY gamification_profiles_user_id_fkey: FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE
-//   UNIQUE gamification_profiles_user_id_key: UNIQUE (user_id)
-// Table: leaderboards
-//   CHECK leaderboards_period_check: CHECK (((period)::text = ANY ((ARRAY['weekly'::character varying, 'monthly'::character varying, 'all_time'::character varying])::text[])))
-//   PRIMARY KEY leaderboards_pkey: PRIMARY KEY (id)
-//   FOREIGN KEY leaderboards_user_id_fkey: FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE
-//   UNIQUE leaderboards_user_id_period_key: UNIQUE (user_id, period)
-// Table: meal_foods
-//   FOREIGN KEY meal_foods_food_id_fkey: FOREIGN KEY (food_id) REFERENCES foods(id)
-//   FOREIGN KEY meal_foods_meal_plan_id_fkey: FOREIGN KEY (meal_plan_id) REFERENCES meal_plans(id) ON DELETE CASCADE
-//   PRIMARY KEY meal_foods_pkey: PRIMARY KEY (id)
-// Table: meal_plans
-//   FOREIGN KEY meal_plans_nutrition_plan_id_fkey: FOREIGN KEY (nutrition_plan_id) REFERENCES nutrition_plans(id) ON DELETE CASCADE
-//   PRIMARY KEY meal_plans_pkey: PRIMARY KEY (id)
-// Table: monthly_metrics
-//   PRIMARY KEY monthly_metrics_pkey: PRIMARY KEY (id)
-//   FOREIGN KEY monthly_metrics_user_id_fkey: FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE
-// Table: monthly_reports
-//   PRIMARY KEY monthly_reports_pkey: PRIMARY KEY (id)
-//   FOREIGN KEY monthly_reports_user_id_fkey: FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE
-// Table: nutrition_assessments
-//   FOREIGN KEY nutrition_assessments_nutrition_profile_id_fkey: FOREIGN KEY (nutrition_profile_id) REFERENCES nutrition_profiles(id) ON DELETE CASCADE
-//   PRIMARY KEY nutrition_assessments_pkey: PRIMARY KEY (id)
-// Table: nutrition_chat_messages
-//   PRIMARY KEY nutrition_chat_messages_pkey: PRIMARY KEY (id)
-//   FOREIGN KEY nutrition_chat_messages_user_id_fkey: FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE
-// Table: nutrition_onboarding_steps
-//   FOREIGN KEY nutrition_onboarding_steps_nutrition_profile_id_fkey: FOREIGN KEY (nutrition_profile_id) REFERENCES nutrition_profiles(id) ON DELETE CASCADE
-//   PRIMARY KEY nutrition_onboarding_steps_pkey: PRIMARY KEY (id)
-//   CHECK nutrition_onboarding_steps_step_number_check: CHECK (((step_number >= 1) AND (step_number <= 11)))
-// Table: nutrition_plans
-//   FOREIGN KEY nutrition_plans_nutrition_profile_id_fkey: FOREIGN KEY (nutrition_profile_id) REFERENCES nutrition_profiles(id) ON DELETE CASCADE
-//   PRIMARY KEY nutrition_plans_pkey: PRIMARY KEY (id)
-// Table: nutrition_profiles
-//   PRIMARY KEY nutrition_profiles_pkey: PRIMARY KEY (id)
-//   FOREIGN KEY nutrition_profiles_user_id_fkey: FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE
-// Table: periodization
-//   UNIQUE periodization_name_key: UNIQUE (name)
-//   PRIMARY KEY periodization_pkey: PRIMARY KEY (id)
-// Table: profiles
-//   FOREIGN KEY profiles_id_fkey: FOREIGN KEY (id) REFERENCES auth.users(id) ON DELETE CASCADE
-//   PRIMARY KEY profiles_pkey: PRIMARY KEY (id)
-//   FOREIGN KEY profiles_subscription_id_fkey: FOREIGN KEY (subscription_id) REFERENCES subscriptions(id) ON DELETE SET NULL
-// Table: progress_metrics
-//   PRIMARY KEY progress_metrics_pkey: PRIMARY KEY (id)
-//   UNIQUE progress_metrics_user_id_date_key: UNIQUE (user_id, date)
-//   FOREIGN KEY progress_metrics_user_id_fkey: FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE
-// Table: social_connections
-//   CHECK social_connections_check: CHECK ((user_id <> friend_id))
-//   FOREIGN KEY social_connections_friend_id_fkey: FOREIGN KEY (friend_id) REFERENCES auth.users(id) ON DELETE CASCADE
-//   PRIMARY KEY social_connections_pkey: PRIMARY KEY (id)
-//   CHECK social_connections_status_check: CHECK (((status)::text = ANY ((ARRAY['pending'::character varying, 'accepted'::character varying, 'blocked'::character varying])::text[])))
-//   FOREIGN KEY social_connections_user_id_fkey: FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE
-// Table: subscriptions
-//   PRIMARY KEY subscriptions_pkey: PRIMARY KEY (id)
-//   UNIQUE subscriptions_stripe_customer_id_key: UNIQUE (stripe_customer_id)
-//   UNIQUE subscriptions_stripe_subscription_id_key: UNIQUE (stripe_subscription_id)
-//   FOREIGN KEY subscriptions_user_id_fkey: FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE
-// Table: supplementation_plans
-//   FOREIGN KEY supplementation_plans_nutrition_plan_id_fkey: FOREIGN KEY (nutrition_plan_id) REFERENCES nutrition_plans(id) ON DELETE CASCADE
-//   PRIMARY KEY supplementation_plans_pkey: PRIMARY KEY (id)
-// Table: user_activity_log
-//   PRIMARY KEY user_activity_log_pkey: PRIMARY KEY (id)
-//   FOREIGN KEY user_activity_log_user_id_fkey: FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE
-// Table: user_badges
-//   PRIMARY KEY user_badges_pkey: PRIMARY KEY (id)
-//   UNIQUE user_badges_user_id_badge_type_key: UNIQUE (user_id, badge_type)
-//   FOREIGN KEY user_badges_user_id_fkey: FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE
-// Table: user_points
-//   CHECK user_points_amount_check: CHECK ((amount > 0))
-//   PRIMARY KEY user_points_pkey: PRIMARY KEY (id)
-//   FOREIGN KEY user_points_user_id_fkey: FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE
-// Table: workout_sessions
-//   CHECK workout_sessions_borg_rpe_check: CHECK (((borg_rpe >= 0) AND (borg_rpe <= 10)))
-//   PRIMARY KEY workout_sessions_pkey: PRIMARY KEY (id)
-//   FOREIGN KEY workout_sessions_user_id_fkey: FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE
-
-// --- ROW LEVEL SECURITY POLICIES ---
-// Table: admin_users
-//   Policy "auth_all_admin_users" (ALL, PERMISSIVE) roles={authenticated}
-//     USING: true
-//     WITH CHECK: true
-// Table: ai_food_identifications
-//   Policy "Users can access their own ai_food_identifications" (ALL, PERMISSIVE) roles={public}
-//     USING: (EXISTS ( SELECT 1    FROM food_logs   WHERE ((food_logs.id = ai_food_identifications.food_log_id) AND (food_logs.user_id = auth.uid()))))
-//   Policy "auth_all_ai_food_identifications" (ALL, PERMISSIVE) roles={authenticated}
-//     USING: (EXISTS ( SELECT 1    FROM food_logs fl   WHERE ((fl.id = ai_food_identifications.food_log_id) AND (fl.user_id = auth.uid()))))
-//     WITH CHECK: (EXISTS ( SELECT 1    FROM food_logs fl   WHERE ((fl.id = ai_food_identifications.food_log_id) AND (fl.user_id = auth.uid()))))
-// Table: app_settings
-//   Policy "auth_all_app_settings" (ALL, PERMISSIVE) roles={authenticated}
-//     USING: true
-//     WITH CHECK: true
-//   Policy "public_read_app_settings" (SELECT, PERMISSIVE) roles={public}
-//     USING: true
-// Table: assessment_responses
-//   Policy "Users can insert their own assessment_responses" (INSERT, PERMISSIVE) roles={public}
-//     WITH CHECK: true
-//   Policy "Users can view their own assessment_responses" (SELECT, PERMISSIVE) roles={public}
-//     USING: true
-// Table: audit_log
-//   Policy "auth_all_audit_log" (ALL, PERMISSIVE) roles={authenticated}
-//     USING: true
-//     WITH CHECK: true
-// Table: challenge_participations
-//   Policy "Users can access their own challenge_participations" (ALL, PERMISSIVE) roles={public}
-//     USING: (user_id = auth.uid())
-//   Policy "auth_all_challenge_participations" (ALL, PERMISSIVE) roles={authenticated}
-//     USING: (user_id = auth.uid())
-//     WITH CHECK: (user_id = auth.uid())
-// Table: challenges
-//   Policy "auth_select_challenges" (SELECT, PERMISSIVE) roles={authenticated}
-//     USING: true
-// Table: daily_summaries
-//   Policy "Users can access their own daily_summaries" (ALL, PERMISSIVE) roles={public}
-//     USING: (user_id = auth.uid())
-//   Policy "auth_all_daily_summaries" (ALL, PERMISSIVE) roles={authenticated}
-//     USING: (user_id = auth.uid())
-//     WITH CHECK: (user_id = auth.uid())
-//   Policy "daily_summaries_insert_authenticated" (INSERT, PERMISSIVE) roles={public}
-//     WITH CHECK: (auth.uid() = user_id)
-//   Policy "daily_summaries_read_authenticated" (SELECT, PERMISSIVE) roles={public}
-//     USING: (auth.uid() = user_id)
-//   Policy "daily_summaries_update_authenticated" (UPDATE, PERMISSIVE) roles={public}
-//     USING: (auth.uid() = user_id)
-// Table: decision_matrix
-//   Policy "auth_all_decision_matrix" (ALL, PERMISSIVE) roles={authenticated}
-//     USING: true
-//     WITH CHECK: true
-// Table: deviations
-//   Policy "auth_all_deviations" (ALL, PERMISSIVE) roles={authenticated}
-//     USING: true
-//     WITH CHECK: true
-//   Policy "public_read_deviations" (SELECT, PERMISSIVE) roles={public}
-//     USING: true
-// Table: exercises
-//   Policy "auth_all_exercises" (ALL, PERMISSIVE) roles={authenticated}
-//     USING: true
-//     WITH CHECK: true
-//   Policy "public_read_exercises" (SELECT, PERMISSIVE) roles={public}
-//     USING: true
-// Table: food_database
-//   Policy "public_read_food_db" (SELECT, PERMISSIVE) roles={public}
-//     USING: true
-// Table: food_logs
-//   Policy "Users can access their own food_logs" (ALL, PERMISSIVE) roles={public}
-//     USING: (user_id = auth.uid())
-//   Policy "auth_all_food_logs" (ALL, PERMISSIVE) roles={authenticated}
-//     USING: (user_id = auth.uid())
-//     WITH CHECK: (user_id = auth.uid())
-//   Policy "food_logs_insert_authenticated" (INSERT, PERMISSIVE) roles={public}
-//     WITH CHECK: (auth.uid() = user_id)
-//   Policy "food_logs_read_authenticated" (SELECT, PERMISSIVE) roles={public}
-//     USING: (auth.uid() = user_id)
-//   Policy "food_logs_update_authenticated" (UPDATE, PERMISSIVE) roles={public}
-//     USING: (auth.uid() = user_id)
-// Table: food_substitutes
-//   Policy "authenticated_all" (ALL, PERMISSIVE) roles={authenticated}
-//     USING: true
-//     WITH CHECK: true
-// Table: foods
-//   Policy "public_select" (SELECT, PERMISSIVE) roles={public}
-//     USING: true
-// Table: gamification_profiles
-//   Policy "Users can access their own gamification_profiles" (ALL, PERMISSIVE) roles={public}
-//     USING: (user_id = auth.uid())
-//   Policy "auth_all_gamification_profiles" (ALL, PERMISSIVE) roles={authenticated}
-//     USING: (user_id = auth.uid())
-//     WITH CHECK: (user_id = auth.uid())
-//   Policy "gamification_profiles_delete_authenticated" (DELETE, PERMISSIVE) roles={public}
-//     USING: (auth.uid() = user_id)
-//   Policy "gamification_profiles_insert_authenticated" (INSERT, PERMISSIVE) roles={public}
-//     WITH CHECK: (auth.uid() = user_id)
-//   Policy "gamification_profiles_read_authenticated" (SELECT, PERMISSIVE) roles={public}
-//     USING: (auth.uid() = user_id)
-//   Policy "gamification_profiles_update_authenticated" (UPDATE, PERMISSIVE) roles={public}
-//     USING: (auth.uid() = user_id)
-// Table: leaderboards
-//   Policy "Users can access their own leaderboards" (ALL, PERMISSIVE) roles={public}
-//     USING: (user_id = auth.uid())
-//   Policy "auth_all_leaderboards" (SELECT, PERMISSIVE) roles={authenticated}
-//     USING: true
-//   Policy "auth_manage_leaderboards" (ALL, PERMISSIVE) roles={authenticated}
-//     USING: (user_id = auth.uid())
-//     WITH CHECK: (user_id = auth.uid())
-// Table: meal_foods
-//   Policy "authenticated_all" (ALL, PERMISSIVE) roles={authenticated}
-//     USING: true
-//     WITH CHECK: true
-// Table: meal_plans
-//   Policy "authenticated_all" (ALL, PERMISSIVE) roles={authenticated}
-//     USING: true
-//     WITH CHECK: true
-// Table: monthly_metrics
-//   Policy "Users can access their own monthly_metrics" (ALL, PERMISSIVE) roles={public}
-//     USING: (user_id = auth.uid())
-//   Policy "auth_all_monthly_metrics" (ALL, PERMISSIVE) roles={authenticated}
-//     USING: (user_id = auth.uid())
-//     WITH CHECK: (user_id = auth.uid())
-// Table: monthly_reports
-//   Policy "Users can access their own monthly_reports" (ALL, PERMISSIVE) roles={public}
-//     USING: (user_id = auth.uid())
-//   Policy "auth_all_monthly_reports" (ALL, PERMISSIVE) roles={authenticated}
-//     USING: (user_id = auth.uid())
-//     WITH CHECK: (user_id = auth.uid())
-// Table: nutrition_assessments
-//   Policy "Users can insert their own nutrition_assessments" (INSERT, PERMISSIVE) roles={public}
-//     WITH CHECK: true
-//   Policy "Users can update their own nutrition_assessments" (UPDATE, PERMISSIVE) roles={public}
-//     USING: true
-//   Policy "Users can view their own nutrition_assessments" (SELECT, PERMISSIVE) roles={public}
-//     USING: true
-//   Policy "nutrition_assessments_insert_authenticated" (INSERT, PERMISSIVE) roles={public}
-//     WITH CHECK: (auth.uid() = ( SELECT nutrition_profiles.user_id    FROM nutrition_profiles   WHERE (nutrition_profiles.id = nutrition_assessments.nutrition_profile_id)  LIMIT 1))
-//   Policy "nutrition_assessments_read_authenticated" (SELECT, PERMISSIVE) roles={public}
-//     USING: (auth.uid() = ( SELECT nutrition_profiles.user_id    FROM nutrition_profiles   WHERE (nutrition_profiles.id = nutrition_assessments.nutrition_profile_id)  LIMIT 1))
-//   Policy "nutrition_assessments_update_authenticated" (UPDATE, PERMISSIVE) roles={public}
-//     USING: (auth.uid() = ( SELECT nutrition_profiles.user_id    FROM nutrition_profiles   WHERE (nutrition_profiles.id = nutrition_assessments.nutrition_profile_id)  LIMIT 1))
-// Table: nutrition_chat_messages
-//   Policy "Users can access their own nutrition_chat_messages" (ALL, PERMISSIVE) roles={public}
-//     USING: (user_id = auth.uid())
-//   Policy "auth_all_nutrition_chat_messages" (ALL, PERMISSIVE) roles={authenticated}
-//     USING: (user_id = auth.uid())
-//     WITH CHECK: (user_id = auth.uid())
-// Table: nutrition_onboarding_steps
-//   Policy "Users can access their own nutrition_onboarding_steps" (ALL, PERMISSIVE) roles={public}
-//     USING: (EXISTS ( SELECT 1    FROM nutrition_profiles   WHERE ((nutrition_profiles.id = nutrition_onboarding_steps.nutrition_profile_id) AND (nutrition_profiles.user_id = auth.uid()))))
-//   Policy "authenticated_all" (ALL, PERMISSIVE) roles={authenticated}
-//     USING: true
-//     WITH CHECK: true
-//   Policy "nutrition_onboarding_steps_delete_authenticated" (DELETE, PERMISSIVE) roles={public}
-//     USING: (auth.uid() = ( SELECT nutrition_profiles.user_id    FROM nutrition_profiles   WHERE (nutrition_profiles.id = nutrition_onboarding_steps.nutrition_profile_id)  LIMIT 1))
-//   Policy "nutrition_onboarding_steps_insert_authenticated" (INSERT, PERMISSIVE) roles={public}
-//     WITH CHECK: (auth.uid() = ( SELECT nutrition_profiles.user_id    FROM nutrition_profiles   WHERE (nutrition_profiles.id = nutrition_onboarding_steps.nutrition_profile_id)  LIMIT 1))
-//   Policy "nutrition_onboarding_steps_read_authenticated" (SELECT, PERMISSIVE) roles={public}
-//     USING: (auth.uid() = ( SELECT nutrition_profiles.user_id    FROM nutrition_profiles   WHERE (nutrition_profiles.id = nutrition_onboarding_steps.nutrition_profile_id)  LIMIT 1))
-//   Policy "nutrition_onboarding_steps_update_authenticated" (UPDATE, PERMISSIVE) roles={public}
-//     USING: (auth.uid() = ( SELECT nutrition_profiles.user_id    FROM nutrition_profiles   WHERE (nutrition_profiles.id = nutrition_onboarding_steps.nutrition_profile_id)  LIMIT 1))
-// Table: nutrition_plans
-//   Policy "Users can access their own nutrition_plans" (ALL, PERMISSIVE) roles={public}
-//     USING: (EXISTS ( SELECT 1    FROM nutrition_profiles   WHERE ((nutrition_profiles.id = nutrition_plans.nutrition_profile_id) AND (nutrition_profiles.user_id = auth.uid()))))
-//   Policy "authenticated_all" (ALL, PERMISSIVE) roles={authenticated}
-//     USING: true
-//     WITH CHECK: true
-//   Policy "nutrition_plans_insert_authenticated" (INSERT, PERMISSIVE) roles={public}
-//     WITH CHECK: (auth.uid() = ( SELECT nutrition_profiles.user_id    FROM nutrition_profiles   WHERE (nutrition_profiles.id = nutrition_plans.nutrition_profile_id)  LIMIT 1))
-//   Policy "nutrition_plans_read_authenticated" (SELECT, PERMISSIVE) roles={public}
-//     USING: (auth.uid() = ( SELECT nutrition_profiles.user_id    FROM nutrition_profiles   WHERE (nutrition_profiles.id = nutrition_plans.nutrition_profile_id)  LIMIT 1))
-//   Policy "nutrition_plans_update_authenticated" (UPDATE, PERMISSIVE) roles={public}
-//     USING: (auth.uid() = ( SELECT nutrition_profiles.user_id    FROM nutrition_profiles   WHERE (nutrition_profiles.id = nutrition_plans.nutrition_profile_id)  LIMIT 1))
-// Table: nutrition_profiles
-//   Policy "Users can access their own nutrition_profiles" (ALL, PERMISSIVE) roles={public}
-//     USING: (user_id = auth.uid())
-//   Policy "Users can create their own nutrition_profiles" (INSERT, PERMISSIVE) roles={public}
-//     WITH CHECK: (user_id = auth.uid())
-//   Policy "Users can insert their own nutrition_profiles" (INSERT, PERMISSIVE) roles={public}
-//     WITH CHECK: true
-//   Policy "Users can update their own nutrition_profiles" (UPDATE, PERMISSIVE) roles={public}
-//     USING: true
-//   Policy "Users can view their own nutrition_profiles" (SELECT, PERMISSIVE) roles={public}
-//     USING: true
-//   Policy "nutrition_profiles_delete_authenticated" (DELETE, PERMISSIVE) roles={public}
-//     USING: (auth.uid() = user_id)
-//   Policy "nutrition_profiles_insert_authenticated" (INSERT, PERMISSIVE) roles={public}
-//     WITH CHECK: (auth.uid() = user_id)
-//   Policy "nutrition_profiles_read_authenticated" (SELECT, PERMISSIVE) roles={public}
-//     USING: (auth.uid() = user_id)
-//   Policy "nutrition_profiles_update_authenticated" (UPDATE, PERMISSIVE) roles={public}
-//     USING: (auth.uid() = user_id)
-// Table: periodization
-//   Policy "auth_all_periodization" (ALL, PERMISSIVE) roles={authenticated}
-//     USING: true
-//     WITH CHECK: true
-//   Policy "public_read_periodization" (SELECT, PERMISSIVE) roles={public}
-//     USING: true
-// Table: profiles
-//   Policy "Users can update their own profiles" (UPDATE, PERMISSIVE) roles={authenticated}
-//     USING: (id = auth.uid())
-//     WITH CHECK: (id = auth.uid())
-//   Policy "Users can view their own profiles" (SELECT, PERMISSIVE) roles={authenticated}
-//     USING: (id = auth.uid())
-//   Policy "profiles_delete_authenticated" (DELETE, PERMISSIVE) roles={public}
-//     USING: (auth.uid() = id)
-//   Policy "profiles_insert_authenticated" (INSERT, PERMISSIVE) roles={public}
-//     WITH CHECK: (auth.uid() = id)
-//   Policy "profiles_read_authenticated" (SELECT, PERMISSIVE) roles={public}
-//     USING: (auth.uid() = id)
-//   Policy "profiles_update_authenticated" (UPDATE, PERMISSIVE) roles={public}
-//     USING: (auth.uid() = id)
-// Table: progress_metrics
-//   Policy "Users can access their own progress_metrics" (ALL, PERMISSIVE) roles={public}
-//     USING: (user_id = auth.uid())
-//   Policy "Users can manage their own progress metrics" (ALL, PERMISSIVE) roles={authenticated}
-//     USING: (user_id = auth.uid())
-//     WITH CHECK: (user_id = auth.uid())
-//   Policy "Users can view their own progress metrics" (SELECT, PERMISSIVE) roles={authenticated}
-//     USING: (user_id = auth.uid())
-//   Policy "progress_metrics_insert_authenticated" (INSERT, PERMISSIVE) roles={public}
-//     WITH CHECK: (auth.uid() = user_id)
-//   Policy "progress_metrics_read_authenticated" (SELECT, PERMISSIVE) roles={public}
-//     USING: (auth.uid() = user_id)
-//   Policy "progress_metrics_update_authenticated" (UPDATE, PERMISSIVE) roles={public}
-//     USING: (auth.uid() = user_id)
-// Table: social_connections
-//   Policy "Users can access their own social_connections" (ALL, PERMISSIVE) roles={public}
-//     USING: (user_id = auth.uid())
-//   Policy "auth_all_social_connections" (ALL, PERMISSIVE) roles={authenticated}
-//     USING: ((user_id = auth.uid()) OR (friend_id = auth.uid()))
-//     WITH CHECK: ((user_id = auth.uid()) OR (friend_id = auth.uid()))
-// Table: subscriptions
-//   Policy "Users can access their own subscriptions" (ALL, PERMISSIVE) roles={public}
-//     USING: (user_id = auth.uid())
-//   Policy "Users can view their own subscriptions" (SELECT, PERMISSIVE) roles={authenticated}
-//     USING: (user_id = auth.uid())
-//   Policy "subscriptions_insert_authenticated" (INSERT, PERMISSIVE) roles={public}
-//     WITH CHECK: (auth.uid() = user_id)
-//   Policy "subscriptions_read_authenticated" (SELECT, PERMISSIVE) roles={public}
-//     USING: (auth.uid() = user_id)
-//   Policy "subscriptions_update_authenticated" (UPDATE, PERMISSIVE) roles={public}
-//     USING: (auth.uid() = user_id)
-// Table: supplementation_plans
-//   Policy "authenticated_all" (ALL, PERMISSIVE) roles={authenticated}
-//     USING: true
-//     WITH CHECK: true
-// Table: user_activity_log
-//   Policy "Users can access their own user_activity_log" (ALL, PERMISSIVE) roles={public}
-//     USING: (user_id = auth.uid())
-//   Policy "auth_all_user_activity_log" (ALL, PERMISSIVE) roles={authenticated}
-//     USING: true
-//     WITH CHECK: true
-// Table: user_badges
-//   Policy "Users can access their own user_badges" (ALL, PERMISSIVE) roles={public}
-//     USING: (user_id = auth.uid())
-//   Policy "auth_all_user_badges" (ALL, PERMISSIVE) roles={authenticated}
-//     USING: (user_id = auth.uid())
-//     WITH CHECK: (user_id = auth.uid())
-// Table: user_points
-//   Policy "Users can access their own user_points" (ALL, PERMISSIVE) roles={public}
-//     USING: (user_id = auth.uid())
-//   Policy "auth_all_user_points" (ALL, PERMISSIVE) roles={authenticated}
-//     USING: (user_id = auth.uid())
-//     WITH CHECK: (user_id = auth.uid())
-// Table: workout_sessions
-//   Policy "Users can access their own workout_sessions" (ALL, PERMISSIVE) roles={public}
-//     USING: (user_id = auth.uid())
-//   Policy "Users can manage their own workout sessions" (ALL, PERMISSIVE) roles={authenticated}
-//     USING: (user_id = auth.uid())
-//     WITH CHECK: (user_id = auth.uid())
-//   Policy "workout_sessions_insert_authenticated" (INSERT, PERMISSIVE) roles={public}
-//     WITH CHECK: (auth.uid() = user_id)
-//   Policy "workout_sessions_read_authenticated" (SELECT, PERMISSIVE) roles={public}
-//     USING: (auth.uid() = user_id)
-//   Policy "workout_sessions_update_authenticated" (UPDATE, PERMISSIVE) roles={public}
-//     USING: (auth.uid() = user_id)
-
-// --- DATABASE FUNCTIONS ---
-// FUNCTION auto_confirm_email()
-//   CREATE OR REPLACE FUNCTION public.auto_confirm_email()
-//    RETURNS trigger
-//    LANGUAGE plpgsql
-//    SECURITY DEFINER
-//   AS $function$
-//   BEGIN
-//     NEW.email_confirmed_at = NOW();
-//     RETURN NEW;
-//   END;
-//   $function$
-//
-// FUNCTION handle_new_user()
-//   CREATE OR REPLACE FUNCTION public.handle_new_user()
-//    RETURNS trigger
-//    LANGUAGE plpgsql
-//    SECURITY DEFINER
-//   AS $function$
-//   DECLARE
-//     v_nutrition_profile_id uuid;
-//     v_dob date := '1990-01-01'::date;
-//     v_name text := '';
-//     v_avatar text := '';
-//   BEGIN
-//     -- Safely parse date_of_birth
-//     BEGIN
-//       IF NEW.raw_user_meta_data->>'birth_date' IS NOT NULL AND NEW.raw_user_meta_data->>'birth_date' != '' THEN
-//         v_dob := (NEW.raw_user_meta_data->>'birth_date')::date;
-//       END IF;
-//     EXCEPTION WHEN OTHERS THEN
-//       v_dob := '1990-01-01'::date;
-//     END;
-//
-//     IF NEW.raw_user_meta_data->>'full_name' IS NOT NULL THEN
-//       v_name := NEW.raw_user_meta_data->>'full_name';
-//     END IF;
-//
-//     IF NEW.raw_user_meta_data->>'avatar_url' IS NOT NULL THEN
-//       v_avatar := NEW.raw_user_meta_data->>'avatar_url';
-//     END IF;
-//
-//     -- Create profile
-//     INSERT INTO public.profiles (id, is_premium, email, name, avatar_url)
-//     VALUES (NEW.id, false, NEW.email, v_name, v_avatar)
-//     ON CONFLICT (id) DO UPDATE SET email = EXCLUDED.email;
-//
-//     -- Create nutrition_profile only if it doesn't exist
-//     IF NOT EXISTS (SELECT 1 FROM public.nutrition_profiles WHERE user_id = NEW.id) THEN
-//       INSERT INTO public.nutrition_profiles (
-//         user_id,
-//         gender,
-//         date_of_birth,
-//         height_cm,
-//         current_weight_kg,
-//         target_weight_kg,
-//         primary_goal,
-//         fitness_level,
-//         exercise_types,
-//         status,
-//         onboarding_completed
-//       )
-//       VALUES (
-//         NEW.id,
-//         'outros',
-//         v_dob,
-//         0,
-//         0,
-//         0,
-//         'saude',
-//         'sedentario',
-//         ARRAY[]::text[],
-//         'in_progress',
-//         false
-//       )
-//       RETURNING id INTO v_nutrition_profile_id;
-//
-//       -- Create onboarding step only if we just created the nutrition_profile
-//       IF v_nutrition_profile_id IS NOT NULL THEN
-//         INSERT INTO public.nutrition_onboarding_steps (
-//           nutrition_profile_id,
-//           step_number,
-//           step_name,
-//           completed,
-//           skipped,
-//           is_valid
-//         )
-//         VALUES (
-//           v_nutrition_profile_id,
-//           1,
-//           'Dados Pessoais',
-//           false,
-//           false,
-//           false
-//         );
-//       END IF;
-//     END IF;
-//
-//     -- Create gamification profile
-//     INSERT INTO public.gamification_profiles (
-//       user_id,
-//       total_points,
-//       level,
-//       badges
-//     )
-//     VALUES (
-//       NEW.id,
-//       0,
-//       1,
-//       '[]'::jsonb
-//     )
-//     ON CONFLICT (user_id) DO NOTHING;
-//
-//     RETURN NEW;
-//   END;
-//   $function$
-//
-// FUNCTION update_all_leaderboards()
-//   CREATE OR REPLACE FUNCTION public.update_all_leaderboards()
-//    RETURNS void
-//    LANGUAGE plpgsql
-//    SECURITY DEFINER
-//   AS $function$
-//     DECLARE
-//       p_period VARCHAR;
-//       v_start_date TIMESTAMPTZ;
-//     BEGIN
-//       FOREACH p_period IN ARRAY ARRAY['weekly', 'monthly', 'all_time']
-//       LOOP
-//         IF p_period = 'weekly' THEN
-//           v_start_date := NOW() - INTERVAL '7 days';
-//         ELSIF p_period = 'monthly' THEN
-//           v_start_date := NOW() - INTERVAL '1 month';
-//         ELSE
-//           v_start_date := '2020-01-01'::TIMESTAMPTZ;
-//         END IF;
-//
-//         INSERT INTO public.leaderboards (user_id, rank, total_points, period, updated_at)
-//         SELECT
-//           up.user_id,
-//           ROW_NUMBER() OVER(ORDER BY SUM(up.amount) DESC) as rank,
-//           SUM(up.amount) as total_points,
-//           p_period,
-//           NOW()
-//         FROM public.user_points up
-//         WHERE up.earned_at >= v_start_date
-//         GROUP BY up.user_id
-//         ON CONFLICT (user_id, period) DO UPDATE
-//         SET rank = EXCLUDED.rank,
-//             total_points = EXCLUDED.total_points,
-//             updated_at = EXCLUDED.updated_at;
-//       END LOOP;
-//     END;
-//     $function$
-//
-// FUNCTION update_progress_metrics_integrated()
-//   CREATE OR REPLACE FUNCTION public.update_progress_metrics_integrated()
-//    RETURNS trigger
-//    LANGUAGE plpgsql
-//    SECURITY DEFINER
-//   AS $function$
-//   DECLARE
-//     target_user_id UUID;
-//     target_date DATE;
-//   BEGIN
-//     -- Determine target user and date based on table
-//     IF TG_TABLE_NAME = 'workout_sessions' THEN
-//       target_user_id := NEW.user_id;
-//       target_date := NEW.workout_date;
-//     ELSIF TG_TABLE_NAME = 'food_logs' THEN
-//       target_user_id := NEW.user_id;
-//       target_date := NEW.log_date;
-//     ELSE
-//       RETURN NEW;
-//     END IF;
-//
-//     INSERT INTO public.progress_metrics (
-//       user_id, date, week_of_year, month_of_year, year
-//     )
-//     VALUES (
-//       target_user_id, target_date,
-//       EXTRACT(WEEK FROM target_date),
-//       EXTRACT(MONTH FROM target_date),
-//       EXTRACT(YEAR FROM target_date)
-//     )
-//     ON CONFLICT (user_id, date) DO UPDATE SET updated_at = NOW();
-//
-//     RETURN NEW;
-//   END;
-//   $function$
-//
-
-// --- TRIGGERS ---
-// Table: food_logs
-//   food_logs_progress_trigger: CREATE TRIGGER food_logs_progress_trigger AFTER INSERT OR UPDATE ON public.food_logs FOR EACH ROW EXECUTE FUNCTION update_progress_metrics_integrated()
-// Table: workout_sessions
-//   workout_sessions_progress_trigger: CREATE TRIGGER workout_sessions_progress_trigger AFTER INSERT OR UPDATE ON public.workout_sessions FOR EACH ROW EXECUTE FUNCTION update_progress_metrics_integrated()
-
-// --- INDEXES ---
-// Table: admin_users
-//   CREATE UNIQUE INDEX admin_users_email_key ON public.admin_users USING btree (email)
-// Table: ai_food_identifications
-//   CREATE INDEX idx_ai_food_identifications_food_log_id ON public.ai_food_identifications USING btree (food_log_id)
-// Table: app_settings
-//   CREATE UNIQUE INDEX app_settings_setting_key_key ON public.app_settings USING btree (setting_key)
-// Table: challenge_participations
-//   CREATE UNIQUE INDEX challenge_participations_user_id_challenge_id_key ON public.challenge_participations USING btree (user_id, challenge_id)
-//   CREATE INDEX idx_challenge_participations_challenge_id ON public.challenge_participations USING btree (challenge_id)
-//   CREATE INDEX idx_challenge_participations_completed_at ON public.challenge_participations USING btree (completed_at)
-//   CREATE INDEX idx_challenge_participations_user_id ON public.challenge_participations USING btree (user_id)
-// Table: challenges
-//   CREATE INDEX idx_challenges_category ON public.challenges USING btree (category)
-//   CREATE INDEX idx_challenges_end_date ON public.challenges USING btree (end_date)
-//   CREATE INDEX idx_challenges_is_active ON public.challenges USING btree (is_active)
-//   CREATE INDEX idx_challenges_start_date ON public.challenges USING btree (start_date)
-// Table: daily_summaries
-//   CREATE UNIQUE INDEX daily_summaries_user_id_summary_date_key ON public.daily_summaries USING btree (user_id, summary_date)
-//   CREATE INDEX idx_daily_summaries_summary_date ON public.daily_summaries USING btree (summary_date)
-//   CREATE INDEX idx_daily_summaries_user_id ON public.daily_summaries USING btree (user_id)
-// Table: deviations
-//   CREATE UNIQUE INDEX deviations_name_key ON public.deviations USING btree (name)
-// Table: exercises
-//   CREATE UNIQUE INDEX exercises_name_key ON public.exercises USING btree (name)
-// Table: food_database
-//   CREATE UNIQUE INDEX food_database_usda_fdc_id_key ON public.food_database USING btree (usda_fdc_id)
-//   CREATE INDEX idx_food_database_category ON public.food_database USING btree (food_category)
-//   CREATE INDEX idx_food_database_food_name ON public.food_database USING btree (food_name)
-// Table: food_logs
-//   CREATE INDEX idx_food_logs_log_date ON public.food_logs USING btree (log_date)
-//   CREATE INDEX idx_food_logs_nutrition_plan_id ON public.food_logs USING btree (nutrition_plan_id)
-//   CREATE INDEX idx_food_logs_user_id ON public.food_logs USING btree (user_id)
-// Table: foods
-//   CREATE UNIQUE INDEX foods_name_key ON public.foods USING btree (name)
-// Table: gamification_profiles
-//   CREATE UNIQUE INDEX gamification_profiles_user_id_key ON public.gamification_profiles USING btree (user_id)
-// Table: leaderboards
-//   CREATE INDEX idx_leaderboards_period ON public.leaderboards USING btree (period)
-//   CREATE INDEX idx_leaderboards_rank ON public.leaderboards USING btree (rank)
-//   CREATE INDEX idx_leaderboards_total_points ON public.leaderboards USING btree (total_points DESC)
-//   CREATE INDEX idx_leaderboards_user_id ON public.leaderboards USING btree (user_id)
-//   CREATE UNIQUE INDEX leaderboards_user_id_period_key ON public.leaderboards USING btree (user_id, period)
-// Table: monthly_metrics
-//   CREATE INDEX idx_monthly_metrics_user_cycle ON public.monthly_metrics USING btree (user_id, cycle_number)
-// Table: monthly_reports
-//   CREATE INDEX idx_monthly_reports_cycle ON public.monthly_reports USING btree (user_id, cycle_number DESC)
-//   CREATE INDEX idx_monthly_reports_user_id ON public.monthly_reports USING btree (user_id)
-// Table: nutrition_onboarding_steps
-//   CREATE INDEX idx_nutrition_onboarding_steps_nutrition_profile_id ON public.nutrition_onboarding_steps USING btree (nutrition_profile_id)
-// Table: nutrition_profiles
-//   CREATE INDEX idx_nutrition_profiles_user_id ON public.nutrition_profiles USING btree (user_id)
-// Table: periodization
-//   CREATE UNIQUE INDEX periodization_name_key ON public.periodization USING btree (name)
-// Table: profiles
-//   CREATE INDEX idx_profiles_is_premium ON public.profiles USING btree (is_premium)
-//   CREATE INDEX idx_profiles_subscription_id ON public.profiles USING btree (subscription_id)
-//   CREATE INDEX idx_profiles_trial_started_at ON public.profiles USING btree (trial_started_at)
-//   CREATE INDEX idx_profiles_user_id ON public.profiles USING btree (id)
-// Table: progress_metrics
-//   CREATE INDEX idx_progress_metrics_date ON public.progress_metrics USING btree (date DESC)
-//   CREATE INDEX idx_progress_metrics_user_id ON public.progress_metrics USING btree (user_id)
-//   CREATE UNIQUE INDEX progress_metrics_user_id_date_key ON public.progress_metrics USING btree (user_id, date)
-// Table: social_connections
-//   CREATE INDEX idx_social_connections_friend_id ON public.social_connections USING btree (friend_id)
-//   CREATE INDEX idx_social_connections_status ON public.social_connections USING btree (status)
-//   CREATE INDEX idx_social_connections_user_id ON public.social_connections USING btree (user_id)
-// Table: subscriptions
-//   CREATE INDEX idx_subscriptions_expires_at ON public.subscriptions USING btree (expires_at)
-//   CREATE INDEX idx_subscriptions_plan_id ON public.subscriptions USING btree (plan_id)
-//   CREATE INDEX idx_subscriptions_status ON public.subscriptions USING btree (status)
-//   CREATE INDEX idx_subscriptions_user_id ON public.subscriptions USING btree (user_id)
-//   CREATE UNIQUE INDEX subscriptions_stripe_customer_id_key ON public.subscriptions USING btree (stripe_customer_id)
-//   CREATE UNIQUE INDEX subscriptions_stripe_subscription_id_key ON public.subscriptions USING btree (stripe_subscription_id)
-// Table: user_badges
-//   CREATE INDEX idx_user_badges_badge_type ON public.user_badges USING btree (badge_type)
-//   CREATE INDEX idx_user_badges_earned_at ON public.user_badges USING btree (earned_at DESC)
-//   CREATE INDEX idx_user_badges_user_id ON public.user_badges USING btree (user_id)
-//   CREATE UNIQUE INDEX user_badges_user_id_badge_type_key ON public.user_badges USING btree (user_id, badge_type)
-// Table: user_points
-//   CREATE INDEX idx_user_points_earned_at ON public.user_points USING btree (earned_at DESC)
-//   CREATE INDEX idx_user_points_point_type ON public.user_points USING btree (point_type)
-//   CREATE INDEX idx_user_points_user_id ON public.user_points USING btree (user_id)
-// Table: workout_sessions
-//   CREATE INDEX idx_workout_sessions_user_id ON public.workout_sessions USING btree (user_id)
-//   CREATE INDEX idx_workout_sessions_workout_date ON public.workout_sessions USING btree (workout_date DESC)
