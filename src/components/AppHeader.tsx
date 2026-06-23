@@ -13,6 +13,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { useAuth } from '@/hooks/use-auth'
 import { useNavigate, Link } from 'react-router-dom'
+import { BrandLogo } from '@/components/BrandLogo'
 
 export function AppHeader() {
   const { user, signOut } = useAuth()
@@ -29,7 +30,10 @@ export function AppHeader() {
   return (
     <header className="sticky top-0 z-40 bg-background/80 backdrop-blur-md border-b border-border/50 h-16 flex items-center justify-between px-4 md:px-6">
       <div className="flex items-center gap-2 md:hidden">
-        <span className="font-bold text-lg tracking-tight text-foreground">KINETIX</span>
+        <BrandLogo className="w-6 h-6" />
+        <span className="font-display font-bold text-xl tracking-tight text-primary-gradient">
+          kinetix.app
+        </span>
       </div>
       <div className="hidden md:block">
         <h2 className="text-sm font-medium text-muted-foreground">

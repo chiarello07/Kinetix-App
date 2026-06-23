@@ -25,6 +25,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { BrandLogo } from '@/components/BrandLogo'
 
 export default function Layout() {
   const { user, signOut, loading } = useAuth()
@@ -43,8 +44,10 @@ export default function Layout() {
       {/* Sidebar Lateral Esquerdo */}
       <aside className="w-64 border-r bg-card flex-col hidden md:flex z-10 shadow-sm">
         <div className="h-16 flex items-center px-6 border-b">
-          <Activity className="w-6 h-6 text-primary mr-2" />
-          <span className="font-bold text-lg tracking-tight">KINETIX</span>
+          <BrandLogo className="w-6 h-6 mr-2" />
+          <span className="font-display font-bold text-xl tracking-tight text-primary-gradient">
+            kinetix.app
+          </span>
         </div>
         <nav className="flex-1 overflow-y-auto py-4 px-3 space-y-1">
           <Link to="/index">
@@ -102,8 +105,10 @@ export default function Layout() {
       <div className="flex-1 flex flex-col overflow-hidden relative">
         <header className="h-16 border-b bg-card/80 backdrop-blur-md flex items-center justify-between px-6 sticky top-0 z-20">
           <div className="md:hidden flex items-center">
-            <Activity className="w-6 h-6 text-primary mr-2" />
-            <span className="font-bold text-lg tracking-tight">KINETIX</span>
+            <BrandLogo className="w-6 h-6 mr-2" />
+            <span className="font-display font-bold text-xl tracking-tight text-primary-gradient">
+              kinetix.app
+            </span>
           </div>
           <div className="flex items-center gap-4 ml-auto">
             {/* Seletor de Tema */}

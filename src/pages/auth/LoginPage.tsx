@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Activity } from 'lucide-react'
+import { BrandLogo } from '@/components/BrandLogo'
 import { supabase } from '@/lib/supabase/client'
 
 export function LoginPage() {
@@ -96,10 +96,12 @@ export function LoginPage() {
       <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/10 via-background to-background"></div>
       <Card className="w-full max-w-md shadow-elevation border-primary/20 animate-fade-in-up">
         <CardHeader className="text-center space-y-2">
-          <div className="mx-auto bg-primary/10 text-primary p-3 rounded-full w-16 h-16 flex items-center justify-center mb-2">
-            <Activity className="w-8 h-8" />
+          <div className="mx-auto w-20 h-20 flex items-center justify-center mb-2">
+            <BrandLogo className="w-16 h-16" />
           </div>
-          <CardTitle className="text-2xl font-bold tracking-tight">KINETIX</CardTitle>
+          <CardTitle className="text-3xl font-display font-bold tracking-tight text-primary-gradient pb-1">
+            kinetix.app
+          </CardTitle>
           <CardDescription>
             {isLogin ? 'Faça login na sua conta' : 'Crie sua conta para começar'}
           </CardDescription>
@@ -147,7 +149,11 @@ export function LoginPage() {
               />
             </div>
             {error && <p className="text-sm text-destructive">{error}</p>}
-            <Button type="submit" className="w-full h-12 text-lg font-bold" disabled={loading}>
+            <Button
+              type="submit"
+              className="w-full h-12 text-lg font-bold bg-primary-gradient text-white border-0 shadow-lg hover:shadow-primary/30 transition-all"
+              disabled={loading}
+            >
               {loading ? 'Aguarde...' : isLogin ? 'Entrar' : 'Criar Conta'}
             </Button>
             <Button

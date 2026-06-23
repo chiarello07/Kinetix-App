@@ -40,7 +40,10 @@ export function BottomNav({ className }: { className?: string }) {
                     isActive && 'bg-primary/10',
                   )}
                 >
-                  <item.icon className={cn('w-[20px] h-[20px]', isActive && 'fill-primary/20')} />
+                  <item.icon
+                    className={cn('w-[20px] h-[20px]', isActive && 'fill-primary/20')}
+                    strokeWidth={isActive ? 2 : 1.5}
+                  />
                 </div>
                 <span
                   className={cn(
