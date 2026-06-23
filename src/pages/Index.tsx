@@ -47,10 +47,6 @@ export default function Index() {
         className="h-20 md:h-24 w-auto max-w-full object-contain mb-8"
       />
 
-      <h1 className="text-5xl md:text-6xl font-black tracking-tighter mb-6 bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/70">
-        KINETIX <span className="text-[#FF1493]">App</span>
-      </h1>
-
       {!hasOnboarding ? (
         <>
           <p className="text-muted-foreground max-w-2xl mx-auto mb-12 leading-relaxed text-[1.23rem]">
