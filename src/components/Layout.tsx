@@ -109,7 +109,6 @@ export default function Layout() {
               className="flex items-center gap-2 hover:opacity-80 transition-opacity"
             >
               <img src={kinetixLogo} alt="Kinetix Logo" className="h-8 w-auto" />
-              <span className="font-bold text-lg tracking-tight">Kinetix</span>
             </Link>
           </div>
           <div className="flex items-center gap-4 ml-auto">
