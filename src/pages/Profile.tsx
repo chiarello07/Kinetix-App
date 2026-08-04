@@ -1,5 +1,5 @@
-import { useState, useEffect, useRef } from 'react'
-import { Save, Edit2, Camera, Crown, CreditCard, User } from 'lucide-react'
+import { useState, useEffect, useRef, useCallback } from 'react'
+import { Save, Edit2, Camera, Crown, CreditCard, User, AlertCircle, RefreshCw } from 'lucide-react'
 import {
   Card,
   CardContent,
@@ -26,6 +26,8 @@ import { Badge } from '@/components/ui/badge'
 import { PaywallModal } from '@/components/PaywallModal'
 import { cn } from '@/lib/utils'
 
+type LoadState = 'loading' | 'success' | 'error' | 'empty'
+
 export default function Profile() {
   const { user } = useAuth()
   const { toast } = useToast()
@@ -42,17 +44,10 @@ export default function Profile() {
   })
   const [isSaving, setIsSaving] = useState(false)
   const [avatarUrl, setAvatarUrl] = useState<string | undefined>(undefined)
+  const [loadState, setLoadState] = useState<LoadState>('loading')
 
   const [showPaywall, setShowPaywall] = useState(false)
   const [subscription, setSubscription] = useState<any>(null)
-
-  useEffect(() => {
-    if (user) {
-      const src = user.user_metadata?.avatar_url
-      setAvatarUrl(src && src.trim() !== '' ? src : undefined)
-      fetchProfile()
-    }
-  }, [user])
 
   const calculateAge = (dob: string) => {
     if (!dob) return ''
@@ -60,38 +55,105 @@ export default function Profile() {
     return Math.abs(new Date(diff).getUTCFullYear() - 1970)
   }
 
-  const fetchProfile = async () => {
-    const { data: nutData } = await supabase
-      .from('nutrition_profiles')
-      .select('*')
-      .eq('user_id', user!.id)
-      .single()
-    const { data: profData } = await supabase
-      .from('profiles')
-      .select('*')
-      .eq('id', user!.id)
-      .single()
-
-    if (nutData) {
-      setProfile(nutData)
-      setFormData({
-        name: profData?.name || user?.user_metadata?.full_name || '',
-        current_weight_kg: nutData.current_weight_kg,
-        height_cm: nutData.height_cm,
-        gender: nutData.gender,
-        age: calculateAge(nutData.date_of_birth),
-      })
+  const fetchProfile = useCallback(async () => {
+    if (!user) {
+      setLoadState('error')
+      return
     }
 
-    if (profData?.subscription_id) {
-      const { data: subData } = await supabase
-        .from('subscriptions')
+    setLoadState('loading')
+
+    try {
+      const { data: nutData, error: nutError } = await supabase
+        .from('nutrition_profiles')
         .select('*')
-        .eq('id', profData.subscription_id)
-        .single()
-      if (subData) setSubscription(subData)
+        .eq('user_id', user.id)
+        .maybeSingle()
+
+      if (nutError) {
+        console.error('Error fetching nutrition_profiles:', nutError)
+        setLoadState('error')
+        return
+      }
+
+      const { data: profData, error: profError } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', user.id)
+        .maybeSingle()
+
+      if (profError) {
+        console.error('Error fetching profiles:', profError)
+        setLoadState('error')
+        return
+      }
+
+      if (!nutData && !profData) {
+        setLoadState('empty')
+        return
+      }
+
+      if (nutData) {
+        setProfile(nutData)
+        setFormData({
+          name: profData?.name || user?.user_metadata?.full_name || '',
+          current_weight_kg: nutData.current_weight_kg ?? '',
+          height_cm: nutData.height_cm ?? '',
+          gender: nutData.gender ?? '',
+          age: calculateAge(nutData.date_of_birth),
+        })
+      } else if (profData) {
+        setProfile({
+          id: null,
+          name: profData.name,
+          current_weight_kg: null,
+          height_cm: null,
+          gender: null,
+          date_of_birth: null,
+          onboarding_completed: false,
+        })
+        setFormData({
+          name: profData.name || user?.user_metadata?.full_name || '',
+          current_weight_kg: '',
+          height_cm: '',
+          gender: '',
+          age: '',
+        })
+      }
+
+      if (profData?.avatar_url) {
+        setAvatarUrl(profData.avatar_url)
+      } else {
+        const src = user.user_metadata?.avatar_url
+        setAvatarUrl(src && src.trim() !== '' ? src : undefined)
+      }
+
+      if (profData?.subscription_id) {
+        const { data: subData, error: subError } = await supabase
+          .from('subscriptions')
+          .select('*')
+          .eq('id', profData.subscription_id)
+          .maybeSingle()
+        if (subError) {
+          console.error('Error fetching subscription:', subError)
+        }
+        if (subData) setSubscription(subData)
+      }
+
+      setLoadState('success')
+    } catch (err) {
+      console.error('Unexpected error fetching profile:', err)
+      setLoadState('error')
     }
-  }
+  }, [user])
+
+  useEffect(() => {
+    if (user) {
+      fetchProfile()
+    } else {
+      setLoadState('loading')
+    }
+  }, [user, fetchProfile])
 
   const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
@@ -108,11 +170,9 @@ export default function Profile() {
   const handleSave = async () => {
     setIsSaving(true)
 
-    // Update Auth and Profile Name
     await supabase.auth.updateUser({ data: { full_name: formData.name } })
     await supabase.from('profiles').update({ name: formData.name }).eq('id', user!.id)
 
-    // Calculate approx DOB based on age if it was changed
     const currentAge = calculateAge(profile.date_of_birth)
     let newDob = profile.date_of_birth
     if (Number(formData.age) !== currentAge && formData.age) {
@@ -151,12 +211,71 @@ export default function Profile() {
     }
   }
 
-  if (!profile)
+  if (loadState === 'loading' || !user) {
     return (
-      <div className="p-8 text-center text-muted-foreground animate-pulse">
-        Carregando perfil...
+      <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4 animate-fade-in">
+        <div className="w-10 h-10 border-4 border-primary/20 border-t-primary rounded-full animate-spin" />
+        <p className="text-muted-foreground text-sm">Carregando perfil...</p>
       </div>
     )
+  }
+
+  if (loadState === 'error') {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4 animate-fade-in px-6">
+        <div className="w-16 h-16 rounded-full bg-destructive/10 flex items-center justify-center">
+          <AlertCircle className="w-8 h-8 text-destructive" />
+        </div>
+        <div className="text-center max-w-sm">
+          <h2 className="text-xl font-bold mb-1">Não foi possível carregar seu perfil</h2>
+          <p className="text-sm text-muted-foreground">
+            Ocorreu um erro ao buscar seus dados. Verifique sua conexão e tente novamente.
+          </p>
+        </div>
+        <Button onClick={fetchProfile} className="gap-2 shadow-sm">
+          <RefreshCw className="w-4 h-4" /> Tentar Novamente
+        </Button>
+      </div>
+    )
+  }
+
+  if (loadState === 'empty') {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4 animate-fade-in px-6">
+        <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
+          <User className="w-8 h-8 text-primary" />
+        </div>
+        <div className="text-center max-w-sm">
+          <h2 className="text-xl font-bold mb-1">Nenhum dado de perfil encontrado</h2>
+          <p className="text-sm text-muted-foreground">
+            Seu perfil ainda não foi configurado. Complete o onboarding para começar a usar o app.
+          </p>
+        </div>
+        <Button onClick={fetchProfile} className="gap-2 shadow-sm">
+          <RefreshCw className="w-4 h-4" /> Tentar Novamente
+        </Button>
+      </div>
+    )
+  }
+
+  if (!profile) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4 animate-fade-in px-6">
+        <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
+          <User className="w-8 h-8 text-primary" />
+        </div>
+        <div className="text-center max-w-sm">
+          <h2 className="text-xl font-bold mb-1">Perfil não disponível</h2>
+          <p className="text-sm text-muted-foreground">
+            Não encontramos dados de perfil para sua conta.
+          </p>
+        </div>
+        <Button onClick={fetchProfile} className="gap-2 shadow-sm">
+          <RefreshCw className="w-4 h-4" /> Tentar Novamente
+        </Button>
+      </div>
+    )
+  }
 
   return (
     <div className="flex flex-col gap-6 max-w-4xl mx-auto w-full animate-fade-in-up pb-24 md:pb-6 p-6">
@@ -344,7 +463,7 @@ export default function Profile() {
                 />
               ) : (
                 <div className="p-2 bg-secondary/20 rounded-md font-medium">
-                  {profile.current_weight_kg} kg
+                  {profile.current_weight_kg ? `${profile.current_weight_kg} kg` : 'Não informado'}
                 </div>
               )}
             </div>
@@ -358,7 +477,7 @@ export default function Profile() {
                 />
               ) : (
                 <div className="p-2 bg-secondary/20 rounded-md font-medium">
-                  {profile.height_cm} cm
+                  {profile.height_cm ? `${profile.height_cm} cm` : 'Não informado'}
                 </div>
               )}
             </div>
@@ -382,7 +501,7 @@ export default function Profile() {
                 <div className="p-2 bg-secondary/20 rounded-md font-medium capitalize">
                   {!profile.onboarding_completed && profile.gender === 'outros'
                     ? 'Não informado'
-                    : profile.gender}
+                    : profile.gender || 'Não informado'}
                 </div>
               )}
             </div>
