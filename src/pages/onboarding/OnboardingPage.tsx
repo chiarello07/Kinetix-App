@@ -28,14 +28,19 @@ export default function OnboardingPage() {
     setStep(14) // isSubmitting state
     try {
       if (user) {
-        await supabase.from('profiles').update({ name: data.name }).eq('id', user.id)
+        await supabase.from('profiles').upsert({
+          id: user.id,
+          name: data.name,
+          email: user.email,
+          updated_at: new Date().toISOString(),
+        })
         await supabase.auth.updateUser({ data: { full_name: data.name } })
 
         const { data: profile } = await supabase
           .from('nutrition_profiles')
           .select('id')
           .eq('user_id', user.id)
-          .single()
+          .maybeSingle()
 
         let dob = new Date().toISOString().split('T')[0]
         if (data.age) {
@@ -44,22 +49,26 @@ export default function OnboardingPage() {
           dob = d.toISOString().split('T')[0]
         }
 
+        const nutPayload = {
+          user_id: user.id,
+          gender: data.gender || 'outros',
+          current_weight_kg: Number(data.weight) || 0,
+          target_weight_kg: Number(data.targetWeight) || 0,
+          height_cm: Number(data.height) || 0,
+          primary_goal: data.goal || 'saude',
+          fitness_level: data.experience || 'sedentario',
+          exercise_days_per_week: Number(data.frequency) || 3,
+          date_of_birth: dob,
+          onboarding_completed: true,
+          onboarding_completion_date: new Date().toISOString(),
+          status: 'active',
+          updated_at: new Date().toISOString(),
+        }
+
         if (profile) {
-          await supabase
-            .from('nutrition_profiles')
-            .update({
-              gender: data.gender,
-              current_weight_kg: Number(data.weight),
-              target_weight_kg: Number(data.targetWeight),
-              height_cm: Number(data.height),
-              primary_goal: data.goal,
-              fitness_level: data.experience,
-              exercise_days_per_week: data.frequency,
-              date_of_birth: dob,
-              onboarding_completed: true,
-              onboarding_completion_date: new Date().toISOString(),
-            })
-            .eq('id', profile.id)
+          await supabase.from('nutrition_profiles').update(nutPayload).eq('id', profile.id)
+        } else {
+          await supabase.from('nutrition_profiles').upsert(nutPayload, { onConflict: 'user_id' })
         }
       }
       // Check premium

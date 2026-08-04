@@ -35,18 +35,21 @@ export default function NutritionOnboardingPage() {
           .from('nutrition_profiles')
           .select('id')
           .eq('user_id', user.id)
-          .single()
+          .maybeSingle()
+
+        const nutPayload = {
+          user_id: user.id,
+          max_weight_kg: Number(data.maxWeight) || 0,
+          min_weight_kg: Number(data.minWeight) || 0,
+          body_type: data.bodyType || 'mesomorfo',
+          intestinal_function: 'regular',
+          updated_at: new Date().toISOString(),
+        }
 
         if (profile) {
-          await supabase
-            .from('nutrition_profiles')
-            .update({
-              max_weight_kg: Number(data.maxWeight),
-              min_weight_kg: Number(data.minWeight),
-              body_type: data.bodyType,
-              intestinal_function: 'regular',
-            })
-            .eq('id', profile.id)
+          await supabase.from('nutrition_profiles').update(nutPayload).eq('id', profile.id)
+        } else {
+          await supabase.from('nutrition_profiles').upsert(nutPayload, { onConflict: 'user_id' })
         }
       }
 

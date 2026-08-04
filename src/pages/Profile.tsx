@@ -64,62 +64,81 @@ export default function Profile() {
     setLoadState('loading')
 
     try {
-      const { data: nutData, error: nutError } = await supabase
-        .from('nutrition_profiles')
-        .select('*')
-        .eq('user_id', user.id)
-        .maybeSingle()
-
-      if (nutError) {
-        console.error('Error fetching nutrition_profiles:', nutError)
-        setLoadState('error')
-        return
-      }
-
-      const { data: profData, error: profError } = await supabase
+      // 1. Fetch profiles
+      let { data: profData, error: profError } = await supabase
         .from('profiles')
         .select('*')
         .eq('id', user.id)
         .maybeSingle()
 
-      if (profError) {
+      if (profError && profError.code !== 'PGRST116') {
         console.error('Error fetching profiles:', profError)
-        setLoadState('error')
-        return
       }
 
-      if (!nutData && !profData) {
-        setLoadState('empty')
-        return
+      // Auto-create profile if missing
+      if (!profData) {
+        const newProf = {
+          id: user.id,
+          email: user.email || '',
+          name:
+            user.user_metadata?.full_name ||
+            user.user_metadata?.name ||
+            user.email?.split('@')[0] ||
+            'Atleta Kinetix',
+          is_premium: false,
+        }
+        const { data: createdProf } = await supabase
+          .from('profiles')
+          .upsert(newProf)
+          .select()
+          .maybeSingle()
+
+        profData = createdProf || (newProf as any)
       }
 
-      if (nutData) {
-        setProfile(nutData)
-        setFormData({
-          name: profData?.name || user?.user_metadata?.full_name || '',
-          current_weight_kg: nutData.current_weight_kg ?? '',
-          height_cm: nutData.height_cm ?? '',
-          gender: nutData.gender ?? '',
-          age: calculateAge(nutData.date_of_birth),
-        })
-      } else if (profData) {
-        setProfile({
-          id: null,
-          name: profData.name,
-          current_weight_kg: null,
-          height_cm: null,
-          gender: null,
-          date_of_birth: null,
+      // 2. Fetch nutrition_profiles
+      let { data: nutData, error: nutError } = await supabase
+        .from('nutrition_profiles')
+        .select('*')
+        .eq('user_id', user.id)
+        .maybeSingle()
+
+      if (nutError && nutError.code !== 'PGRST116') {
+        console.error('Error fetching nutrition_profiles:', nutError)
+      }
+
+      // Auto-create nutrition profile if missing
+      if (!nutData) {
+        const defaultNut = {
+          user_id: user.id,
+          gender: 'outros',
+          date_of_birth: '1990-01-01',
+          height_cm: 0,
+          current_weight_kg: 0,
+          target_weight_kg: 0,
+          primary_goal: 'saude',
+          fitness_level: 'sedentario',
+          exercise_types: [],
+          status: 'in_progress',
           onboarding_completed: false,
-        })
-        setFormData({
-          name: profData.name || user?.user_metadata?.full_name || '',
-          current_weight_kg: '',
-          height_cm: '',
-          gender: '',
-          age: '',
-        })
+        }
+        const { data: createdNut } = await supabase
+          .from('nutrition_profiles')
+          .upsert(defaultNut, { onConflict: 'user_id' })
+          .select()
+          .maybeSingle()
+
+        nutData = createdNut || ({ ...defaultNut, id: 'temp-id' } as any)
       }
+
+      setProfile(nutData)
+      setFormData({
+        name: profData?.name || user?.user_metadata?.full_name || '',
+        current_weight_kg: nutData.current_weight_kg || '',
+        height_cm: nutData.height_cm || '',
+        gender: nutData.gender || 'outros',
+        age: calculateAge(nutData.date_of_birth),
+      })
 
       if (profData?.avatar_url) {
         setAvatarUrl(profData.avatar_url)
@@ -129,14 +148,11 @@ export default function Profile() {
       }
 
       if (profData?.subscription_id) {
-        const { data: subData, error: subError } = await supabase
+        const { data: subData } = await supabase
           .from('subscriptions')
           .select('*')
           .eq('id', profData.subscription_id)
           .maybeSingle()
-        if (subError) {
-          console.error('Error fetching subscription:', subError)
-        }
         if (subData) setSubscription(subData)
       }
 
@@ -168,46 +184,78 @@ export default function Profile() {
   }
 
   const handleSave = async () => {
+    if (!user) return
     setIsSaving(true)
 
-    await supabase.auth.updateUser({ data: { full_name: formData.name } })
-    await supabase.from('profiles').update({ name: formData.name }).eq('id', user!.id)
-
-    const currentAge = calculateAge(profile.date_of_birth)
-    let newDob = profile.date_of_birth
-    if (Number(formData.age) !== currentAge && formData.age) {
-      const d = new Date()
-      d.setFullYear(d.getFullYear() - Number(formData.age))
-      newDob = d.toISOString().split('T')[0]
-    }
-
-    const { error } = await supabase
-      .from('nutrition_profiles')
-      .update({
-        current_weight_kg: Number(formData.current_weight_kg),
-        height_cm: Number(formData.height_cm),
-        gender: formData.gender,
-        date_of_birth: newDob,
+    try {
+      await supabase.auth.updateUser({ data: { full_name: formData.name } })
+      await supabase.from('profiles').upsert({
+        id: user.id,
+        email: user.email,
+        name: formData.name,
+        updated_at: new Date().toISOString(),
       })
-      .eq('id', profile.id)
 
-    setIsSaving(false)
-    if (error) {
+      const currentAge = calculateAge(profile?.date_of_birth)
+      let newDob = profile?.date_of_birth || '1990-01-01'
+      if (formData.age && Number(formData.age) !== currentAge) {
+        const d = new Date()
+        d.setFullYear(d.getFullYear() - Number(formData.age))
+        newDob = d.toISOString().split('T')[0]
+      }
+
+      const nutUpdate = {
+        user_id: user.id,
+        current_weight_kg: Number(formData.current_weight_kg) || 0,
+        height_cm: Number(formData.height_cm) || 0,
+        gender: formData.gender || 'outros',
+        date_of_birth: newDob,
+        updated_at: new Date().toISOString(),
+      }
+
+      let saveErr = null
+      if (profile?.id && profile.id !== 'temp-id') {
+        const { error } = await supabase
+          .from('nutrition_profiles')
+          .update(nutUpdate)
+          .eq('id', profile.id)
+        saveErr = error
+      } else {
+        const { error, data: createdNut } = await supabase
+          .from('nutrition_profiles')
+          .upsert(nutUpdate, { onConflict: 'user_id' })
+          .select()
+          .single()
+        saveErr = error
+        if (createdNut) setProfile(createdNut)
+      }
+
+      setIsSaving(false)
+      if (saveErr) {
+        toast({
+          title: 'Erro',
+          description: 'Não foi possível salvar o perfil',
+          variant: 'destructive',
+        })
+      } else {
+        setProfile((prev: any) => ({
+          ...prev,
+          current_weight_kg: formData.current_weight_kg,
+          height_cm: formData.height_cm,
+          gender: formData.gender,
+          date_of_birth: newDob,
+        }))
+        setIsEditing(false)
+        toast({ title: 'Sucesso', description: 'Perfil atualizado com sucesso' })
+      }
+    } catch (err) {
+      console.error('Error saving profile:', err)
+      setIsSaving(false)
       toast({
         title: 'Erro',
         description: 'Não foi possível salvar o perfil',
         variant: 'destructive',
       })
-    } else {
-      setProfile({
-        ...profile,
-        current_weight_kg: formData.current_weight_kg,
-        height_cm: formData.height_cm,
-        gender: formData.gender,
-        date_of_birth: newDob,
-      })
-      setIsEditing(false)
-      toast({ title: 'Sucesso', description: 'Perfil atualizado com sucesso' })
     }
   }
 
@@ -232,7 +280,7 @@ export default function Profile() {
             Ocorreu um erro ao buscar seus dados. Verifique sua conexão e tente novamente.
           </p>
         </div>
-        <Button onClick={fetchProfile} className="gap-2 shadow-sm">
+        <Button onClick={() => fetchProfile()} className="gap-2 shadow-sm">
           <RefreshCw className="w-4 h-4" /> Tentar Novamente
         </Button>
       </div>
