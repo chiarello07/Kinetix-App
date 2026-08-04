@@ -1,7 +1,7 @@
 {
   "_versions": {
     "stripe-webhook": 1,
-    "monthly-update": 1,
-    "update-leaderboards": 1
+    "monthly-update": 2,
+    "update-leaderboards": 2
   }
 }

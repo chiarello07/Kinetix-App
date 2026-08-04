@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Crown, Lock, Sparkles } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import {
@@ -9,8 +10,13 @@ import {
 } from '@/components/ui/dialog'
 import { cn } from '@/lib/utils'
 
+const STRIPE_CHECKOUT_URLS: Record<string, string> = {
+  trimestral: 'https://buy.stripe.com/8x28wQ4kugKO0krarW7Zu00',
+}
+
 export function PaywallModal({ isOpen, onClose, feature, reason, onSelectPlan }: any) {
   const navigate = useNavigate()
+  const [selectedPlanId, setSelectedPlanId] = useState<string | null>(null)
 
   const plans = [
     {
@@ -48,9 +54,23 @@ export function PaywallModal({ isOpen, onClose, feature, reason, onSelectPlan }:
     },
   ]
 
-  const handleSelectPlan = (billingPeriod: string) => {
-    if (onSelectPlan) onSelectPlan(billingPeriod)
-    navigate(`/checkout?plan=${billingPeriod}`)
+  const handleCardClick = (planId: string) => {
+    setSelectedPlanId(planId)
+  }
+
+  const handleButtonClick = (e: React.MouseEvent, planId: string) => {
+    e.stopPropagation()
+    if (selectedPlanId !== planId) {
+      setSelectedPlanId(planId)
+      return
+    }
+    if (onSelectPlan) onSelectPlan(planId)
+    const stripeUrl = STRIPE_CHECKOUT_URLS[planId]
+    if (stripeUrl) {
+      window.location.href = stripeUrl
+    } else {
+      navigate(`/checkout?plan=${planId}`)
+    }
   }
 
   return (
@@ -107,8 +127,10 @@ export function PaywallModal({ isOpen, onClose, feature, reason, onSelectPlan }:
                   plan.recommended
                     ? 'border-amber-400 bg-amber-500/10 shadow-lg shadow-amber-500/20 transform md:-translate-y-2'
                     : 'border-gray-600 bg-gray-800/50 hover:border-purple-400',
+                  selectedPlanId === plan.id &&
+                    'ring-2 ring-green-400 ring-offset-2 ring-offset-slate-900',
                 )}
-                onClick={() => handleSelectPlan(plan.id)}
+                onClick={() => handleCardClick(plan.id)}
               >
                 {plan.badge && (
                   <div className="absolute -top-3.5 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-amber-400 to-orange-500 text-white px-4 py-1 rounded-full text-xs font-bold whitespace-nowrap shadow-sm">
@@ -154,6 +176,7 @@ export function PaywallModal({ isOpen, onClose, feature, reason, onSelectPlan }:
                         ? 'bg-gradient-to-r from-amber-400 to-orange-500 hover:from-amber-500 hover:to-orange-600 text-white shadow-md'
                         : 'bg-white/10 hover:bg-white/20 text-white',
                     )}
+                    onClick={(e) => handleButtonClick(e, plan.id)}
                   >
                     Escolher Plano
                   </button>
